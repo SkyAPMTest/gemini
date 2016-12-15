@@ -42,35 +42,28 @@ public class PacketMatch {
 		Ethernet eth = new Ethernet();
 		packet.getHeader(eth);
 
-		JsonObject macJson = new JsonObject();
-		macJson.addProperty("frameNumber", packet.getFrameNumber());
-		macJson.addProperty("source", FormatUtils.mac(eth.source()));
-		macJson.addProperty("destination", FormatUtils.mac(eth.destination()));
-		onceJson.add("mac", macJson);
-		logger.debug("#%d Ethernet Json=%s", packet.getFrameNumber(), macJson.toString());
+		onceJson.addProperty("eth_frame_number", packet.getFrameNumber());
+		onceJson.addProperty("eth_source", FormatUtils.mac(eth.source()));
+		onceJson.addProperty("eth_destination", FormatUtils.mac(eth.destination()));
+		logger.debug("#%d Ethernet Json=%s", packet.getFrameNumber(), onceJson.toString());
 
 		Tcp tcp = new Tcp();
 		packet.getHeader(tcp);
 
-		JsonObject tcpJson = new JsonObject();
-		tcpJson.addProperty("source", tcp.source());
-		tcpJson.addProperty("destination", tcp.destination());
-		tcpJson.addProperty("seq", tcp.seq());
-		tcpJson.addProperty("ack", tcp.ack());
-		tcpJson.addProperty("time", packet.getCaptureHeader().timestampInMillis());
-		onceJson.add("tcp", tcpJson);
-		logger.debug("#%d Tcp Json=%s", packet.getFrameNumber(), tcpJson.toString());
+		onceJson.addProperty("tcp_source", tcp.source());
+		onceJson.addProperty("tcp_destination", tcp.destination());
+		onceJson.addProperty("tcp_seq", tcp.seq());
+		onceJson.addProperty("tcp_ack", tcp.ack());
+		onceJson.addProperty("tcp_time", packet.getCaptureHeader().timestampInMillis());
+		logger.debug("#%d Tcp Json=%s", packet.getFrameNumber(), onceJson.toString());
 
 		Ip4 ip = new Ip4();
 		packet.getHeader(ip);
 
-		JsonObject ipJson = new JsonObject();
-		ipJson.addProperty("frameNumber", packet.getFrameNumber());
-		ipJson.addProperty("source", FormatUtils.ip(ip.source()));
-		ipJson.addProperty("destination", FormatUtils.ip(ip.destination()));
-		onceJson.add("ip", ipJson);
+		onceJson.addProperty("ip_source", FormatUtils.ip(ip.source()));
+		onceJson.addProperty("ip_destination", FormatUtils.ip(ip.destination()));
 
-		logger.debug("#%d Ip4 Json=%s", packet.getFrameNumber(), ipJson.toString());
+		logger.debug("#%d Ip4 Json=%s", packet.getFrameNumber(), onceJson.toString());
 
 		if (tcp.destination() != 443) {
 			Http http = new Http();
@@ -82,24 +75,20 @@ public class PacketMatch {
 			// http.fieldValue(Request.Accept).contains("text/html"))) {
 			if (http.isResponse()) {
 				logger.debug("#" + packet.getFrameNumber() + " Res  ");
-				JsonObject resJson = new JsonObject();
 				for (Response res : Response.values()) {
 					if (http.hasField(res)) {
 						logger.debug(res.toString() + ":" + http.fieldValue(res) + "  ");
-						resJson.addProperty(res.toString(), http.fieldValue(res));
+						onceJson.addProperty("res_" + res.toString(), http.fieldValue(res));
 					}
 				}
-				onceJson.add("res", resJson);
 			} else {
 				logger.debug("#" + packet.getFrameNumber() + " Req  ");
-				JsonObject reqJson = new JsonObject();
 				for (Request req : Request.values()) {
 					if (http.hasField(req)) {
 						logger.debug(req.toString() + ":" + http.fieldValue(req) + "  ");
-						reqJson.addProperty(req.toString(), http.fieldValue(req));
+						onceJson.addProperty("req_" + req.toString(), http.fieldValue(req));
 					}
 				}
-				onceJson.add("req", reqJson);
 			}
 
 			logger.debug(packet.getCaptureHeader().timestampInMillis());
