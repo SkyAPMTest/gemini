@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan("com.a.eye.gemini.webui")
-public class ApplicationStartUp extends SpringBootServletInitializer {
+public class GeminiWebUiStartUp extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(ApplicationStartUp.class, args);
+		SpringApplication.run(GeminiWebUiStartUp.class, args);
 	}
 }
