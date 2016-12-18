@@ -1,4 +1,4 @@
-package com.a.eye.gemini.analysis.base
+package com.a.eye.gemini.analysis.recevier
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,7 +23,6 @@ import org.apache.zookeeper.ZooDefs.Ids
 import com.a.eye.gemini.analysis.config.KafkaConfig
 import com.a.eye.gemini.analysis.config.RedisConfig
 import com.a.eye.gemini.analysis.config.SparkConfig
-import com.a.eye.gemini.analysis.util.FakeWatcher
 import com.a.eye.gemini.analysis.util.RedisClient
 import com.a.eye.gemini.analysis.util.ZookeeperClient
 import com.google.gson.Gson
@@ -32,16 +31,15 @@ import com.typesafe.config.ConfigFactory
 import org.apache.logging.log4j.LogManager
 import kafka.message.MessageAndMetadata
 import org.apache.spark.SparkException
+import org.elasticsearch.spark._
+import org.apache.spark.rdd.RDD
+import com.a.eye.gemini.analysis.util.OffsetsManager
 
-abstract class RecevierBase(appName: String, topicName: String, groupId: String, esIdx: String, edType: String) extends Serializable {
+abstract class GeminiAbstractRecevier(appName: String, topicName: String, partition: Int, groupId: String, esIdx: String, edType: String) extends Serializable {
 
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   private var intervalTime = 10
-
-  private val partition = "0"
-
-  private val path = "/gemini/" + topicName + "/" + partition + "/offsets"
 
   private val df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -52,14 +50,15 @@ abstract class RecevierBase(appName: String, topicName: String, groupId: String,
   }
 
   private def initialize[K, V](): (InputDStream[ConsumerRecord[String, String]], StreamingContext) = {
-    val sparkConf = new SparkConfig(conf).sparkConf.setAppName(appName).setMaster("local[1]")
+    val sparkConf = new SparkConfig(conf).sparkConf.setAppName(appName).setMaster("local[2]")
     val streamingContext = new StreamingContext(sparkConf, Seconds(intervalTime))
     val redisClient = new RedisConfig(conf)
     val kafkaParams = new KafkaConfig(conf).kafkaParams + ("group.id" -> groupId) + ("consumer.id" -> "GeminiSparkConsumer")
     val topics = Array(topicName)
 
-    val fromOffsets = selectOffsetsFromZookeeper.map { resultSet =>
-      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
+    val fromOffsets = OffsetsManager.selectOffsets(topicName, partition).map { resultSet =>
+      //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
+      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 10400l
     }.toMap
 
     (KafkaUtils.createDirectStream[String, String](
@@ -121,7 +120,9 @@ abstract class RecevierBase(appName: String, topicName: String, groupId: String,
       }).reduceByKey(_ + _)
       //      pvData.saveAsTextFile("file:///d:/data/pv/" + timeStamp)
 
-      offsets.foreach { x => updateOffsetsToZookeeper(x.untilOffset) }
+//      saveEsData(pvData)
+
+      offsets.foreach { x => OffsetsManager.persistentOffsets(topicName, partition, x.untilOffset) }
     })
     streamingContext.start()
     streamingContext.awaitTermination()
@@ -132,40 +133,4 @@ abstract class RecevierBase(appName: String, topicName: String, groupId: String,
   def buildReqData(record: ConsumerRecord[String, String]): (String, JsonObject)
 
   def buildResData(record: ConsumerRecord[String, String]): (String, JsonObject)
-
-  def selectOffsetsFromZookeeper(): Array[Map[String, String]] = {
-    val logger = LogManager.getFormatterLogger(this.getClass.getName)
-    val zkClient = new ZookeeperClient(conf, new FakeWatcher())
-    initOffsets(path)
-
-    val offsets = new String(zkClient.get(path))
-    logger.info("起始的offsets位置为：%s", offsets)
-
-    Array(Map("topic" -> topicName, "partition" -> partition, "offset" -> offsets))
-  }
-
-  def updateOffsetsToZookeeper(offsets: Long) {
-    val zkClient = new ZookeeperClient(conf, new FakeWatcher())
-    logger.info("更新zookeeper的offset，path=%s ,offsets=%d", path, offsets)
-    zkClient.update(path, offsets.toString().getBytes)
-  }
-
-  def initOffsets(path: String) {
-    val logger = LogManager.getFormatterLogger(this.getClass.getName)
-    val zkClient = new ZookeeperClient(conf, new FakeWatcher())
-
-    var pathTmp = ""
-    path.split("/").filter { x => (x != null && x != "") }.foreach { node =>
-      pathTmp += "/" + node
-      logger.info("初始化zookeeper中的offsets path信息，path=%s", pathTmp)
-      if (zkClient.notExists(pathTmp)) {
-        logger.info("节点不存在，创建")
-        zkClient.create(pathTmp, "0".getBytes, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
-      } else {
-        logger.info("节点存在，跳过")
-      }
-    }
-
-    zkClient.close
-  }
 }

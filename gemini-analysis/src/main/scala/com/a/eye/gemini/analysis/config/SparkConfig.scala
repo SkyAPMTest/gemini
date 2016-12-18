@@ -6,9 +6,10 @@ import com.typesafe.config.Config
 class SparkConfig(conf: Config) {
   val sparkConf = new SparkConf();
   sparkConf.set("es.index.auto.create", conf.getString("es.index.auto.create"))
+  sparkConf.set("es.index.read.missing.as.empty", conf.getString("es.index.read.missing.as.empty"))
   //  sparkConfig.set("es.nodes", "10.1.241.18:9200,10.1.241.19:9200,10.1.241.20:9200")
   sparkConf.set("es.nodes", conf.getString("es.nodes"))
-  sparkConf.set("spark.logConf", conf.getString("spark.logConf"))
+  sparkConf.set("es.port", conf.getString("es.port"))
   sparkConf.set("spark.streaming.receiver.writeAheadLog.enable", conf.getString("spark.streaming.receiver.writeAheadLog.enable"))
   sparkConf.set("spark.streaming.kafka.consumer.cache.initialCapacity", conf.getString("spark.streaming.kafka.consumer.cache.initialCapacity"))
   sparkConf.set("spark.streaming.kafka.consumer.cache.maxCapacity", conf.getString("spark.streaming.kafka.consumer.cache.maxCapacity"))
