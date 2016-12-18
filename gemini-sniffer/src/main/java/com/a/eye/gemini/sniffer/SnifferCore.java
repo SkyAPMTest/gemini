@@ -39,7 +39,7 @@ public class SnifferCore {
 
 	@PostConstruct
 	public void startCapture() {// 选择一个网卡开启抓包
-		PcapIf device = this.getDevs().get(2);
+		PcapIf device = this.getDevs().get(6);
 		StringBuilder errsb = new StringBuilder();
 		int snaplen = Pcap.DEFAULT_SNAPLEN;// 长度65536
 		int flags = Pcap.MODE_PROMISCUOUS;// 混杂模式

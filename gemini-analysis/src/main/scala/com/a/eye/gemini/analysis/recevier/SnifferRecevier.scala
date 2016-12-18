@@ -8,34 +8,39 @@ import org.elasticsearch.spark.rdd.Metadata
 import com.google.gson.JsonObject
 import com.a.eye.gemini.analysis.base.RecevierBase
 import java.util.HashMap
+import redis.clients.jedis.Jedis
+import com.a.eye.gemini.analysis.util.RedisClient
 
 class SnifferRecevier extends RecevierBase("sniffer-recevier-app", "sniffer-recevier-topic", "sniffer-recevier-group", "sniffer_idx", "sniffer") {
 
-  override def validateData(record: ConsumerRecord[String, String]): Boolean = {
-    true
+  override def isResData(record: ConsumerRecord[String, String]): Boolean = {
+    val logger = LogManager.getFormatterLogger(this.getClass.getName)
+    val gson = new Gson()
+    val messageJson = gson.fromJson(record.value(), classOf[JsonObject])
+    messageJson.get("is_res").getAsBoolean
   }
 
-  override def buildEsData(record: ConsumerRecord[String, String]): (Map[Metadata, String], Map[String, String]) = {
+  override def buildReqData(record: ConsumerRecord[String, String]): (String, JsonObject) = {
+    val logger = LogManager.getFormatterLogger(this.getClass.getName)
+    val gson = new Gson()
+    val messageJson = gson.fromJson(record.value(), classOf[JsonObject])
+    val seq = messageJson.get("tcp_seq").getAsString
+    logger.info("seq=%s", seq)
+
+    val jedis = RedisClient.pool.getResource
+    jedis.setex(seq, 120, record.value())
+    RedisClient.pool.returnResource(jedis)
+
+    (seq, messageJson)
+  }
+
+  override def buildResData(record: ConsumerRecord[String, String]): (String, JsonObject) = {
     val logger = LogManager.getFormatterLogger(this.getClass.getName)
     val gson = new Gson()
     val messageJson = gson.fromJson(record.value(), classOf[JsonObject])
 
-    var dataMap: Map[String, String] = Map()
+    val seq = messageJson.get("tcp_ack").getAsString
 
-    val iter = messageJson.entrySet().iterator()
-    while (iter.hasNext()) {
-      val element = iter.next()
-      val key = element.getKey
-      val value = element.getValue
-
-      println("key: " + key)
-      println("value: " + value)
-
-      dataMap += (key -> value.getAsString)
-    }
-
-    dataMap.foreach(f => (println("key=" + f._1 + ",value=" + f._2)))
-
-    (Map(Metadata.ID -> record.key()), dataMap)
+    (seq, messageJson)
   }
 }

@@ -75,6 +75,7 @@ public class PacketMatch {
 			// http.fieldValue(Request.Accept).contains("text/html"))) {
 			if (http.isResponse()) {
 				logger.debug("#" + packet.getFrameNumber() + " Res  ");
+				onceJson.addProperty("is_res", true);
 				for (Response res : Response.values()) {
 					if (http.hasField(res)) {
 						logger.debug(res.toString() + ":" + http.fieldValue(res) + "  ");
@@ -83,6 +84,7 @@ public class PacketMatch {
 				}
 			} else {
 				logger.debug("#" + packet.getFrameNumber() + " Req  ");
+				onceJson.addProperty("is_res", false);
 				for (Request req : Request.values()) {
 					if (http.hasField(req)) {
 						logger.debug(req.toString() + ":" + http.fieldValue(req) + "  ");

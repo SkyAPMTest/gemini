@@ -77,8 +77,8 @@ body {
 
 @media ( min-width : 768px) {
 	.main {
-		padding-right: 40px;
-		padding-left: 40px;
+		padding-right: 20px;
+		padding-left: 20px;
 	}
 }
 
@@ -105,6 +105,11 @@ body {
 .placeholder img {
 	display: inline-block;
 	border-radius: 50%;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+    text-decoration: none;
+    background-color: #1c84c6;
 }
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/

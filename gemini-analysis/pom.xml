@@ -16,7 +16,7 @@
 		<java.version>1.8</java.version>
 		<scala.version>2.11.2</scala.version>
 		<scala.version.tools>2.11</scala.version.tools>
-		<spark.version>2.0.1</spark.version>
+		<spark.version>2.0.2</spark.version>
 		<log4j.version>2.6.1</log4j.version>
 	</properties>
 
@@ -37,6 +37,11 @@
 			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch-hadoop</artifactId>
 			<version>5.0.0</version>
@@ -54,7 +59,15 @@
 					<groupId>org.apache.storm</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>spark-core_2.10</artifactId>
+					<artifactId>hive-service</artifactId>
+					<groupId>org.apache.hive</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>pig</artifactId>
+					<groupId>org.apache.pig</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spark-streaming_2.10</artifactId>
 					<groupId>org.apache.spark</groupId>
 				</exclusion>
 				<exclusion>
@@ -62,16 +75,8 @@
 					<groupId>org.apache.spark</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>spark-streaming_2.10</artifactId>
+					<artifactId>spark-core_2.10</artifactId>
 					<groupId>org.apache.spark</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>hive-service</artifactId>
-					<groupId>org.apache.hive</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>pig</artifactId>
-					<groupId>org.apache.pig</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -80,6 +85,11 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scala-tools</groupId>
+			<artifactId>javautils</artifactId>
+			<version>2.7.4-0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.typesafe</groupId>
