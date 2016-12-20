@@ -34,37 +34,32 @@ import org.apache.spark.SparkException
 import org.elasticsearch.spark._
 import org.apache.spark.rdd.RDD
 import com.a.eye.gemini.analysis.util.OffsetsManager
+import com.a.eye.gemini.analysis.executer.GeminiAnalysis
+import com.a.eye.gemini.analysis.config.GeminiConfig
+import com.a.eye.gemini.analysis.util.DateUtil
 
 abstract class GeminiAbstractRecevier(appName: String, topicName: String, partition: Int, groupId: String, esIdx: String, edType: String) extends Serializable {
 
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
-  private var intervalTime = 10
-
-  private val df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
   val conf = ConfigFactory.load()
 
-  def setIntervalTime(time: Integer) {
-    this.intervalTime = time
-  }
-
-  private def initialize[K, V](): (InputDStream[ConsumerRecord[String, String]], StreamingContext) = {
+  private def initialize[K, V](): (InputDStream[ConsumerRecord[Long, String]], StreamingContext) = {
     val sparkConf = new SparkConfig(conf).sparkConf.setAppName(appName).setMaster("local[2]")
-    val streamingContext = new StreamingContext(sparkConf, Seconds(intervalTime))
+    val streamingContext = new StreamingContext(sparkConf, Seconds(GeminiConfig.intervalTime))
     val redisClient = new RedisConfig(conf)
     val kafkaParams = new KafkaConfig(conf).kafkaParams + ("group.id" -> groupId) + ("consumer.id" -> "GeminiSparkConsumer")
     val topics = Array(topicName)
 
     val fromOffsets = OffsetsManager.selectOffsets(topicName, partition).map { resultSet =>
       //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
-      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 10400l
+      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 10700l
     }.toMap
 
-    (KafkaUtils.createDirectStream[String, String](
+    (KafkaUtils.createDirectStream[Long, String](
       streamingContext,
       PreferConsistent,
-      Assign[String, String](fromOffsets.keys.toList, kafkaParams, fromOffsets)), streamingContext)
+      Assign[Long, String](fromOffsets.keys.toList, kafkaParams, fromOffsets)), streamingContext)
   }
 
   def startRecevie() {
@@ -78,49 +73,8 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
       logger.info("本次处理的消息条数： " + rdd.count())
       offsets.foreach { x => logger.info("本次消息的偏移量：从" + x.fromOffset + " 到 " + x.untilOffset) }
 
-      rdd.foreach(f => (println("请求key:" + f.key() + "------value:" + f.value())))
-
-      val reqData = rdd.filter(record => !isResData(record)).map(record => { buildReqData(record) })
-      val resData = rdd.filter(record => isResData(record)).map(record => { buildResData(record) })
-
-      reqData.foreach(f => (println("请求" + f._1 + "------" + f._2)))
-
-      val req_res_pairs = resData.map(response => {
-        val resSeq = response._1
-        val jedis = RedisClient.pool.getResource
-        val request = jedis.get(resSeq);
-        RedisClient.pool.returnResource(jedis)
-
-        if (request != null) {
-          val gson = new Gson()
-          val reqJson = gson.fromJson(request, classOf[JsonObject])
-
-          val pairs = new JsonObject();
-          pairs.add("request", reqJson)
-          pairs.add("response", response._2)
-
-          (resSeq, pairs)
-        } else {
-          (resSeq, null)
-        }
-      })
-
-      val timeStamp = new Date().getTime;
-      //      resData.saveAsTextFile("file:///d:/data/res/" + timeStamp)
-      //      reqData.saveAsTextFile("file:///d:/data/req/" + timeStamp)
-
-      val count = req_res_pairs.filter(f => f._2 != null).count()
-      logger.info("成功配对的数据条数：%d", count)
-
-      //      req_res_pairs.filter(f => f._2 != null).saveAsTextFile("file:///d:/data/pairs/" + timeStamp)
-      val pvData = req_res_pairs.filter(f => f._2 != null).map(f => {
-        val host = f._2.getAsJsonObject("request").get("req_Host").getAsString
-        val url = f._2.getAsJsonObject("request").get("req_RequestUrl").getAsString
-        (host + url, 1)
-      }).reduceByKey(_ + _)
-      //      pvData.saveAsTextFile("file:///d:/data/pv/" + timeStamp)
-
-//      saveEsData(pvData)
+      val pairsData = buildData(rdd, partition)
+      GeminiAnalysis.startAnalysis(pairsData, partition)
 
       offsets.foreach { x => OffsetsManager.persistentOffsets(topicName, partition, x.untilOffset) }
     })
@@ -128,9 +82,5 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
     streamingContext.awaitTermination()
   }
 
-  def isResData(record: ConsumerRecord[String, String]): Boolean
-
-  def buildReqData(record: ConsumerRecord[String, String]): (String, JsonObject)
-
-  def buildResData(record: ConsumerRecord[String, String]): (String, JsonObject)
+  def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int): RDD[(Long, String, Long, JsonObject, String)]
 }

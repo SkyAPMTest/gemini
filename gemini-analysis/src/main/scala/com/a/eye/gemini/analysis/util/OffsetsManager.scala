@@ -16,9 +16,10 @@ object OffsetsManager {
   def selectOffsets(topicName: String, partition: Int): Array[Map[String, String]] = {
     val zkClient = new ZookeeperClient(conf, new ZkWatcher())
     val path = getPath(topicName, partition).toString()
+    logger.info("起始的offsets在zk中的path为：%s", path)
     initializeOffsets(path)
 
-    val offsets = zkClient.get(path).mkString
+    val offsets = new String(zkClient.get(path))
 
     logger.info("起始的offsets位置为：%s", offsets)
 
@@ -48,7 +49,7 @@ object OffsetsManager {
     zkClient.close
   }
 
-  private def getPath(topicName: String, partition: Int) = {
-    val path = "/gemini/" + topicName + "/" + partition.toString() + "/offsets"
+  private def getPath(topicName: String, partition: Int): String = {
+    "/gemini/" + topicName + "/" + partition.toString() + "/offsets"
   }
 }

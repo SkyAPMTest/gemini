@@ -2,17 +2,14 @@ package com.a.eye.search.data.receive
 
 import com.a.eye.gemini.analysis.executer.GeminiRegistry
 import com.a.eye.gemini.analysis.executer.indicator.PvIndicatorExecuter
-import com.a.eye.gemini.analysis.recevier.GeminiSnifferRecevier
+import com.a.eye.gemini.analysis.recevier.GeminiRecevier
 
 object AnalysisStartUp {
 
   def main(args: Array[String]): Unit = {
-    val intervalTime = args.apply(0)
-
     GeminiRegistry.register(new PvIndicatorExecuter)
 
-    val recevier = new GeminiSnifferRecevier()
-    recevier.setIntervalTime(Integer.parseInt(intervalTime))
+    val recevier = new GeminiRecevier()
     recevier.startRecevie()
   }
 }
