@@ -5,7 +5,7 @@ import com.google.gson.JsonObject
 import com.a.eye.gemini.analysis.executer.model.IndicatorData
 import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
 
-abstract class GeminiAbstractExecuter {
+abstract class GeminiAbstractExecuter extends Serializable {
 
   def buildIndicatorData(data: RDD[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)]
 
