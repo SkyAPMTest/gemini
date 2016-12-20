@@ -37,6 +37,7 @@ import com.a.eye.gemini.analysis.util.OffsetsManager
 import com.a.eye.gemini.analysis.executer.GeminiAnalysis
 import com.a.eye.gemini.analysis.config.GeminiConfig
 import com.a.eye.gemini.analysis.util.DateUtil
+import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
 
 abstract class GeminiAbstractRecevier(appName: String, topicName: String, partition: Int, groupId: String, esIdx: String, edType: String) extends Serializable {
 
@@ -82,5 +83,5 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
     streamingContext.awaitTermination()
   }
 
-  def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int): RDD[(Long, String, Long, JsonObject, String)]
+  def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int): RDD[(RecevierPairsData)]
 }

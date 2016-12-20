@@ -3,6 +3,7 @@ package com.a.eye.gemini.analysis.executer
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.rdd.RDD
 import com.google.gson.JsonObject
+import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
 
 object GeminiAnalysis {
 
@@ -12,7 +13,7 @@ object GeminiAnalysis {
     //    executers.foreach { executer => executer.detail() }
   }
 
-  def startAnalysis(data: RDD[(Long, String, Long, JsonObject, String)], partition: Int) {
+  def startAnalysis(data: RDD[(RecevierPairsData)], partition: Int) {
     executers.foreach { executer =>
       val indicatorData = executer.buildIndicatorData(data, partition)
       executer.saveIndicatorData(indicatorData, partition)
