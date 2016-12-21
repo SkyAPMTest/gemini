@@ -5,5 +5,5 @@ import com.typesafe.config.ConfigFactory
 object GeminiConfig {
 
   val conf = ConfigFactory.load()
-  lazy val intervalTime = conf.getLong("gemini.intervalTime")
+  lazy val intervalTime = conf.getInt("gemini.intervalTime")
 }

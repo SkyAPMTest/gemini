@@ -5,7 +5,6 @@ class IndicatorData extends Serializable {
   var resSeq: String = _
   var host: String = _
   var tcpTime: Long = _
-  var timeSlot: String = _
   var indKey: String = _
   var indKeyName: String = _
 }

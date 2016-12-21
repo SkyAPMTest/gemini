@@ -13,22 +13,7 @@ object DateUtil {
 
   private var partitionTime = new Array[Long](64)
 
-  def compareSlotTime(partition: Int, tcpTime: Long): String = {
-    val calendar = Calendar.getInstance();
-    calendar.setTimeInMillis(tcpTime)
-    val second = calendar.get(Calendar.SECOND)
-    logger.debug("秒：%s", second)
-
-    val intervalTime = GeminiConfig.intervalTime
-    val remainder = second % intervalTime
-    logger.debug("余数：%d", remainder)
-
-    val slotStart = tcpTime / 1000 / intervalTime
-    val slotEnd = slotStart + 1
-
-    logger.debug("时间：%s", df.format(new Date(slotStart * 1000 * intervalTime)))
-    logger.debug("时间：%s", df.format(new Date(slotEnd * 1000 * intervalTime)))
-
-    slotStart.toString() + "-" + slotEnd.toString()
+  def date2String(timeStamp: Long): String = {
+    df.format(timeStamp)
   }
 }

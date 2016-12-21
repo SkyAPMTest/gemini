@@ -38,7 +38,6 @@ class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sni
 
       pairsData.messageId = resRow.messageId
       pairsData.tcpTime = resRow.tcpTime
-      pairsData.slotTime = resRow.slotTime
       pairsData.seq = resSeq
 
       if (request != null) {
@@ -65,7 +64,6 @@ class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sni
         "partition" -> partition,
         "seq" -> pairsData.seq,
         "pairs" -> pairsData.pairs.toString(),
-        "slot_time" -> pairsData.slotTime,
         "create_date" -> pairsData.tcpTime))
     }).saveToEsWithMeta(Pairs_Es)
 
@@ -101,7 +99,6 @@ class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sni
     resData.pairs = gson.fromJson(record.value(), classOf[JsonObject])
     resData.seq = resData.pairs.get("tcp_ack").getAsString
     resData.tcpTime = resData.pairs.get("tcp_time").getAsLong
-    resData.slotTime = DateUtil.compareSlotTime(partition, resData.tcpTime)
     resData
   }
 }

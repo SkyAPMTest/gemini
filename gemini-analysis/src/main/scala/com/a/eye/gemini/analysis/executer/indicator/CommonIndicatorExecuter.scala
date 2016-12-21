@@ -20,7 +20,6 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
       indicatorData.indKey = recevierPairsData.pairs.getAsJsonObject("request").get(indKey).getAsString
       indicatorData.indKeyName = indKeyName
       indicatorData.tcpTime = recevierPairsData.tcpTime
-      indicatorData.timeSlot = recevierPairsData.slotTime
       (indicatorData)
     })
   }
@@ -32,7 +31,6 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
         "seq" -> indicatorData.resSeq,
         "host" -> indicatorData.host,
         indicatorData.indKeyName -> indicatorData.indKey,
-        "slot_time" -> indicatorData.timeSlot,
         "create_date" -> indicatorData.tcpTime))
     }).saveToEsWithMeta(Indicator_Index_Name + "_idx/" + indKeyName)
   }
