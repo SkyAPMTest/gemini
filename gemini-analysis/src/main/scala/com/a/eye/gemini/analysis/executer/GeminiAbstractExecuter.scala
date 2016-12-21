@@ -12,27 +12,21 @@ abstract class GeminiAbstractExecuter extends Serializable {
 
   def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int)
 
-  def buildAnalysisSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Int)]
+  def buildAnalysisHostSlotData(data: RDD[(String, Int)], indType: String): RDD[(String, Int)]
 
-  def buildAnalysisAtomData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)]
+  def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Int)]
 
-  def buildAnalysisHourData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)]
+  def saveAnalysisIndiData(data: RDD[(String, Int)], partition: Int, slotType: String)
 
-  def buildAnalysisDayData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)]
+  def saveAnalysisHostData(data: RDD[(String, Int)], partition: Int, slotType: String)
 
-  def buildAnalysisWeekData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)]
+  def analysisAtomData(data: RDD[(IndicatorData)], partition: Int)
 
-  def buildAnalysisMonthData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)]
+  def analysisHourData(data: RDD[(IndicatorData)], partition: Int)
 
-  def saveAnalysisSlotData(data: RDD[(String, Int)], partition: Int, slotType: String)
+  def analysisDayData(data: RDD[(IndicatorData)], partition: Int)
 
-  def saveAnalysisAtomData(data: RDD[(String, Int)], partition: Int)
+  def analysisWeekData(data: RDD[(IndicatorData)], partition: Int)
 
-  def saveAnalysisHourData(data: RDD[(String, Int)], partition: Int)
-
-  def saveAnalysisDayData(data: RDD[(String, Int)], partition: Int)
-
-  def saveAnalysisWeekData(data: RDD[(String, Int)], partition: Int)
-
-  def saveAnalysisMonthData(data: RDD[(String, Int)], partition: Int)
+  def analysisMonthData(data: RDD[(IndicatorData)], partition: Int)
 }

@@ -12,6 +12,7 @@ import org.elasticsearch.spark.rdd.Metadata
 import breeze.util.partition
 import com.a.eye.gemini.analysis.util.DateUtil
 import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
+import com.a.eye.gemini.analysis.util.UrlUtil
 
 class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sniffer-recevier-topic", 0, "sniffer-recevier-group", "sniffer_idx", "sniffer") {
 
@@ -79,8 +80,13 @@ class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sni
   private def buildReqData(record: ConsumerRecord[Long, String], partition: Int): (RecevierPairsData) = {
     val reqData = new RecevierPairsData()
     val gson = new Gson()
+    val reqJson = gson.fromJson(record.value(), classOf[JsonObject])
+    val url = UrlUtil.removeParameters(reqJson.get("req_RequestUrl").getAsString)
+    reqJson.remove("req_RequestUrl")
+    reqJson.addProperty("req_RequestUrl", url)
+
     reqData.messageId = record.key()
-    reqData.pairs = gson.fromJson(record.value(), classOf[JsonObject])
+    reqData.pairs = reqJson
     reqData.seq = reqData.pairs.get("tcp_seq").getAsString
     reqData.tcpTime = reqData.pairs.get("tcp_time").getAsLong
     logger.info("seq=%s", reqData.seq)

@@ -14,89 +14,18 @@ import com.a.eye.gemini.analysis.util.DayTimeSlotUtil
 import com.a.eye.gemini.analysis.util.WeekTimeSlotUtil
 import com.a.eye.gemini.analysis.util.MonthTimeSlotUtil
 import com.a.eye.gemini.analysis.config.GeminiConfig
+import com.a.eye.gemini.analysis.util.ReduceKeyUtil
 
 abstract class CumulativeIndicatorExecuter(indKey: String, indKeyName: String) extends CommonIndicatorExecuter(indKey: String, indKeyName: String) {
 
-  override def buildAnalysisAtomData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)] = {
-    this.buildAnalysisSlotData(data, partition, new AtomTimeSlotUtil())
-  }
+  override def buildAnalysisHostSlotData(data: RDD[(String, Int)], indType: String): RDD[(String, Int)] = {
+    data.map(analysisIndiSlotData => {
+      val analysisKey = analysisIndiSlotData._1
+      val analysisVal = analysisIndiSlotData._2
 
-  override def saveAnalysisAtomData(data: RDD[(String, Int)], partition: Int) {
-    this.saveAnalysisSlotData(data, partition, TimeSlotUtil.Atom)
-  }
+      val hostKey = ReduceKeyUtil.parseIndiKeyToHostKey(analysisKey)
 
-  override def buildAnalysisHourData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)] = {
-    this.buildAnalysisSlotData(data, partition, new HourTimeSlotUtil())
-  }
-
-  override def saveAnalysisHourData(data: RDD[(String, Int)], partition: Int) {
-    this.saveAnalysisSlotData(data, partition, TimeSlotUtil.Hour)
-  }
-
-  override def buildAnalysisDayData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)] = {
-    this.buildAnalysisSlotData(data, partition, new DayTimeSlotUtil())
-  }
-
-  override def saveAnalysisDayData(data: RDD[(String, Int)], partition: Int) {
-    this.saveAnalysisSlotData(data, partition, TimeSlotUtil.Day)
-  }
-
-  override def buildAnalysisWeekData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)] = {
-    this.buildAnalysisSlotData(data, partition, new WeekTimeSlotUtil())
-  }
-
-  override def saveAnalysisWeekData(data: RDD[(String, Int)], partition: Int) {
-    this.saveAnalysisSlotData(data, partition, TimeSlotUtil.Week)
-  }
-
-  override def buildAnalysisMonthData(data: RDD[(IndicatorData)], partition: Int): RDD[(String, Int)] = {
-    this.buildAnalysisSlotData(data, partition, new MonthTimeSlotUtil())
-  }
-
-  override def saveAnalysisMonthData(data: RDD[(String, Int)], partition: Int) {
-    this.saveAnalysisSlotData(data, partition, TimeSlotUtil.Month)
-  }
-
-  override def buildAnalysisSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Int)] = {
-    data.map(indicatorData => {
-      val timeSlot = timeSlotUtil.compareSlotTime(indicatorData.tcpTime)
-      val indKey = timeSlot + "|" + indicatorData.host + "|" + indicatorData.indKey
-      (indKey, 1)
+      (hostKey, analysisVal)
     }).reduceByKey(_ + _)
-  }
-
-  override def saveAnalysisSlotData(data: RDD[(String, Int)], partition: Int, slotType: String) {
-    data.map(analysisRow => {
-      val jedis = RedisClient.pool.getResource
-      val analysisKey = analysisRow._1
-      var analysisVal = analysisRow._2
-
-      val firstIdx = analysisKey.indexOf("|")
-      val secondIdx = analysisKey.indexOf("|", firstIdx + 1)
-      println(analysisKey + "," + firstIdx + "," + secondIdx)
-
-      val timeSlot = analysisKey.substring(0, firstIdx)
-      val host = analysisKey.substring(firstIdx + 1, secondIdx)
-      val indKey = analysisKey.substring(secondIdx + 1, analysisKey.length())
-
-      if (jedis.exists(analysisKey)) {
-        analysisVal = analysisVal + jedis.get(analysisKey).toInt
-      } else {
-        if (TimeSlotUtil.Atom.equals(slotType)) {
-          val redisExSecond = GeminiConfig.intervalTime * 3
-          jedis.setex(analysisKey, redisExSecond, String.valueOf(analysisVal))
-        } else {
-          jedis.set(analysisKey, String.valueOf(analysisVal))
-        }
-      }
-      RedisClient.pool.returnResource(jedis)
-
-      (Map(Metadata.ID -> analysisKey), Map(
-        "partition" -> partition,
-        "host" -> host,
-        "timeSlot" -> timeSlot,
-        indKeyName -> indKey,
-        "analysisVal" -> analysisVal))
-    }).saveToEsWithMeta(Indicator_Index_Name + "_" + slotType + "_idx/" + indKeyName)
   }
 }

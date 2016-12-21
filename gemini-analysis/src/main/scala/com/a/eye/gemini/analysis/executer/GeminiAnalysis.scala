@@ -17,8 +17,12 @@ object GeminiAnalysis {
     executers.foreach { executer =>
       val indicatorData = executer.buildIndicatorData(data, partition)
       executer.saveIndicatorData(indicatorData, partition)
-      val analysis = executer.buildAnalysisAtomData(indicatorData, partition)
-      executer.saveAnalysisAtomData(analysis, partition)
+
+      executer.analysisAtomData(indicatorData, partition)
+      executer.analysisHourData(indicatorData, partition)
+      executer.analysisDayData(indicatorData, partition)
+      executer.analysisWeekData(indicatorData, partition)
+      executer.analysisMonthData(indicatorData, partition)
     }
   }
 }

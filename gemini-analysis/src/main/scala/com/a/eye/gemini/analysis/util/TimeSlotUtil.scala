@@ -4,7 +4,7 @@ import java.util.Calendar
 import com.a.eye.gemini.analysis.config.GeminiConfig
 import org.apache.logging.log4j.LogManager
 
-abstract class TimeSlotUtil {
+abstract class TimeSlotUtil extends Serializable {
   def compareSlotTime(tcpTime: Long): String
 }
 
