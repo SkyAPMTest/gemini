@@ -1,14 +1,24 @@
 package com.a.eye.gemini.webui.vo;
 
-public class IndicatorItemData {
+public class IndicatorItemData extends ItemData {
 
-	private String host;
+	private String indiKey;
 
-	public String getHost() {
-		return host;
+	private String indiVal;
+
+	public String getIndiKey() {
+		return indiKey;
 	}
 
-	public void setHost(String host) {
-		this.host = host;
+	public void setIndiKey(String indiKey) {
+		this.indiKey = indiKey;
+	}
+
+	public String getIndiVal() {
+		return indiVal;
+	}
+
+	public void setIndiVal(String indiVal) {
+		this.indiVal = indiVal;
 	}
 }

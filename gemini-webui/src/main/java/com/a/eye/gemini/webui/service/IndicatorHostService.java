@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.a.eye.gemini.webui.util.ElasticSearchFactoryBean;
 import com.a.eye.gemini.webui.vo.IndicatorData;
-import com.a.eye.gemini.webui.vo.IndicatorItemData;
+import com.a.eye.gemini.webui.vo.IndicatorHostItemData;
 
 @Service
-public class IndicatorService {
-	private Logger logger = LogManager.getFormatterLogger(IndicatorService.class);
+public class IndicatorHostService {
+	private Logger logger = LogManager.getFormatterLogger(IndicatorHostService.class);
 
 	@Autowired
 	private ElasticSearchFactoryBean factory;
@@ -38,11 +38,9 @@ public class IndicatorService {
 		indicatorData.setCount(response.getHits().totalHits());
 
 		for (SearchHit hit : response.getHits().getHits()) {
-			IndicatorItemData item = new IndicatorItemData();
+			IndicatorHostItemData item = new IndicatorHostItemData();
 			item.setHost(hit.getSource().get("host").toString());
 			item.setTimeSlot(hit.getSource().get("timeSlot").toString());
-			item.setIndiKey(type);
-			item.setIndiVal(hit.getSource().get(type).toString());
 			item.setAnalysisVal(hit.getSource().get("analysisVal").toString());
 			indicatorData.getItems().add(item);
 		}
