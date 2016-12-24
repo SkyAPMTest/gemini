@@ -70,11 +70,12 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
 
     streamDS.foreachRDD(rdd => {
       val offsets = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
+      val periodTime = DateUtil.date2String(new Date().getTime)
       logger.info("本次处理的消息条数： " + rdd.count())
       offsets.foreach { x => logger.info("本次消息的偏移量：从" + x.fromOffset + " 到 " + x.untilOffset) }
 
-      val pairsData = buildData(rdd, partition)
-      GeminiAnalysis.startAnalysis(pairsData, partition)
+      val pairsData = buildData(rdd, partition, periodTime)
+      GeminiAnalysis.startAnalysis(pairsData, partition, periodTime)
 
       offsets.foreach { x => OffsetsManager.persistentOffsets(topicName, partition, x.untilOffset) }
     })
@@ -82,5 +83,5 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
     streamingContext.awaitTermination()
   }
 
-  def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int): RDD[(RecevierPairsData)]
+  def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): RDD[(RecevierPairsData)]
 }

@@ -19,39 +19,39 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
 
   val Indicator_Index_Name = "gemini_" + indKeyName + "_ind"
 
-  override def analysisAtomData(data: RDD[(IndicatorData)], partition: Int) {
+  override def analysisAtomData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
     val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new AtomTimeSlotUtil())
-    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Atom)
+    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Atom, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Atom)
-    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Atom)
+    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Atom, periodTime)
   }
 
-  override def analysisHourData(data: RDD[(IndicatorData)], partition: Int) {
+  override def analysisHourData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
     val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new HourTimeSlotUtil())
-    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Hour)
+    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Hour, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Hour)
-    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Hour)
+    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Hour, periodTime)
   }
 
-  override def analysisDayData(data: RDD[(IndicatorData)], partition: Int) {
+  override def analysisDayData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
     val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new DayTimeSlotUtil())
-    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Day)
+    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Day, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Day)
-    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Day)
+    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Day, periodTime)
   }
 
-  override def analysisWeekData(data: RDD[(IndicatorData)], partition: Int) {
+  override def analysisWeekData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
     val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new WeekTimeSlotUtil())
-    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Week)
+    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Week, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Week)
-    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Week)
+    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Week, periodTime)
   }
 
-  override def analysisMonthData(data: RDD[(IndicatorData)], partition: Int) {
+  override def analysisMonthData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
     val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new MonthTimeSlotUtil())
-    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Month)
+    this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Month, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Month)
-    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Month)
+    this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Month, periodTime)
   }
 
   def buildIndicatorData(data: RDD[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)] = {
@@ -67,14 +67,15 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
     })
   }
 
-  def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int) {
+  def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
     data.map(indicatorData => {
       (Map(Metadata.ID -> indicatorData.messageId), Map(
         "partition" -> partition,
         "seq" -> indicatorData.resSeq,
         "host" -> indicatorData.host,
         indicatorData.indKeyName -> indicatorData.indKey,
-        "create_date" -> indicatorData.tcpTime))
+        "create_date" -> periodTime,
+        "tcp_time" -> indicatorData.tcpTime))
     }).saveToEsWithMeta(Indicator_Index_Name + "_idx/" + indKeyName)
   }
 
@@ -86,7 +87,7 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
     }).reduceByKey(_ + _)
   }
 
-  override def saveAnalysisIndiData(data: RDD[(String, Int)], partition: Int, slotType: String) {
+  override def saveAnalysisIndiData(data: RDD[(String, Int)], partition: Int, slotType: String, periodTime: String) {
     data.map(analysisRow => {
       val jedis = RedisClient.pool.getResource
       val analysisKey = analysisRow._1
@@ -111,15 +112,16 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
       (Map(Metadata.ID -> analysisKey), Map(
         "partition" -> partition,
         "host" -> indiReduceKey.host,
-        "timeSlot" -> indiReduceKey.timeSlot,
-        "startTime" -> timeSlotData.startTime,
-        "endTime" -> timeSlotData.endTime,
+        "time_slot" -> indiReduceKey.timeSlot,
+        "start_time" -> timeSlotData.startTime,
+        "end_time" -> timeSlotData.endTime,
         indKeyName -> indiReduceKey.indKey,
-        "analysisVal" -> analysisVal))
+        "analysis_val" -> analysisVal,
+        "create_date" -> periodTime))
     }).saveToEsWithMeta(Indicator_Index_Name + "_" + slotType + "_indi_idx/" + indKeyName)
   }
 
-  override def saveAnalysisHostData(data: RDD[(String, Int)], partition: Int, slotType: String) {
+  override def saveAnalysisHostData(data: RDD[(String, Int)], partition: Int, slotType: String, periodTime: String) {
     data.map(analysisRow => {
       val jedis = RedisClient.pool.getResource
       val analysisKey = analysisRow._1
@@ -144,10 +146,11 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
       (Map(Metadata.ID -> analysisKey), Map(
         "partition" -> partition,
         "host" -> hostReduceKey.host,
-        "timeSlot" -> hostReduceKey.timeSlot,
-        "startTime" -> timeSlotData.startTime,
-        "endTime" -> timeSlotData.endTime,
-        "analysisVal" -> analysisVal))
+        "time_slot" -> hostReduceKey.timeSlot,
+        "start_time" -> timeSlotData.startTime,
+        "end_time" -> timeSlotData.endTime,
+        "analysis_val" -> analysisVal,
+        "create_date" -> periodTime))
     }).saveToEsWithMeta(Indicator_Index_Name + "_" + slotType + "_host_idx/" + indKeyName)
   }
 }

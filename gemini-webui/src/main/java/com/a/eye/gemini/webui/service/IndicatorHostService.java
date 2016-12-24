@@ -33,7 +33,7 @@ public class IndicatorHostService {
 
 		BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
 		queryBuilder.must(QueryBuilders.matchQuery("host", host));
-		queryBuilder.must(QueryBuilders.matchQuery("timeSlot", timeSlot));
+		queryBuilder.must(QueryBuilders.matchQuery("time_slot", timeSlot));
 
 		searchRequestBuilder.setQuery(queryBuilder);
 
@@ -46,8 +46,8 @@ public class IndicatorHostService {
 		for (SearchHit hit : response.getHits().getHits()) {
 			IndicatorHostItemData item = new IndicatorHostItemData();
 			item.setHost(hit.getSource().get("host").toString());
-			item.setTimeSlot(hit.getSource().get("timeSlot").toString());
-			item.setAnalysisVal(hit.getSource().get("analysisVal").toString());
+			item.setTimeSlot(hit.getSource().get("time_slot").toString());
+			item.setAnalysisVal(hit.getSource().get("analysis_val").toString());
 			item.setHostName(domainInfoService.getDomainName(item.getHost()));
 			indicatorData.getItems().add(item);
 		}

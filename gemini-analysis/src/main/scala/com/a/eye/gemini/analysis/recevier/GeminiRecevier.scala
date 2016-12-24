@@ -24,7 +24,7 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
 
   private val Pairs_Es = Pairs_Index_Name + "/" + Pairs_Type_Name
 
-  override def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int): RDD[(RecevierPairsData)] = {
+  override def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): RDD[(RecevierPairsData)] = {
     val reqData = rdd.filter(record => !isResData(record)).map(record => { buildReqData(record, partition) })
     val resData = rdd.filter(record => isResData(record)).map(record => { buildResData(record, partition) })
 
@@ -69,7 +69,8 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
         "partition" -> partition,
         "seq" -> pairsData.seq,
         "pairs" -> pairsData.pairs.toString(),
-        "create_date" -> pairsData.tcpTime))
+        "create_date" -> periodTime,
+        "tcp_time" -> pairsData.tcpTime))
     }).saveToEsWithMeta(Pairs_Es)
 
     req_res_pairs

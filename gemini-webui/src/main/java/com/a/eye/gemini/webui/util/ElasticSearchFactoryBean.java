@@ -27,9 +27,8 @@ public class ElasticSearchFactoryBean {
 	@PostConstruct
 	public void init() throws UnknownHostException {
 		logger.info("开始初始化ElasticSearch的Client");
-		Settings settings = Settings.builder().put("cluster.name", "asiasearch").put("client.transport.sniff", true).build();
-		// Settings settings = Settings.builder().put("client.transport.sniff",
-		// true).build();
+//		Settings settings = Settings.builder().put("cluster.name", "asiasearch").put("client.transport.sniff", true).build();
+		Settings settings = Settings.builder().put("client.transport.sniff", true).build();
 
 		String[] serverList = servers.split(",");
 		PreBuiltTransportClient preBuiltTransportClient = new PreBuiltTransportClient(settings);

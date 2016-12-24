@@ -29,7 +29,7 @@ public class IndicatorService {
 
 		BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
 		queryBuilder.must(QueryBuilders.matchQuery("host", host));
-		queryBuilder.must(QueryBuilders.matchQuery("timeSlot", timeSlot));
+		queryBuilder.must(QueryBuilders.matchQuery("time_slot", timeSlot));
 
 		SearchResponse response = searchRequestBuilder.execute().actionGet();
 		logger.info("条数：%d", response.getHits().totalHits());
@@ -40,9 +40,9 @@ public class IndicatorService {
 		for (SearchHit hit : response.getHits().getHits()) {
 			IndicatorItemData item = new IndicatorItemData();
 			item.setHost(hit.getSource().get("host").toString());
-			item.setTimeSlot(hit.getSource().get("timeSlot").toString());
+			item.setTimeSlot(hit.getSource().get("time_slot").toString());
 			item.setIndiKey(type);
-			item.setIndiVal(hit.getSource().get("analysisVal").toString());
+			item.setIndiVal(hit.getSource().get("analysis_val").toString());
 			indicatorData.getItems().add(item);
 		}
 		return indicatorData;
