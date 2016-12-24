@@ -13,6 +13,7 @@ import breeze.util.partition
 import com.a.eye.gemini.analysis.util.DateUtil
 import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
 import com.a.eye.gemini.analysis.util.UrlUtil
+import com.a.eye.gemini.analysis.util.TimeSlotUtil
 
 class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemini-sniffer-topic", 0, "gemini-sniffer-group", "sniffer_idx", "sniffer") {
 
@@ -35,13 +36,14 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
       val resSeq = resRow.seq
       val jedis = RedisClient.pool.getResource
       val request = jedis.get(String.valueOf(resSeq));
+      val hasKey = jedis.exists(String.valueOf(resSeq))
       RedisClient.pool.returnResource(jedis)
 
       pairsData.messageId = resRow.messageId
       pairsData.tcpTime = resRow.tcpTime
       pairsData.seq = resSeq
 
-      if (request != null) {
+      if (hasKey) {
         val gson = new Gson()
         val reqJson = gson.fromJson(request, classOf[JsonObject])
 
@@ -94,7 +96,7 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
     logger.debug("seq=%s", reqData.seq)
 
     val jedis = RedisClient.pool.getResource
-    jedis.setex(reqData.seq, 120, record.value())
+    jedis.setex(reqData.seq, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), record.value())
     RedisClient.pool.returnResource(jedis)
 
     reqData

@@ -12,7 +12,7 @@ abstract class GeminiAbstractExecuter extends Serializable {
 
   def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
 
-  def buildAnalysisHostSlotData(data: RDD[(String, Int)], indType: String): RDD[(String, Int)]
+  def buildAnalysisHostSlotData(data: RDD[(String, Int)], slotType: String): RDD[(String, Int)]
 
   def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Int)]
 

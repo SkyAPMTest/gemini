@@ -16,7 +16,7 @@ import com.a.eye.gemini.analysis.util.ReduceKeyUtil
 
 abstract class UniqueIndicatorExecuter(indKey: String, indKeyName: String) extends CommonIndicatorExecuter(indKey: String, indKeyName: String) {
 
-  override def buildAnalysisHostSlotData(data: RDD[(String, Int)], indType: String): RDD[(String, Int)] = {
+  override def buildAnalysisHostSlotData(data: RDD[(String, Int)], slotType: String): RDD[(String, Int)] = {
     data.map(analysisIndiSlotData => {
       val jedis = RedisClient.pool.getResource
       val analysisKey = analysisIndiSlotData._1
@@ -27,12 +27,7 @@ abstract class UniqueIndicatorExecuter(indKey: String, indKeyName: String) exten
       if (jedis.exists(hostKey)) {
         analysisVal = 0
       } else {
-        if (TimeSlotUtil.Atom.equals(indType)) {
-          val redisExSecond = GeminiConfig.intervalTime * 3
-          jedis.setex(analysisKey, redisExSecond, String.valueOf(analysisVal))
-        } else {
-          jedis.set(analysisKey, String.valueOf(analysisVal))
-        }
+        jedis.setex(analysisKey, TimeSlotUtil.getRedisExSecond(slotType), String.valueOf(analysisVal))
       }
       RedisClient.pool.returnResource(jedis)
       (hostKey, analysisVal)

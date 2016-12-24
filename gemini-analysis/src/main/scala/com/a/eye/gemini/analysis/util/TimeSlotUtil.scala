@@ -5,6 +5,7 @@ import java.util.Calendar
 import org.apache.logging.log4j.LogManager
 
 import com.a.eye.gemini.analysis.config.GeminiConfig
+import scala.runtime.RichInt
 
 abstract class TimeSlotUtil extends Serializable {
   def compareSlotTime(tcpTime: Long): String
@@ -16,6 +17,7 @@ object TimeSlotUtil {
   val Day = "day"
   val Week = "week"
   val Month = "month"
+  val Year = "year"
   val Time_Slot_Split = "-"
 
   def formatTimeSlot(timeSlot: String): TimeSlotData = {
@@ -23,6 +25,22 @@ object TimeSlotUtil {
     val startTime = DateUtil.date2String(timeSlots.apply(0).toLong)
     val endTime = DateUtil.date2String(timeSlots.apply(1).toLong)
     new TimeSlotData(startTime, endTime)
+  }
+
+  def getRedisExSecond(slotType: String): Int = {
+    if (Hour.equals(slotType)) {
+      (60 * 60 * 1.2).toInt
+    } else if (Day.equals(slotType)) {
+      (60 * 60 * 24 * 1.2).toInt
+    } else if (Week.equals(slotType)) {
+      (60 * 60 * 24 * 7 * 1.2).toInt
+    } else if (Month.equals(slotType)) {
+      (60 * 60 * 24 * 31 * 1.2).toInt
+    } else if (Year.equals(slotType)) {
+      (60 * 60 * 24 * 366 * 1.2).toInt
+    } else {
+      60 * 20
+    }
   }
 }
 

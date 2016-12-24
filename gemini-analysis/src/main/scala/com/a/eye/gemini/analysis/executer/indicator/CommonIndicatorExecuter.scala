@@ -97,14 +97,8 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
 
       if (jedis.exists(analysisKey)) {
         analysisVal = analysisVal + jedis.get(analysisKey).toInt
-      } else {
-        if (TimeSlotUtil.Atom.equals(slotType)) {
-          val redisExSecond = GeminiConfig.intervalTime * 3
-          jedis.setex(analysisKey, redisExSecond, String.valueOf(analysisVal))
-        } else {
-          jedis.set(analysisKey, String.valueOf(analysisVal))
-        }
       }
+      jedis.setex(analysisKey, TimeSlotUtil.getRedisExSecond(slotType), String.valueOf(analysisVal))
       RedisClient.pool.returnResource(jedis)
 
       val timeSlotData = TimeSlotUtil.formatTimeSlot(indiReduceKey.timeSlot)
@@ -131,14 +125,8 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
 
       if (jedis.exists(analysisKey)) {
         analysisVal = analysisVal + jedis.get(analysisKey).toInt
-      } else {
-        if (TimeSlotUtil.Atom.equals(slotType)) {
-          val redisExSecond = GeminiConfig.intervalTime * 3
-          jedis.setex(analysisKey, redisExSecond, String.valueOf(analysisVal))
-        } else {
-          jedis.set(analysisKey, String.valueOf(analysisVal))
-        }
       }
+      jedis.setex(analysisKey, TimeSlotUtil.getRedisExSecond(slotType), String.valueOf(analysisVal))
       RedisClient.pool.returnResource(jedis)
 
       val timeSlotData = TimeSlotUtil.formatTimeSlot(hostReduceKey.timeSlot)
