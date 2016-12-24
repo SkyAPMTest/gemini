@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.a.eye.gemini.sniffer.GeminiProducer;
+import com.a.eye.gemini.sniffer.util.CallCountUtil;
 import com.a.eye.gemini.sniffer.util.IdWorker;
 import com.google.gson.JsonObject;
 
@@ -65,6 +66,13 @@ public class PacketMatch {
 
 		logger.debug("#%d Ip4 Json=%s", packet.getFrameNumber(), onceJson.toString());
 
+		if (tcp.destination() == 17909 && (FormatUtils.ip(ip.destination()).equals("10.19.7.66") || FormatUtils.ip(ip.destination()).equals("10.19.7.67"))) {
+			logger.info("地址被过滤：%s", FormatUtils.ip(ip.destination()));
+			return;
+		} else {
+			logger.info("地址未过滤：%s, 端口：%s", FormatUtils.ip(ip.destination()), tcp.destination());
+		}
+
 		if (tcp.destination() != 443) {
 			Http http = new Http();
 			packet.getHeader(http);
@@ -95,8 +103,10 @@ public class PacketMatch {
 
 			logger.debug(packet.getCaptureHeader().timestampInMillis());
 
+			CallCountUtil.increment();
+
 			logger.debug(onceJson.toString());
-			ProducerRecord<Long, String> record = new ProducerRecord<Long, String>("sniffer-recevier-topic", worker.nextId(), onceJson.toString());
+			ProducerRecord<Long, String> record = new ProducerRecord<Long, String>("gemini-sniffer-topic", worker.nextId(), onceJson.toString());
 			producer.getProducer().send(record, new Callback() {
 				public void onCompletion(RecordMetadata metadata, Exception e) {
 					if (e != null)

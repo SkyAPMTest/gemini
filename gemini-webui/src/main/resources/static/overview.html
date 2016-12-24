@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="cache-control" content="no-cache,no-store, must-revalidate">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>Gemini | 双子座</title>
+<link href="img/favicon.ico" rel="shortcut icon" />
+</head>
+<body>
+	<div id="todayTrafficDiv"></div>
+	<script id="todayTrafficTemplate" type="text/x-jsrender">
+	<div class="ibox">
+		<div class="ibox-title">
+			<h3>今日流量</h3>
+		</div>
+		<div class="ibox-content" style="border-color: #ffffff">
+			<table class="table">
+				<thead>
+					<tr>
+						<th></th>
+						<th>浏览量(PV)</th>
+						<th>访客数(UV)</th>
+						<th>IP数</th>
+						<th>跳出率</th>
+						<th>平均访问时长</th>
+						<th>转化次数</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>今日</td>
+						<td>{{:pvIndiData.items[0].analysisVal}}</td>
+						<td>{{:uvIndiData.items[0].analysisVal}}</td>
+						<td>{{:ipIndiData.items[0].analysisVal}}</td>
+						<td>1330</td>
+						<td>1330</td>
+					</tr>
+					<tr>
+						<td>昨日</td>
+						<td></td>
+						<td>预计今日</td>
+						<td>{{:analysisVal}}</td>
+						<td>1330</td>
+						<td>1330</td>
+					</tr>
+					<tr>
+						<td>预计今日</td>
+						<td>昨日</td>
+						<td>预计今日</td>
+						<td>{{:analysisVal}}</td>
+						<td>1330</td>
+						<td>1330</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	</script>
+
+	<script src="/js/overview.js"></script>
+</body>
+</html>

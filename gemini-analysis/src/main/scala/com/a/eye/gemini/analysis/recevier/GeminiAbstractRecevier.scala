@@ -24,7 +24,6 @@ import com.a.eye.gemini.analysis.config.KafkaConfig
 import com.a.eye.gemini.analysis.config.RedisConfig
 import com.a.eye.gemini.analysis.config.SparkConfig
 import com.a.eye.gemini.analysis.util.RedisClient
-import com.a.eye.gemini.analysis.util.ZookeeperClient
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.typesafe.config.ConfigFactory
@@ -46,15 +45,15 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
   val conf = ConfigFactory.load()
 
   private def initialize[K, V](): (InputDStream[ConsumerRecord[Long, String]], StreamingContext) = {
-    val sparkConf = new SparkConfig(conf).sparkConf.setAppName(appName).setMaster("local[2]")
+    val sparkConf = new SparkConfig(conf).sparkConf.setAppName(appName).setMaster("local[4]")
     val streamingContext = new StreamingContext(sparkConf, Seconds(GeminiConfig.intervalTime))
     val redisClient = new RedisConfig(conf)
     val kafkaParams = new KafkaConfig(conf).kafkaParams + ("group.id" -> groupId) + ("consumer.id" -> "GeminiSparkConsumer")
     val topics = Array(topicName)
 
     val fromOffsets = OffsetsManager.selectOffsets(topicName, partition).map { resultSet =>
-      //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
-      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 10700l
+      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
+      //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 10700l
     }.toMap
 
     (KafkaUtils.createDirectStream[Long, String](

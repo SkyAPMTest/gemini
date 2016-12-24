@@ -4,11 +4,19 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig
 import redis.clients.jedis.JedisPool
 
 object RedisClient extends Serializable {
-  val redisHost = "10.19.7.241"
-  val redisPort = 31709
+  val redisHost = "10.1.241.18"
+  val redisPort = 6379
   val redisTimeout = 30000
-  val password = "oa_redis"
-  lazy val pool = new JedisPool(new GenericObjectPoolConfig(), redisHost, redisPort, redisTimeout, password)
+  val password = "gemini"
+
+  val config = new GenericObjectPoolConfig()
+  config.setTestOnBorrow(true)
+  config.setTestOnReturn(true)
+  config.setMaxIdle(20)
+  config.setMinIdle(10)
+  config.setMaxTotal(1000)
+
+  lazy val pool = new JedisPool(config, redisHost, redisPort, redisTimeout, password)
 
   lazy val hook = new Thread {
     override def run = {

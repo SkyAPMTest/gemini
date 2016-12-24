@@ -42,8 +42,7 @@ public class IndicatorService {
 			item.setHost(hit.getSource().get("host").toString());
 			item.setTimeSlot(hit.getSource().get("timeSlot").toString());
 			item.setIndiKey(type);
-			item.setIndiVal(hit.getSource().get(type).toString());
-			item.setAnalysisVal(hit.getSource().get("analysisVal").toString());
+			item.setIndiVal(hit.getSource().get("analysisVal").toString());
 			indicatorData.getItems().add(item);
 		}
 		return indicatorData;

@@ -14,7 +14,7 @@ import com.a.eye.gemini.analysis.util.DateUtil
 import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
 import com.a.eye.gemini.analysis.util.UrlUtil
 
-class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sniffer-recevier-topic", 0, "sniffer-recevier-group", "sniffer_idx", "sniffer") {
+class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemini-sniffer-topic", 0, "gemini-sniffer-group", "sniffer_idx", "sniffer") {
 
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
@@ -28,7 +28,7 @@ class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sni
     val reqData = rdd.filter(record => !isResData(record)).map(record => { buildReqData(record, partition) })
     val resData = rdd.filter(record => isResData(record)).map(record => { buildResData(record, partition) })
 
-    reqData.foreach(f => (println("请求" + f.messageId)))
+    reqData.foreach(f => (logger.debug("请求 messageId = %s", f.messageId)))
 
     val req_res_pairs = resData.map(resRow => {
       val pairsData = new RecevierPairsData()
@@ -44,6 +44,10 @@ class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sni
       if (request != null) {
         val gson = new Gson()
         val reqJson = gson.fromJson(request, classOf[JsonObject])
+
+        val url = UrlUtil.removeParameters(reqJson.get("req_RequestUrl").getAsString)
+        reqJson.remove("req_RequestUrl")
+        reqJson.addProperty("req_RequestUrl", url)
 
         val pairs = new JsonObject();
         pairs.add("request", reqJson)
@@ -81,15 +85,12 @@ class GeminiRecevier extends GeminiAbstractRecevier("sniffer-recevier-app", "sni
     val reqData = new RecevierPairsData()
     val gson = new Gson()
     val reqJson = gson.fromJson(record.value(), classOf[JsonObject])
-    val url = UrlUtil.removeParameters(reqJson.get("req_RequestUrl").getAsString)
-    reqJson.remove("req_RequestUrl")
-    reqJson.addProperty("req_RequestUrl", url)
 
     reqData.messageId = record.key()
     reqData.pairs = reqJson
     reqData.seq = reqData.pairs.get("tcp_seq").getAsString
     reqData.tcpTime = reqData.pairs.get("tcp_time").getAsLong
-    logger.info("seq=%s", reqData.seq)
+    logger.debug("seq=%s", reqData.seq)
 
     val jedis = RedisClient.pool.getResource
     jedis.setex(reqData.seq, 120, record.value())

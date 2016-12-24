@@ -1,0 +1,1 @@
+./kafka-topics.sh --create --zookeeper zkp1:29181,zkp2:29181,zkp3:29181 --replication-factor 2 --partitions 1 --topic gemini-sniffer-topic

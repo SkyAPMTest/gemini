@@ -18,7 +18,7 @@ import com.a.eye.gemini.analysis.util.DayTimeSlotUtil
 abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) extends GeminiAbstractExecuter {
 
   val Indicator_Index_Name = "gemini_" + indKeyName + "_ind"
-  
+
   override def analysisAtomData(data: RDD[(IndicatorData)], partition: Int) {
     val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new AtomTimeSlotUtil())
     this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Atom)
@@ -85,7 +85,7 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
       (indKey, 1)
     }).reduceByKey(_ + _)
   }
-  
+
   override def saveAnalysisIndiData(data: RDD[(String, Int)], partition: Int, slotType: String) {
     data.map(analysisRow => {
       val jedis = RedisClient.pool.getResource
@@ -106,10 +106,14 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
       }
       RedisClient.pool.returnResource(jedis)
 
+      val timeSlotData = TimeSlotUtil.formatTimeSlot(indiReduceKey.timeSlot)
+
       (Map(Metadata.ID -> analysisKey), Map(
         "partition" -> partition,
         "host" -> indiReduceKey.host,
         "timeSlot" -> indiReduceKey.timeSlot,
+        "startTime" -> timeSlotData.startTime,
+        "endTime" -> timeSlotData.endTime,
         indKeyName -> indiReduceKey.indKey,
         "analysisVal" -> analysisVal))
     }).saveToEsWithMeta(Indicator_Index_Name + "_" + slotType + "_indi_idx/" + indKeyName)
@@ -135,10 +139,14 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
       }
       RedisClient.pool.returnResource(jedis)
 
+      val timeSlotData = TimeSlotUtil.formatTimeSlot(hostReduceKey.timeSlot)
+
       (Map(Metadata.ID -> analysisKey), Map(
         "partition" -> partition,
         "host" -> hostReduceKey.host,
         "timeSlot" -> hostReduceKey.timeSlot,
+        "startTime" -> timeSlotData.startTime,
+        "endTime" -> timeSlotData.endTime,
         "analysisVal" -> analysisVal))
     }).saveToEsWithMeta(Indicator_Index_Name + "_" + slotType + "_host_idx/" + indKeyName)
   }

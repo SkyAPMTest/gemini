@@ -1,7 +1,10 @@
 package com.a.eye.gemini.webui.vo;
 
+
 public abstract class ItemData {
 	private String host;
+
+	private String hostName;
 
 	private String timeSlot;
 
@@ -13,6 +16,14 @@ public abstract class ItemData {
 
 	public void setAnalysisVal(String analysisVal) {
 		this.analysisVal = analysisVal;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 
 	public String getTimeSlot() {

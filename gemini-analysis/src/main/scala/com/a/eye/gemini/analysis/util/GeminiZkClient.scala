@@ -1,19 +1,37 @@
 package com.a.eye.gemini.analysis.util
 
 import org.apache.zookeeper.CreateMode
-import org.apache.zookeeper.Watcher
+import java.util.concurrent.CountDownLatch
+import com.typesafe.config.ConfigFactory
 import org.apache.zookeeper.ZooKeeper
 import org.apache.zookeeper.data.ACL
 import org.apache.zookeeper.data.Stat
+import org.apache.zookeeper.ZooKeeper.States
 
-import com.typesafe.config.Config
-
-class ZookeeperClient(conf: Config, watcher: Watcher) {
+object GeminiZkClient {
+  val conf = ConfigFactory.load()
 
   val sessionTimeout = conf.getInt("zk.session.timeout")
   val servers = conf.getString("zk.servers")
 
-  private lazy val zk = new ZooKeeper(servers, sessionTimeout, watcher)
+  var zk: ZooKeeper = null
+
+  def initialize() {
+    val connectedLatch = new CountDownLatch(1)
+    val watcher = new ZkWatcher(connectedLatch)
+    zk = new ZooKeeper(servers, sessionTimeout, watcher)
+    waitUntilConnected(connectedLatch)
+  }
+
+  def waitUntilConnected(connectedLatch: CountDownLatch) {
+    if (States.CONNECTING == zk.getState()) {
+      try {
+        connectedLatch.await();
+      } catch {
+        case ex: InterruptedException =>
+      }
+    }
+  }
 
   def close {
     zk.close()

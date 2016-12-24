@@ -22,7 +22,11 @@ public class IndicatorHostService {
 	@Autowired
 	private ElasticSearchFactoryBean factory;
 
+	@Autowired
+	private DomainInfoService domainInfoService;
+
 	public IndicatorData getIndicatorData(String index, String type, String host, String timeSlot) {
+		logger.debug("index=%s, type=%s, host=%s, timeSlot=%s", index, type, host, timeSlot);
 		SearchRequestBuilder searchRequestBuilder = factory.getClient().prepareSearch(index);
 		searchRequestBuilder.setTypes(type);
 		searchRequestBuilder.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
@@ -30,6 +34,8 @@ public class IndicatorHostService {
 		BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
 		queryBuilder.must(QueryBuilders.matchQuery("host", host));
 		queryBuilder.must(QueryBuilders.matchQuery("timeSlot", timeSlot));
+
+		searchRequestBuilder.setQuery(queryBuilder);
 
 		SearchResponse response = searchRequestBuilder.execute().actionGet();
 		logger.info("条数：%d", response.getHits().totalHits());
@@ -42,6 +48,7 @@ public class IndicatorHostService {
 			item.setHost(hit.getSource().get("host").toString());
 			item.setTimeSlot(hit.getSource().get("timeSlot").toString());
 			item.setAnalysisVal(hit.getSource().get("analysisVal").toString());
+			item.setHostName(domainInfoService.getDomainName(item.getHost()));
 			indicatorData.getItems().add(item);
 		}
 		return indicatorData;

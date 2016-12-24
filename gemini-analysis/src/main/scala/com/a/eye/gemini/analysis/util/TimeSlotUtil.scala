@@ -1,8 +1,10 @@
 package com.a.eye.gemini.analysis.util
 
 import java.util.Calendar
-import com.a.eye.gemini.analysis.config.GeminiConfig
+
 import org.apache.logging.log4j.LogManager
+
+import com.a.eye.gemini.analysis.config.GeminiConfig
 
 abstract class TimeSlotUtil extends Serializable {
   def compareSlotTime(tcpTime: Long): String
@@ -14,6 +16,19 @@ object TimeSlotUtil {
   val Day = "day"
   val Week = "week"
   val Month = "month"
+  val Time_Slot_Split = "-"
+
+  def formatTimeSlot(timeSlot: String): TimeSlotData = {
+    val timeSlots = timeSlot.split(Time_Slot_Split)
+    val startTime = DateUtil.date2String(timeSlots.apply(0).toLong)
+    val endTime = DateUtil.date2String(timeSlots.apply(1).toLong)
+    new TimeSlotData(startTime, endTime)
+  }
+}
+
+class TimeSlotData(start: String, end: String) extends Serializable {
+  var startTime: String = start
+  var endTime: String = end
 }
 
 class AtomTimeSlotUtil extends TimeSlotUtil {
@@ -33,7 +48,7 @@ class AtomTimeSlotUtil extends TimeSlotUtil {
     val slotStart = (tcpTime / ratio) * ratio
     val slotEnd = (tcpTime / ratio + 1) * ratio
 
-    slotStart.toString() + "-" + slotEnd.toString()
+    slotStart.toString() + TimeSlotUtil.Time_Slot_Split + slotEnd.toString()
   }
 }
 
@@ -53,7 +68,7 @@ class HourTimeSlotUtil extends TimeSlotUtil {
     calendar.set(Calendar.SECOND, 59)
     val slotEnd = calendar.getTimeInMillis
 
-    slotStart.toString() + "-" + slotEnd.toString()
+    slotStart.toString() + TimeSlotUtil.Time_Slot_Split + slotEnd.toString()
   }
 }
 
@@ -75,7 +90,7 @@ class DayTimeSlotUtil extends TimeSlotUtil {
     calendar.set(Calendar.SECOND, 59)
     val slotEnd = calendar.getTimeInMillis
 
-    slotStart.toString() + "-" + slotEnd.toString()
+    slotStart.toString() + TimeSlotUtil.Time_Slot_Split + slotEnd.toString()
   }
 }
 
@@ -100,7 +115,7 @@ class WeekTimeSlotUtil extends TimeSlotUtil {
     calendar.set(Calendar.SECOND, 59)
     val slotEnd = calendar.getTimeInMillis
 
-    slotStart.toString() + "-" + slotEnd.toString()
+    slotStart.toString() + TimeSlotUtil.Time_Slot_Split + slotEnd.toString()
   }
 }
 
@@ -124,6 +139,6 @@ class MonthTimeSlotUtil extends TimeSlotUtil {
     calendar.set(Calendar.SECOND, 59)
     val slotEnd = calendar.getTimeInMillis
 
-    slotStart.toString() + "-" + slotEnd.toString()
+    slotStart.toString() + TimeSlotUtil.Time_Slot_Split + slotEnd.toString()
   }
 }

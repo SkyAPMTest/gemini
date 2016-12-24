@@ -1,0 +1,38 @@
+DELETE gemini_uv_ind_idx
+DELETE gemini_uv_ind_atom_indi_idx
+DELETE gemini_uv_ind_atom_host_idx
+DELETE gemini_uv_ind_hour_indi_idx
+DELETE gemini_uv_ind_hour_host_idx
+DELETE gemini_uv_ind_day_indi_idx
+DELETE gemini_uv_ind_day_host_idx
+DELETE gemini_uv_ind_week_indi_idx
+DELETE gemini_uv_ind_week_host_idx
+DELETE gemini_uv_ind_month_indi_idx
+DELETE gemini_uv_ind_month_host_idx
+
+
+DELETE gemini_pv_ind_idx
+DELETE gemini_pv_ind_atom_indi_idx
+DELETE gemini_pv_ind_atom_host_idx
+DELETE gemini_pv_ind_hour_indi_idx
+DELETE gemini_pv_ind_hour_host_idx
+DELETE gemini_pv_ind_day_indi_idx
+DELETE gemini_pv_ind_day_host_idx
+DELETE gemini_pv_ind_week_indi_idx
+DELETE gemini_pv_ind_week_host_idx
+DELETE gemini_pv_ind_month_indi_idx
+DELETE gemini_pv_ind_month_host_idx
+
+DELETE gemini_ip_ind_idx
+DELETE gemini_ip_ind_atom_indi_idx
+DELETE gemini_ip_ind_atom_host_idx
+DELETE gemini_ip_ind_hour_indi_idx
+DELETE gemini_ip_ind_hour_host_idx
+DELETE gemini_ip_ind_day_indi_idx
+DELETE gemini_ip_ind_day_host_idx
+DELETE gemini_ip_ind_week_indi_idx
+DELETE gemini_ip_ind_week_host_idx
+DELETE gemini_ip_ind_month_indi_idx
+DELETE gemini_ip_ind_month_host_idx
+
+DELETE gemini_pairs_idx
