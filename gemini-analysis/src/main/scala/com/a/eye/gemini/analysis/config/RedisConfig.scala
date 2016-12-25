@@ -1,8 +1,12 @@
 package com.a.eye.gemini.analysis.config
 
 import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
 
-class RedisConfig(conf: Config) {
+object RedisConfig {
+  
+  private val conf = ConfigFactory.load()
+  
   val redisParams = Map[String, Object](
     "redis.host" -> conf.getString("redis.host"),
     "redis.port" -> conf.getString("redis.port"),

@@ -4,7 +4,10 @@ import com.google.gson.JsonObject
 
 class RecevierPairsData extends Serializable {
   var messageId: Long = _
-  var seq: String = _
+  var tcpSeq: String = _
+  var tcpAck: String = _
   var tcpTime: Long = _
-  var pairs: JsonObject = _
+  var reqData: Map[String, String] = _
+  var resData: Map[String, String] = _
+  var isPair: Boolean = _
 }

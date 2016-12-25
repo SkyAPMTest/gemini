@@ -11,7 +11,7 @@ object RedisDataClear {
   }
 
   def deleteDay(jedis: Jedis) {
-    val pre_str = "148"
+    val pre_str = ""
     val set = jedis.keys(pre_str + "*")
 
     val it = set.iterator()

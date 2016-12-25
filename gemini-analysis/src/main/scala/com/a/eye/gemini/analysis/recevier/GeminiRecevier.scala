@@ -2,18 +2,27 @@ package com.a.eye.gemini.analysis.recevier
 
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.logging.log4j.LogManager
+import org.apache.spark.rdd.RDD
+import org.apache.spark.streaming.StreamingContext
 
+import com.a.eye.gemini.analysis.executer.model.RecevierData
+import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
+import com.a.eye.gemini.analysis.util.JsonUtil
 import com.a.eye.gemini.analysis.util.RedisClient
+import com.a.eye.gemini.analysis.util.TimeSlotUtil
+import com.a.eye.gemini.analysis.util.UrlUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import org.apache.spark.rdd.RDD
-import org.elasticsearch.spark._
-import org.elasticsearch.spark.rdd.Metadata
-import breeze.util.partition
-import com.a.eye.gemini.analysis.util.DateUtil
-import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
-import com.a.eye.gemini.analysis.util.UrlUtil
-import com.a.eye.gemini.analysis.util.TimeSlotUtil
+import com.mongodb.spark.MongoSpark
+import com.mongodb.spark.config.WriteConfig
+import org.bson.types.ObjectId
+import org.bson.Document
+import org.apache.spark.SparkContext
+import com.a.eye.gemini.analysis.util.SparkContextSingleton
+import com.a.eye.gemini.analysis.config.SparkConfig
+import com.a.eye.gemini.analysis.config.SparkConfig
+import com.mongodb.casbah.commons.MongoDBObject
+import com.a.eye.gemini.analysis.util.GeminiMongoClient
 
 class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemini-sniffer-topic", 0, "gemini-sniffer-group", "sniffer_idx", "sniffer") {
 
@@ -25,55 +34,57 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
 
   private val Pairs_Es = Pairs_Index_Name + "/" + Pairs_Type_Name
 
-  override def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): RDD[(RecevierPairsData)] = {
-    val reqData = rdd.filter(record => !isResData(record)).map(record => { buildReqData(record, partition) })
+  override def buildData(streamingContext: StreamingContext, rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): Array[(RecevierPairsData)] = {
+    val reqData = rdd.filter(record => !isResData(record)).map(record => { buildReqData(record, partition) }).collect()
     val resData = rdd.filter(record => isResData(record)).map(record => { buildResData(record, partition) })
-
-    reqData.foreach(f => (logger.debug("请求 messageId = %s", f.messageId)))
+    logger.info("请求数据条数：%d", reqData.length)
+    logger.info("响应数据条数：%d", resData.count())
 
     val req_res_pairs = resData.map(resRow => {
       val pairsData = new RecevierPairsData()
-      val resSeq = resRow.seq
+      val resSeq = changeSeqHead(resRow.tcpSeq)
       val jedis = RedisClient.pool.getResource
-      val request = jedis.get(String.valueOf(resSeq));
-      val hasKey = jedis.exists(String.valueOf(resSeq))
-      RedisClient.pool.returnResource(jedis)
 
       pairsData.messageId = resRow.messageId
       pairsData.tcpTime = resRow.tcpTime
-      pairsData.seq = resSeq
+      pairsData.tcpSeq = resSeq
+      pairsData.isPair = false
 
-      if (hasKey) {
+      if (jedis.exists(resSeq) && !jedis.exists(createPairKey(resSeq))) {
         val gson = new Gson()
+        val request = jedis.get(String.valueOf(resSeq));
         val reqJson = gson.fromJson(request, classOf[JsonObject])
+        jedis.setex(resRow.tcpSeq, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), "yes")
+        jedis.setex(createPairKey(resSeq), TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), "yes")
 
         val url = UrlUtil.removeParameters(reqJson.get("req_RequestUrl").getAsString)
         reqJson.remove("req_RequestUrl")
         reqJson.addProperty("req_RequestUrl", url)
 
-        val pairs = new JsonObject();
-        pairs.add("request", reqJson)
-        pairs.add("response", resRow.pairs)
-        pairsData.pairs = pairs
-
-        pairsData
-      } else {
-        pairsData.pairs = null
-        pairsData
+        pairsData.reqData = JsonUtil.jsonObject2Map(reqJson)
+        pairsData.resData = resRow.data
+        pairsData.isPair = true
       }
-    }).filter(pairsData => pairsData.pairs != null)
+      RedisClient.pool.returnResource(jedis)
 
-    val count = req_res_pairs.count()
-    logger.info("成功配对的数据条数：%d", count)
+      println("req_res_pairs : " + pairsData.messageId + "," + pairsData.isPair)
+      pairsData
+    }).filter(_.isPair).collect()
 
-    req_res_pairs.map(pairsData => {
-      (Map(Metadata.ID -> pairsData.messageId), Map(
-        "partition" -> partition,
-        "seq" -> pairsData.seq,
-        "pairs" -> pairsData.pairs.toString(),
-        "create_date" -> periodTime,
-        "tcp_time" -> pairsData.tcpTime))
-    }).saveToEsWithMeta(Pairs_Es)
+    val length = req_res_pairs.length
+    logger.info("成功配对的数据条数：%d", length)
+
+    req_res_pairs.foreach(pairsData => {
+      val mongoData = MongoDBObject(
+        "_id" -> pairsData.messageId,
+        "req_data" -> pairsData.reqData.mkString(","),
+        "res_data" -> pairsData.resData.mkString(","),
+        "tcp_time" -> pairsData.tcpTime,
+        "tcp_seq" -> pairsData.tcpSeq,
+        "tcp_ack" -> pairsData.tcpAck)
+
+      GeminiMongoClient.db("pairs").insert(mongoData)
+    })
 
     req_res_pairs
   }
@@ -84,31 +95,49 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
     messageJson.get("is_res").getAsBoolean
   }
 
-  private def buildReqData(record: ConsumerRecord[Long, String], partition: Int): (RecevierPairsData) = {
-    val reqData = new RecevierPairsData()
+  private def buildReqData(record: ConsumerRecord[Long, String], partition: Int): (RecevierData) = {
+    val reqData = new RecevierData()
     val gson = new Gson()
-    val reqJson = gson.fromJson(record.value(), classOf[JsonObject])
+    val jsonData = gson.fromJson(record.value(), classOf[JsonObject])
+    val mapData = JsonUtil.jsonObject2Map(jsonData)
 
     reqData.messageId = record.key()
-    reqData.pairs = reqJson
-    reqData.seq = reqData.pairs.get("tcp_seq").getAsString
-    reqData.tcpTime = reqData.pairs.get("tcp_time").getAsLong
-    logger.debug("seq=%s", reqData.seq)
+    reqData.data = mapData
+    reqData.tcpSeq = "REQ-" + reqData.data.get("tcp_seq")
+    reqData.tcpAck = "REQ-" + reqData.data.get("tcp_ack")
+    reqData.tcpTime = reqData.data.getOrElse("tcp_time", "0").toLong
 
     val jedis = RedisClient.pool.getResource
-    jedis.setex(reqData.seq, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), record.value())
+    jedis.setex(reqData.tcpAck, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), record.value())
     RedisClient.pool.returnResource(jedis)
 
     reqData
   }
 
-  private def buildResData(record: ConsumerRecord[Long, String], partition: Int): (RecevierPairsData) = {
-    val resData = new RecevierPairsData()
+  private def buildResData(record: ConsumerRecord[Long, String], partition: Int): (RecevierData) = {
+    val resData = new RecevierData()
     val gson = new Gson()
+    val jsonData = gson.fromJson(record.value(), classOf[JsonObject])
+    val mapData = JsonUtil.jsonObject2Map(jsonData)
+
     resData.messageId = record.key()
-    resData.pairs = gson.fromJson(record.value(), classOf[JsonObject])
-    resData.seq = resData.pairs.get("tcp_ack").getAsString
-    resData.tcpTime = resData.pairs.get("tcp_time").getAsLong
+    resData.data = mapData
+    resData.tcpSeq = "RES-" + resData.data.get("tcp_seq")
+    resData.tcpAck = "RES-" + resData.data.get("tcp_ack")
+    resData.tcpTime = resData.data.getOrElse("tcp_time", "0").toLong
+
+    //    val jedis = RedisClient.pool.getResource
+    //    jedis.setex(resData.tcpSeq, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), "no")
+    //    RedisClient.pool.returnResource(jedis)
+
     resData
+  }
+
+  private def changeSeqHead(resSeq: String): String = {
+    "REQ-" + resSeq.split("-").apply(1)
+  }
+
+  private def createPairKey(resSeq: String): String = {
+    "PAIR-" + resSeq
   }
 }

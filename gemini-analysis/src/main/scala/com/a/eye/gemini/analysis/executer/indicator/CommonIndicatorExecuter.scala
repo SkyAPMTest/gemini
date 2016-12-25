@@ -1,19 +1,28 @@
 package com.a.eye.gemini.analysis.executer.indicator
 
-import com.a.eye.gemini.analysis.executer.GeminiAbstractExecuter
 import org.apache.spark.rdd.RDD
-import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
+import org.apache.spark.sql.DataFrameWriter
+import org.apache.spark.sql.SQLContext
+import org.bson.Document
+
+import com.a.eye.gemini.analysis.config.SparkConfig
+import com.a.eye.gemini.analysis.executer.GeminiAbstractExecuter
 import com.a.eye.gemini.analysis.executer.model.IndicatorData
-import org.elasticsearch.spark.rdd.Metadata
+import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
+import com.a.eye.gemini.analysis.util.AtomTimeSlotUtil
+import com.a.eye.gemini.analysis.util.DayTimeSlotUtil
+import com.a.eye.gemini.analysis.util.HourTimeSlotUtil
+import com.a.eye.gemini.analysis.util.MonthTimeSlotUtil
 import com.a.eye.gemini.analysis.util.RedisClient
 import com.a.eye.gemini.analysis.util.ReduceKeyUtil
+import com.a.eye.gemini.analysis.util.SparkContextSingleton
 import com.a.eye.gemini.analysis.util.TimeSlotUtil
-import com.a.eye.gemini.analysis.config.GeminiConfig
-import com.a.eye.gemini.analysis.util.AtomTimeSlotUtil
-import com.a.eye.gemini.analysis.util.MonthTimeSlotUtil
 import com.a.eye.gemini.analysis.util.WeekTimeSlotUtil
-import com.a.eye.gemini.analysis.util.HourTimeSlotUtil
-import com.a.eye.gemini.analysis.util.DayTimeSlotUtil
+import com.mongodb.spark._
+import com.mongodb.spark.MongoSpark
+import com.mongodb.spark.config.WriteConfig
+import com.mongodb.casbah.commons.MongoDBObject
+import com.a.eye.gemini.analysis.util.GeminiMongoClient
 
 abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) extends GeminiAbstractExecuter {
 
@@ -54,29 +63,33 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
     this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Month, periodTime)
   }
 
-  def buildIndicatorData(data: RDD[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)] = {
-    data.map(recevierPairsData => {
+  def buildIndicatorData(data: Array[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)] = {
+    val dataArray = data.map(recevierPairsData => {
       val indicatorData = new IndicatorData()
       indicatorData.messageId = recevierPairsData.messageId
-      indicatorData.resSeq = recevierPairsData.seq
-      indicatorData.host = recevierPairsData.pairs.getAsJsonObject("request").get("req_Host").getAsString
-      indicatorData.indKey = recevierPairsData.pairs.getAsJsonObject("request").get(indKey).getAsString
+      indicatorData.resSeq = recevierPairsData.tcpSeq
+      indicatorData.host = recevierPairsData.reqData.get("req_Host").get
+      indicatorData.indKey = recevierPairsData.reqData.get(indKey).get
       indicatorData.indKeyName = indKeyName
       indicatorData.tcpTime = recevierPairsData.tcpTime
       (indicatorData)
     })
+
+    SparkContextSingleton.sparkContext.parallelize(dataArray)
   }
 
   def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
-    data.map(indicatorData => {
-      (Map(Metadata.ID -> indicatorData.messageId), Map(
+    data.collect().foreach(indicatorData => {
+      var mongoData = MongoDBObject("_id" -> indicatorData.messageId,
         "partition" -> partition,
         "seq" -> indicatorData.resSeq,
         "host" -> indicatorData.host,
         indicatorData.indKeyName -> indicatorData.indKey,
-        "create_date" -> periodTime,
-        "tcp_time" -> indicatorData.tcpTime))
-    }).saveToEsWithMeta(Indicator_Index_Name + "_idx/" + indKeyName)
+        "tcp_time" -> indicatorData.tcpTime,
+        "create_date" -> periodTime)
+
+      GeminiMongoClient.db("indicator_" + indicatorData.indKeyName).insert(mongoData)
+    })
   }
 
   override def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Int)] = {
@@ -88,7 +101,7 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
   }
 
   override def saveAnalysisIndiData(data: RDD[(String, Int)], partition: Int, slotType: String, periodTime: String) {
-    data.map(analysisRow => {
+    data.collect().foreach(analysisRow => {
       val jedis = RedisClient.pool.getResource
       val analysisKey = analysisRow._1
       var analysisVal = analysisRow._2
@@ -103,7 +116,7 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
 
       val timeSlotData = TimeSlotUtil.formatTimeSlot(indiReduceKey.timeSlot)
 
-      (Map(Metadata.ID -> analysisKey), Map(
+      var mongoData = MongoDBObject("_id" -> analysisKey,
         "partition" -> partition,
         "host" -> indiReduceKey.host,
         "time_slot" -> indiReduceKey.timeSlot,
@@ -111,8 +124,12 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
         "end_time" -> timeSlotData.endTime,
         indKeyName -> indiReduceKey.indKey,
         "analysis_val" -> analysisVal,
-        "create_date" -> periodTime))
-    }).saveToEsWithMeta(Indicator_Index_Name + "_" + slotType + "_indi_idx/" + indKeyName)
+        "create_date" -> periodTime)
+
+      val collection = "indicator_" + slotType + "_" + indKeyName
+      GeminiMongoClient.db(collection).remove(MongoDBObject("_id" -> analysisKey))
+      GeminiMongoClient.db(collection).insert(mongoData)
+    })
   }
 
   override def saveAnalysisHostData(data: RDD[(String, Int)], partition: Int, slotType: String, periodTime: String) {
@@ -131,14 +148,18 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
 
       val timeSlotData = TimeSlotUtil.formatTimeSlot(hostReduceKey.timeSlot)
 
-      (Map(Metadata.ID -> analysisKey), Map(
+      var mongoData = MongoDBObject("_id" -> analysisKey,
         "partition" -> partition,
         "host" -> hostReduceKey.host,
         "time_slot" -> hostReduceKey.timeSlot,
         "start_time" -> timeSlotData.startTime,
         "end_time" -> timeSlotData.endTime,
         "analysis_val" -> analysisVal,
-        "create_date" -> periodTime))
-    }).saveToEsWithMeta(Indicator_Index_Name + "_" + slotType + "_host_idx/" + indKeyName)
+        "create_date" -> periodTime)
+
+      val collection = "indicator_host_" + slotType + "_" + indKeyName
+      GeminiMongoClient.db(collection).remove(MongoDBObject("_id" -> analysisKey))
+      GeminiMongoClient.db(collection).insert(mongoData)
+    })
   }
 }

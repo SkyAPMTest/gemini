@@ -37,23 +37,25 @@ import com.a.eye.gemini.analysis.executer.GeminiAnalysis
 import com.a.eye.gemini.analysis.config.GeminiConfig
 import com.a.eye.gemini.analysis.util.DateUtil
 import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.SparkContext
+import com.a.eye.gemini.analysis.util.SparkContextSingleton
 
 abstract class GeminiAbstractRecevier(appName: String, topicName: String, partition: Int, groupId: String, esIdx: String, edType: String) extends Serializable {
 
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
-  val conf = ConfigFactory.load()
-
   private def initialize[K, V](): (InputDStream[ConsumerRecord[Long, String]], StreamingContext) = {
-    val sparkConf = new SparkConfig(conf).sparkConf.setAppName(appName).setMaster("local[4]")
+    val sparkConf = SparkConfig.sparkConf.setAppName(appName).setMaster("local[1]")
     val streamingContext = new StreamingContext(sparkConf, Seconds(GeminiConfig.intervalTime))
-    val redisClient = new RedisConfig(conf)
-    val kafkaParams = new KafkaConfig(conf).kafkaParams + ("group.id" -> groupId) + ("consumer.id" -> "GeminiSparkConsumer")
+    val kafkaParams = KafkaConfig.kafkaParams + ("group.id" -> groupId)
     val topics = Array(topicName)
+
+    SparkContextSingleton.sparkContext = streamingContext.sparkContext
 
     val fromOffsets = OffsetsManager.selectOffsets(topicName, partition).map { resultSet =>
       new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
-      //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 10700l
+      //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 3070l
     }.toMap
 
     (KafkaUtils.createDirectStream[Long, String](
@@ -74,14 +76,15 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
       logger.info("本次处理的消息条数： " + rdd.count())
       offsets.foreach { x => logger.info("本次消息的偏移量：从" + x.fromOffset + " 到 " + x.untilOffset) }
 
-      val pairsData = buildData(rdd, partition, periodTime)
-      GeminiAnalysis.startAnalysis(pairsData, partition, periodTime)
-
+      val pairsData = buildData(streamingContext, rdd, partition, periodTime)
+      if (pairsData.length > 0) {
+        GeminiAnalysis.startAnalysis(pairsData, partition, periodTime)
+      }
       offsets.foreach { x => OffsetsManager.persistentOffsets(topicName, partition, x.untilOffset) }
     })
     streamingContext.start()
     streamingContext.awaitTermination()
   }
 
-  def buildData(rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): RDD[(RecevierPairsData)]
+  def buildData(streamingContext: StreamingContext, rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): Array[(RecevierPairsData)]
 }

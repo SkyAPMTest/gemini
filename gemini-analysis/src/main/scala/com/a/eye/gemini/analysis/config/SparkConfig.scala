@@ -2,12 +2,20 @@ package com.a.eye.gemini.analysis.config
 
 import org.apache.spark.SparkConf
 import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
 
-class SparkConfig(conf: Config) {
+object SparkConfig {
+
+  private val conf = ConfigFactory.load()
+
   val sparkConf = new SparkConf();
   sparkConf.set("es.index.auto.create", conf.getString("es.index.auto.create"))
   sparkConf.set("es.index.read.missing.as.empty", conf.getString("es.index.read.missing.as.empty"))
-  //  sparkConfig.set("es.nodes", "10.1.241.18:9200,10.1.241.19:9200,10.1.241.20:9200")
+
+  sparkConf.set("spark.mongodb.output.uri", "mongodb://localhost:27017/")
+  sparkConf.set("spark.mongodb.output.database", "gemini")
+  sparkConf.set("spark.mongodb.output.collection", "test")
+
   sparkConf.set("es.nodes", conf.getString("es.nodes"))
   sparkConf.set("es.port", conf.getString("es.port"))
   sparkConf.set("spark.streaming.receiver.writeAheadLog.enable", conf.getString("spark.streaming.receiver.writeAheadLog.enable"))

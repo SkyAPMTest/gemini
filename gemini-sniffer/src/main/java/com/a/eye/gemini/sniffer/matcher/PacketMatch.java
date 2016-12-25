@@ -57,6 +57,7 @@ public class PacketMatch {
 		onceJson.addProperty("tcp_ack", tcp.ack());
 		onceJson.addProperty("tcp_time", packet.getCaptureHeader().timestampInMillis());
 		logger.debug("#%d Tcp Json=%s", packet.getFrameNumber(), onceJson.toString());
+		logger.info("#%d, seq=%s, ack=%s", packet.getFrameNumber(), tcp.seq(), tcp.ack());
 
 		Ip4 ip = new Ip4();
 		packet.getHeader(ip);

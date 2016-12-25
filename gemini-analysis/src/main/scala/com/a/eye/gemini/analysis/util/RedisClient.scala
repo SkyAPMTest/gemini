@@ -4,10 +4,10 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig
 import redis.clients.jedis.JedisPool
 
 object RedisClient extends Serializable {
-  val redisHost = "10.1.241.18"
+  val redisHost = "localhost"
   val redisPort = 6379
   val redisTimeout = 30000
-  val password = "gemini"
+  val password = "aeye"
 
   val config = new GenericObjectPoolConfig()
   config.setTestOnBorrow(true)

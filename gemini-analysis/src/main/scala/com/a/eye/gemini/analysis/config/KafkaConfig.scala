@@ -1,8 +1,12 @@
 package com.a.eye.gemini.analysis.config
 
 import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
 
-class KafkaConfig(conf: Config) {
+object KafkaConfig {
+
+  private val conf = ConfigFactory.load()
+
   val kafkaParams = Map[String, Object](
     "bootstrap.servers" -> conf.getString("bootstrap.servers"),
     "key.deserializer" -> conf.getString("key.deserializer"),

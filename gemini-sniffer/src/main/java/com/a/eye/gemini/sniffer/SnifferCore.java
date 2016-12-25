@@ -27,7 +27,7 @@ public class SnifferCore {
 		int i = 0;
 		for (PcapIf device : devs) {
 			String description = (device.getDescription() != null) ? device.getDescription() : "No description available";
-			logger.debug("#%d: %s [%s]", i++, device.getName(), description);
+			logger.info("#%d: %s [%s]", i++, device.getName(), description);
 		}
 		if (result == Pcap.NOT_OK || devs.isEmpty()) {
 			logger.debug("错误 %s \n", errsb.toString());
@@ -39,7 +39,7 @@ public class SnifferCore {
 
 	@PostConstruct
 	public void startCapture() {// 选择一个网卡开启抓包
-		PcapIf device = this.getDevs().get(6);
+		PcapIf device = this.getDevs().get(2);
 		StringBuilder errsb = new StringBuilder();
 		int snaplen = Pcap.DEFAULT_SNAPLEN;// 长度65536
 		int flags = Pcap.MODE_PROMISCUOUS;// 混杂模式
