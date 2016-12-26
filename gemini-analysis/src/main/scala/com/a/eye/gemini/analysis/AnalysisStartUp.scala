@@ -8,6 +8,7 @@ import com.a.eye.gemini.analysis.executer.indicator.IpIndicatorExecuter
 import com.a.eye.gemini.analysis.executer.indicator.UvIndicatorExecuter
 import com.a.eye.gemini.analysis.util.GeminiZkClient
 import com.a.eye.gemini.analysis.util.RedisClient
+import com.a.eye.gemini.analysis.executer.indicator.CostIndicatorExecuter
 
 object AnalysisStartUp {
 
@@ -17,6 +18,7 @@ object AnalysisStartUp {
     GeminiRegistry.register(new PvIndicatorExecuter)
     GeminiRegistry.register(new UvIndicatorExecuter)
     GeminiRegistry.register(new IpIndicatorExecuter)
+    GeminiRegistry.register(new CostIndicatorExecuter)
 
     val recevier = new GeminiRecevier()
     recevier.startRecevie()

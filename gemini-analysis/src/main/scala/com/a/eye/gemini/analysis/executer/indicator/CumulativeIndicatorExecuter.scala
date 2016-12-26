@@ -11,14 +11,17 @@ import com.a.eye.gemini.analysis.util.RedisClient
 import com.a.eye.gemini.analysis.util.ReduceKeyUtil
 import com.a.eye.gemini.analysis.util.WeekTimeSlotUtil
 
-abstract class CumulativeIndicatorExecuter(indKey: String, indKeyName: String) extends CommonIndicatorExecuter(indKey: String, indKeyName: String) {
+abstract class CumulativeIndicatorExecuter(indKey: String, isUseIndValue: Boolean, indKeyName: String) extends CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, indKeyName: String) {
 
-  override def buildAnalysisHostSlotData(data: RDD[(String, Int)], slotType: String): RDD[(String, Int)] = {
+  override def buildAnalysisHostSlotData(data: RDD[(String, Long)], slotType: String): RDD[(String, Long)] = {
     data.map(analysisIndiSlotData => {
       val analysisKey = analysisIndiSlotData._1
       val analysisVal = analysisIndiSlotData._2
 
-      val hostKey = ReduceKeyUtil.parseIndiKeyToHostKey(analysisKey)
+      var hostKey = analysisKey
+      if (!isUseIndValue) {
+        hostKey = ReduceKeyUtil.parseIndiKeyToHostKey(analysisKey)
+      }
 
       (hostKey, analysisVal)
     }).reduceByKey(_ + _)

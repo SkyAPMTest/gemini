@@ -6,5 +6,5 @@ class IndicatorData extends Serializable {
   var host: String = _
   var tcpTime: Long = _
   var indKey: String = _
-  var indKeyName: String = _
+  var keyInDbName: String = _
 }

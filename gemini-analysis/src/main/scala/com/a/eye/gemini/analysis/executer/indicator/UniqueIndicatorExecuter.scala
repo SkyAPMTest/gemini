@@ -13,18 +13,21 @@ import com.a.eye.gemini.analysis.util.MonthTimeSlotUtil
 import com.a.eye.gemini.analysis.util.WeekTimeSlotUtil
 import com.a.eye.gemini.analysis.util.ReduceKeyUtil
 
-abstract class UniqueIndicatorExecuter(indKey: String, indKeyName: String) extends CommonIndicatorExecuter(indKey: String, indKeyName: String) {
+abstract class UniqueIndicatorExecuter(indKey: String, isUseIndValue: Boolean, indKeyName: String) extends CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, indKeyName: String) {
 
-  override def buildAnalysisHostSlotData(data: RDD[(String, Int)], slotType: String): RDD[(String, Int)] = {
+  override def buildAnalysisHostSlotData(data: RDD[(String, Long)], slotType: String): RDD[(String, Long)] = {
     data.map(analysisIndiSlotData => {
       val jedis = RedisClient.pool.getResource
       val analysisKey = analysisIndiSlotData._1
 
-      val hostKey = ReduceKeyUtil.parseIndiKeyToHostKey(analysisKey)
+      var hostKey = analysisKey
+      if (!isUseIndValue) {
+        hostKey = ReduceKeyUtil.parseIndiKeyToHostKey(analysisKey)
+      }
 
-      var analysisVal = 1
+      var analysisVal = 1l
       if (jedis.exists(hostKey)) {
-        analysisVal = 0
+        analysisVal = 0l
       } else {
         jedis.setex(analysisKey, TimeSlotUtil.getRedisExSecond(slotType), String.valueOf(analysisVal))
       }

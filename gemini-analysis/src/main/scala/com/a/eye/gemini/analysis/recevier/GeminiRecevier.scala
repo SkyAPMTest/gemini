@@ -26,12 +26,6 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
 
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
-  private val Pairs_Index_Name = "gemini_pairs_idx"
-
-  private val Pairs_Type_Name = "record"
-
-  private val Pairs_Es = Pairs_Index_Name + "/" + Pairs_Type_Name
-
   override def buildData(streamingContext: StreamingContext, rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): Array[(RecevierPairsData)] = {
     val reqData = rdd.filter(record => !isResData(record)).map(record => { buildReqData(record, partition) }).collect()
     val resData = rdd.filter(record => isResData(record)).map(record => { buildResData(record, partition) })
@@ -66,11 +60,16 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
 
         pairsData.reqData = JsonUtil.jsonObject2Map(reqJson)
         pairsData.resData = resRow.data
+
+        val startTime = pairsData.reqData.get("tcp_time").get.toLong
+        val endTime = pairsData.resData.get("tcp_time").get.toLong
+        val cost = endTime - startTime
+        pairsData.reqData = pairsData.reqData ++ Map("cost" -> cost.toString())
+        logger.debug("地址：%s%s, 响应时间：%d", reqJson.get("req_Host").getAsString, reqJson.get("req_RequestUrl").getAsString, cost)
+
         pairsData.isPair = true
       }
       RedisClient.pool.returnResource(jedis)
-
-      println("req_res_pairs : " + pairsData.messageId + "," + pairsData.isPair)
       pairsData
     }).filter(_.isPair).collect()
 

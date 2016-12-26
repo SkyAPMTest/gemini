@@ -32,9 +32,9 @@ public class OverviewService {
 		IndiHostDayPvItemData pvIndiDataYesterday = indicatorHostService.getIndicatorData(IndiHostDayPvItemData.class, host, TimeSlotUtil.getYesterdaySlot());
 		yesterday.setPv(pvIndiDataYesterday.getAnalysisVal());
 		IndiHostDayUvItemData uvIndiDataYesterday = indicatorHostService.getIndicatorData(IndiHostDayUvItemData.class, host, TimeSlotUtil.getYesterdaySlot());
-		yesterday.setPv(uvIndiDataYesterday.getAnalysisVal());
+		yesterday.setUv(uvIndiDataYesterday.getAnalysisVal());
 		IndiHostDayIpItemData ipIndiDataYesterday = indicatorHostService.getIndicatorData(IndiHostDayIpItemData.class, host, TimeSlotUtil.getYesterdaySlot());
-		yesterday.setPv(ipIndiDataYesterday.getAnalysisVal());
+		yesterday.setIp(ipIndiDataYesterday.getAnalysisVal());
 
 		TrafficVO trafficVO = new TrafficVO();
 		trafficVO.setToday(today);

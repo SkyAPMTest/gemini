@@ -20,10 +20,11 @@ import com.a.eye.gemini.analysis.util.TimeSlotUtil
 import com.a.eye.gemini.analysis.util.WeekTimeSlotUtil
 import com.mongodb.casbah.commons.MongoDBObject
 import com.a.eye.gemini.analysis.util.GeminiMongoClient
+import org.apache.logging.log4j.LogManager
 
-abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) extends GeminiAbstractExecuter {
-
-  val Indicator_Index_Name = "gemini_" + indKeyName + "_ind"
+abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, keyInDbName: String) extends GeminiAbstractExecuter {
+  
+  private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def analysisAtomData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
     val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new AtomTimeSlotUtil())
@@ -60,44 +61,50 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
     this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Month, periodTime)
   }
 
-  def buildIndicatorData(data: Array[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)] = {
+  override def buildIndicatorData(data: Array[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)] = {
     val dataArray = data.map(recevierPairsData => {
       val indicatorData = new IndicatorData()
       indicatorData.messageId = recevierPairsData.messageId
       indicatorData.resSeq = recevierPairsData.tcpSeq
       indicatorData.host = recevierPairsData.reqData.get("req_Host").get
       indicatorData.indKey = recevierPairsData.reqData.get(indKey).get
-      indicatorData.indKeyName = indKeyName
+      indicatorData.keyInDbName = keyInDbName
       indicatorData.tcpTime = recevierPairsData.tcpTime
+      logger.debug("统计值：%s", indicatorData.indKey)
       (indicatorData)
     })
 
     SparkContextSingleton.sparkContext.parallelize(dataArray)
   }
 
-  def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
+  override def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
     data.collect().foreach(indicatorData => {
       var mongoData = MongoDBObject("_id" -> indicatorData.messageId,
         "partition" -> partition,
         "seq" -> indicatorData.resSeq,
         "host" -> indicatorData.host,
-        indicatorData.indKeyName -> indicatorData.indKey,
+        indicatorData.keyInDbName -> indicatorData.indKey,
         "tcp_time" -> indicatorData.tcpTime,
         "create_date" -> periodTime)
 
-      GeminiMongoClient.db("indicator_" + indicatorData.indKeyName).insert(mongoData)
+      GeminiMongoClient.db("indicator_" + indicatorData.keyInDbName).insert(mongoData)
     })
   }
 
-  override def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Int)] = {
+  override def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Long)] = {
     data.map(indicatorData => {
       val timeSlot = timeSlotUtil.compareSlotTime(indicatorData.tcpTime)
-      val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, indicatorData.indKey)
-      (indKey, 1)
+      if (isUseIndValue) {
+        val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, indicatorData.keyInDbName)
+        (indKey, indicatorData.indKey.toLong)
+      } else {
+        val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, indicatorData.indKey)
+        (indKey, 1l)
+      }
     }).reduceByKey(_ + _)
   }
 
-  override def saveAnalysisIndiData(data: RDD[(String, Int)], partition: Int, slotType: String, periodTime: String) {
+  override def saveAnalysisIndiData(data: RDD[(String, Long)], partition: Int, slotType: String, periodTime: String) {
     data.collect().foreach(analysisRow => {
       val jedis = RedisClient.pool.getResource
       val analysisKey = analysisRow._1
@@ -119,17 +126,17 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
         "time_slot" -> indiReduceKey.timeSlot,
         "start_time" -> timeSlotData.startTime,
         "end_time" -> timeSlotData.endTime,
-        indKeyName -> indiReduceKey.indKey,
+        keyInDbName -> indiReduceKey.indKey,
         "analysis_val" -> analysisVal,
         "create_date" -> periodTime)
 
-      val collection = "indicator_" + slotType + "_" + indKeyName
+      val collection = "indicator_" + slotType + "_" + keyInDbName
       GeminiMongoClient.db(collection).remove(MongoDBObject("_id" -> analysisKey))
       GeminiMongoClient.db(collection).insert(mongoData)
     })
   }
 
-  override def saveAnalysisHostData(data: RDD[(String, Int)], partition: Int, slotType: String, periodTime: String) {
+  override def saveAnalysisHostData(data: RDD[(String, Long)], partition: Int, slotType: String, periodTime: String) {
     data.collect().foreach(analysisRow => {
       val jedis = RedisClient.pool.getResource
       val analysisKey = analysisRow._1
@@ -154,7 +161,7 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
         "analysis_val" -> analysisVal,
         "create_date" -> periodTime)
 
-      val collection = "indicator_host_" + slotType + "_" + indKeyName
+      val collection = "indicator_host_" + slotType + "_" + keyInDbName
       GeminiMongoClient.db(collection).remove(MongoDBObject("_id" -> analysisKey))
       GeminiMongoClient.db(collection).insert(mongoData)
     })
