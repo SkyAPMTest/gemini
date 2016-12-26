@@ -1,4 +1,4 @@
-package com.a.eye.gemini.sniffer;
+package com.a.eye.gemini.sniffer.producer;
 
 import java.io.IOException;
 import java.io.InputStream;

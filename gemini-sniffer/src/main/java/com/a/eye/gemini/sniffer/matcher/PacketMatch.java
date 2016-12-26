@@ -16,7 +16,7 @@ import org.jnetpcap.protocol.tcpip.Tcp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.a.eye.gemini.sniffer.GeminiProducer;
+import com.a.eye.gemini.sniffer.producer.GeminiProducer;
 import com.a.eye.gemini.sniffer.util.CallCountUtil;
 import com.a.eye.gemini.sniffer.util.IdWorker;
 import com.google.gson.JsonObject;
@@ -24,7 +24,7 @@ import com.google.gson.JsonObject;
 @Component
 public class PacketMatch {
 
-	private Logger logger = LogManager.getFormatterLogger(PacketMatch.class.getName());
+	private Logger logger = LogManager.getFormatterLogger(this.getClass().getName());
 
 	private static final IdWorker worker = new IdWorker(1, 1);
 

@@ -17,13 +17,13 @@ public abstract class ItemData {
 	private String timeSlot;
 
 	@Field ("analysis_val")
-	private String analysisVal;
+	private Long analysisVal;
 
-	public String getAnalysisVal() {
+	public Long getAnalysisVal() {
 		return analysisVal;
 	}
 
-	public void setAnalysisVal(String analysisVal) {
+	public void setAnalysisVal(Long analysisVal) {
 		this.analysisVal = analysisVal;
 	}
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.a.eye.gemini.webui.model.TrafficItemVO;
 import com.a.eye.gemini.webui.model.TrafficVO;
 import com.a.eye.gemini.webui.util.TimeSlotUtil;
+import com.a.eye.gemini.webui.vo.IndiHostDayCostItemData;
 import com.a.eye.gemini.webui.vo.IndiHostDayIpItemData;
 import com.a.eye.gemini.webui.vo.IndiHostDayPvItemData;
 import com.a.eye.gemini.webui.vo.IndiHostDayUvItemData;
@@ -27,6 +28,8 @@ public class OverviewService {
 		today.setUv(uvIndiDataToday.getAnalysisVal());
 		IndiHostDayIpItemData ipIndiDataToday = indicatorHostService.getIndicatorData(IndiHostDayIpItemData.class, host, TimeSlotUtil.getTodaySlot());
 		today.setIp(ipIndiDataToday.getAnalysisVal());
+		IndiHostDayCostItemData costIndiDataToday = indicatorHostService.getIndicatorData(IndiHostDayCostItemData.class, host, TimeSlotUtil.getTodaySlot());
+		today.setCost(costIndiDataToday.getAnalysisVal() / pvIndiDataToday.getAnalysisVal());
 
 		TrafficItemVO yesterday = new TrafficItemVO();
 		IndiHostDayPvItemData pvIndiDataYesterday = indicatorHostService.getIndicatorData(IndiHostDayPvItemData.class, host, TimeSlotUtil.getYesterdaySlot());
@@ -35,6 +38,8 @@ public class OverviewService {
 		yesterday.setUv(uvIndiDataYesterday.getAnalysisVal());
 		IndiHostDayIpItemData ipIndiDataYesterday = indicatorHostService.getIndicatorData(IndiHostDayIpItemData.class, host, TimeSlotUtil.getYesterdaySlot());
 		yesterday.setIp(ipIndiDataYesterday.getAnalysisVal());
+		IndiHostDayCostItemData costIndiDataYesterday = indicatorHostService.getIndicatorData(IndiHostDayCostItemData.class, host, TimeSlotUtil.getYesterdaySlot());
+		yesterday.setCost(costIndiDataYesterday.getAnalysisVal() / pvIndiDataYesterday.getAnalysisVal());
 
 		TrafficVO trafficVO = new TrafficVO();
 		trafficVO.setToday(today);

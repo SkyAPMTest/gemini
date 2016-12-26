@@ -1,24 +1,16 @@
-package com.a.eye.gemini.sniffer;
+package com.a.eye.gemini.sniffer.core;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
-public class SnifferCore {
+public abstract class SnifferCoreBase {
 
-	private Logger logger = LogManager.getFormatterLogger(SnifferCore.class.getName());
-
-	@Autowired
-	private SnifferHandler snifferHandler;
+	private Logger logger = LogManager.getFormatterLogger(this.getClass().getName());
 
 	public List<PcapIf> getDevs() {
 		List<PcapIf> devs = new ArrayList<PcapIf>();
@@ -30,14 +22,13 @@ public class SnifferCore {
 			logger.info("#%d: %s [%s]", i++, device.getName(), description);
 		}
 		if (result == Pcap.NOT_OK || devs.isEmpty()) {
-			logger.debug("错误 %s \n", errsb.toString());
+			logger.error("错误 %s \n", errsb.toString());
 			return null;
 		} else {
 			return devs;
 		}
 	}
 
-	@PostConstruct
 	public void startCapture() {// 选择一个网卡开启抓包
 		PcapIf device = this.getDevs().get(2);
 		StringBuilder errsb = new StringBuilder();
@@ -51,7 +42,9 @@ public class SnifferCore {
 			return;
 		}
 
-		pcap.loop(0, snifferHandler, "jnetpcap");
+		this.loop(pcap);
 		pcap.close();
 	}
+
+	protected abstract void loop(Pcap pcap);
 }
