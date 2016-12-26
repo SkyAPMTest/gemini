@@ -42,55 +42,10 @@
 			<version>2.9.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mongodb.spark</groupId>
-			<artifactId>mongo-spark-connector_2.10</artifactId>
-			<version>2.0.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>casbah-core_2.10</artifactId>
 			<version>3.1.1</version>
 		</dependency>
-		<dependency>
-			<groupId>org.elasticsearch</groupId>
-			<artifactId>elasticsearch-hadoop</artifactId>
-			<version>5.0.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>cascading</groupId>
-					<artifactId>cascading-hadoop</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>cascading</groupId>
-					<artifactId>cascading-local</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>storm-core</artifactId>
-					<groupId>org.apache.storm</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>hive-service</artifactId>
-					<groupId>org.apache.hive</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>pig</artifactId>
-					<groupId>org.apache.pig</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>spark-streaming_2.10</artifactId>
-					<groupId>org.apache.spark</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>spark-sql_2.10</artifactId>
-					<groupId>org.apache.spark</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>spark-core_2.10</artifactId>
-					<groupId>org.apache.spark</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>

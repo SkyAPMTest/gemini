@@ -1,7 +1,6 @@
 package com.a.eye.gemini.analysis.executer.indicator
 
 import org.apache.spark.rdd.RDD
-import org.elasticsearch.spark.rdd.Metadata
 
 import com.a.eye.gemini.analysis.executer.model.IndicatorData
 import com.a.eye.gemini.analysis.util.RedisClient

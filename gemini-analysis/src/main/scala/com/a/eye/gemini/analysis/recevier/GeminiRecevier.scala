@@ -13,8 +13,6 @@ import com.a.eye.gemini.analysis.util.TimeSlotUtil
 import com.a.eye.gemini.analysis.util.UrlUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.mongodb.spark.MongoSpark
-import com.mongodb.spark.config.WriteConfig
 import org.bson.types.ObjectId
 import org.bson.Document
 import org.apache.spark.SparkContext
@@ -57,9 +55,14 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
         jedis.setex(resRow.tcpSeq, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), "yes")
         jedis.setex(createPairKey(resSeq), TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), "yes")
 
-        val url = UrlUtil.removeParameters(reqJson.get("req_RequestUrl").getAsString)
-        reqJson.remove("req_RequestUrl")
-        reqJson.addProperty("req_RequestUrl", url)
+        logger.info("requestJson: %s ", reqJson.toString())
+        if (reqJson.has("req_RequestUrl")) {
+          val url = UrlUtil.removeParameters(reqJson.get("req_RequestUrl").getAsString)
+          reqJson.remove("req_RequestUrl")
+          reqJson.addProperty("req_RequestUrl", url)
+        } else {
+          reqJson.addProperty("req_RequestUrl", "/")
+        }
 
         pairsData.reqData = JsonUtil.jsonObject2Map(reqJson)
         pairsData.resData = resRow.data

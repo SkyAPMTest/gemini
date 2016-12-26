@@ -30,7 +30,6 @@ import com.typesafe.config.ConfigFactory
 import org.apache.logging.log4j.LogManager
 import kafka.message.MessageAndMetadata
 import org.apache.spark.SparkException
-import org.elasticsearch.spark._
 import org.apache.spark.rdd.RDD
 import com.a.eye.gemini.analysis.util.OffsetsManager
 import com.a.eye.gemini.analysis.executer.GeminiAnalysis

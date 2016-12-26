@@ -18,9 +18,6 @@ import com.a.eye.gemini.analysis.util.ReduceKeyUtil
 import com.a.eye.gemini.analysis.util.SparkContextSingleton
 import com.a.eye.gemini.analysis.util.TimeSlotUtil
 import com.a.eye.gemini.analysis.util.WeekTimeSlotUtil
-import com.mongodb.spark._
-import com.mongodb.spark.MongoSpark
-import com.mongodb.spark.config.WriteConfig
 import com.mongodb.casbah.commons.MongoDBObject
 import com.a.eye.gemini.analysis.util.GeminiMongoClient
 
@@ -133,7 +130,7 @@ abstract class CommonIndicatorExecuter(indKey: String, indKeyName: String) exten
   }
 
   override def saveAnalysisHostData(data: RDD[(String, Int)], partition: Int, slotType: String, periodTime: String) {
-    data.map(analysisRow => {
+    data.collect().foreach(analysisRow => {
       val jedis = RedisClient.pool.getResource
       val analysisKey = analysisRow._1
       var analysisVal = analysisRow._2

@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	$.getJSON('getTodayTraffic?host=redmine.asiainfo.com', function(data) {
-		var todayTrafficTemplate = $.templates("#todayTrafficTemplate");
-		todayTrafficTemplate.link("#todayTrafficDiv", data);
+	$.getJSON('getTraffic?host=upload.jianshu.io', function(data) {
+		var trafficTemplate = $.templates("#trafficTemplate");
+		trafficTemplate.link("#trafficDiv", data);
 	});
 });

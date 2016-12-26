@@ -1,13 +1,12 @@
 package com.a.eye.gemini.webui.vo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class IndicatorData {
 
 	private long count;
 
-	private List<ItemData> items = new ArrayList<ItemData>();
+	private List<?> items;
 
 	public long getCount() {
 		return count;
@@ -17,11 +16,11 @@ public class IndicatorData {
 		this.count = count;
 	}
 
-	public List<ItemData> getItems() {
+	public List<?> getItems() {
 		return items;
 	}
 
-	public void setItems(List<ItemData> items) {
+	public void setItems(List<?> items) {
 		this.items = items;
 	}
 }

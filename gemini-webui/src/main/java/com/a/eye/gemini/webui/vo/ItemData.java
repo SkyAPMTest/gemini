@@ -1,13 +1,22 @@
 package com.a.eye.gemini.webui.vo;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 public abstract class ItemData {
+
+	@Id
+	protected String id;
+
+	@Field ("host")
 	private String host;
 
 	private String hostName;
 
+	@Field ("time_slot")
 	private String timeSlot;
 
+	@Field ("analysis_val")
 	private String analysisVal;
 
 	public String getAnalysisVal() {
