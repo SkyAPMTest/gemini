@@ -1,11 +1,12 @@
 package com.a.eye.gemini.analysis.executer
 
-import org.apache.spark.streaming.StreamingContext
-import org.apache.spark.rdd.RDD
-import com.google.gson.JsonObject
-import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
 import org.apache.logging.log4j.LogManager
-import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
+import org.apache.spark.streaming.StreamingContext
+
+import com.a.eye.gemini.analysis.executer.model.RecevierData
+import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
+import com.google.gson.JsonObject
 
 object GeminiAnalysis {
 
@@ -35,5 +36,21 @@ object GeminiAnalysis {
       executer.analysisMonthData(indicatorData, partition, periodTime)
       logger.info("构建并保存一个周期数据（月）指标：%s -- 完毕", executer.getClass.getSimpleName)
     }
+  }
+
+  def validateReq(reqJson: JsonObject): Boolean = {
+    var pass = true
+    executers.foreach { executer =>
+      pass = pass && executer.validateReq(reqJson)
+    }
+    pass
+  }
+
+  def validateRes(resJson: JsonObject): Boolean = {
+    var pass = true
+    executers.foreach { executer =>
+      pass = pass && executer.validateRes(resJson)
+    }
+    pass
   }
 }

@@ -39,13 +39,14 @@ import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkContext
 import com.a.eye.gemini.analysis.util.SparkContextSingleton
+import com.a.eye.gemini.analysis.executer.model.RecevierData
 
 abstract class GeminiAbstractRecevier(appName: String, topicName: String, partition: Int, groupId: String, esIdx: String, edType: String) extends Serializable {
 
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   private def initialize[K, V](): (InputDStream[ConsumerRecord[Long, String]], StreamingContext) = {
-    val sparkConf = SparkConfig.sparkConf.setAppName(appName).setMaster("local[1]")
+    val sparkConf = SparkConfig.sparkConf.setAppName(appName).setMaster("local[4]")
     val streamingContext = new StreamingContext(sparkConf, Seconds(GeminiConfig.intervalTime))
     val kafkaParams = KafkaConfig.kafkaParams + ("group.id" -> groupId)
     val topics = Array(topicName)
@@ -86,4 +87,29 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
   }
 
   def buildData(streamingContext: StreamingContext, rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): Array[(RecevierPairsData)]
+
+  def validateReq(record: ConsumerRecord[Long, String]): Boolean = {
+    val gson = new Gson()
+    val reqJson = gson.fromJson(record.value(), classOf[JsonObject])
+    val isRes = reqJson.get("is_res").getAsBoolean
+    val noHost = !reqJson.has("req_Host")
+
+    if (isRes || noHost) {
+      false
+    } else {
+      GeminiAnalysis.validateReq(reqJson)
+    }
+  }
+
+  def validateRes(record: ConsumerRecord[Long, String]): Boolean = {
+    val gson = new Gson()
+    val resJson = gson.fromJson(record.value(), classOf[JsonObject])
+    val isRes = resJson.get("is_res").getAsBoolean
+
+    if (isRes) {
+      GeminiAnalysis.validateReq(resJson)
+    } else {
+      false
+    }
+  }
 }

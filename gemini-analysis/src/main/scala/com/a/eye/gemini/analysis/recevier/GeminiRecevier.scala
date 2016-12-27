@@ -27,8 +27,8 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def buildData(streamingContext: StreamingContext, rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): Array[(RecevierPairsData)] = {
-    val reqData = rdd.filter(record => !isResData(record)).map(record => { buildReqData(record, partition) }).collect()
-    val resData = rdd.filter(record => isResData(record)).map(record => { buildResData(record, partition) })
+    val reqData = rdd.filter(record => validateReq(record)).map(record => { buildReqData(record, partition) }).collect()
+    val resData = rdd.filter(record => validateRes(record)).map(record => { buildResData(record, partition) })
     logger.info("请求数据条数：%d", reqData.length)
     logger.info("响应数据条数：%d", resData.count())
 
@@ -49,14 +49,10 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
         jedis.setex(resRow.tcpSeq, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), "yes")
         jedis.setex(createPairKey(resSeq), TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), "yes")
 
-        logger.info("requestJson: %s ", reqJson.toString())
-        if (reqJson.has("req_RequestUrl")) {
-          val url = UrlUtil.removeParameters(reqJson.get("req_RequestUrl").getAsString)
-          reqJson.remove("req_RequestUrl")
-          reqJson.addProperty("req_RequestUrl", url)
-        } else {
-          reqJson.addProperty("req_RequestUrl", "/")
-        }
+        logger.debug("requestJson: %s ", reqJson.toString())
+        val url = UrlUtil.removeParameters(reqJson.get("req_RequestUrl").getAsString)
+        reqJson.remove("req_RequestUrl")
+        reqJson.addProperty("req_RequestUrl", url)
 
         pairsData.reqData = JsonUtil.jsonObject2Map(reqJson)
         pairsData.resData = resRow.data
@@ -91,16 +87,13 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
     req_res_pairs
   }
 
-  private def isResData(record: ConsumerRecord[Long, String]): Boolean = {
-    val gson = new Gson()
-    val messageJson = gson.fromJson(record.value(), classOf[JsonObject])
-    messageJson.get("is_res").getAsBoolean
-  }
-
   private def buildReqData(record: ConsumerRecord[Long, String], partition: Int): (RecevierData) = {
     val reqData = new RecevierData()
     val gson = new Gson()
     val jsonData = gson.fromJson(record.value(), classOf[JsonObject])
+    if (!jsonData.has("req_RequestUrl")) {
+      jsonData.addProperty("req_RequestUrl", "/")
+    }
     val mapData = JsonUtil.jsonObject2Map(jsonData)
 
     reqData.messageId = record.key()
@@ -110,7 +103,7 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
     reqData.tcpTime = reqData.data.getOrElse("tcp_time", "0").toLong
 
     val jedis = RedisClient.pool.getResource
-    jedis.setex(reqData.tcpAck, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), record.value())
+    jedis.setex(reqData.tcpAck, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), jsonData.toString())
     RedisClient.pool.returnResource(jedis)
 
     reqData
@@ -127,11 +120,6 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
     resData.tcpSeq = "RES-" + resData.data.get("tcp_seq")
     resData.tcpAck = "RES-" + resData.data.get("tcp_ack")
     resData.tcpTime = resData.data.getOrElse("tcp_time", "0").toLong
-
-    //    val jedis = RedisClient.pool.getResource
-    //    jedis.setex(resData.tcpSeq, TimeSlotUtil.getRedisExSecond(TimeSlotUtil.Atom), "no")
-    //    RedisClient.pool.returnResource(jedis)
-
     resData
   }
 

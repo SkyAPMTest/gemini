@@ -6,8 +6,15 @@ import com.a.eye.gemini.analysis.executer.model.IndicatorData
 import com.a.eye.gemini.analysis.executer.model.RecevierPairsData
 import com.a.eye.gemini.analysis.util.TimeSlotUtil
 import org.apache.spark.SparkContext
+import org.apache.kafka.clients.consumer.ConsumerRecord
+import com.a.eye.gemini.analysis.executer.model.RecevierData
+import com.google.gson.JsonObject
 
 abstract class GeminiAbstractExecuter extends Serializable {
+  
+  def validateReq(reqJson: JsonObject): Boolean
+  
+  def validateRes(resJson: JsonObject): Boolean
   
   def buildIndicatorData(data: Array[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)]
 
