@@ -1,0 +1,19 @@
+<div id="trendIpIndiDiv"></div>
+<script id="trendIpIndiTemplate" type="text/x-jsrender">
+<div class="ibox float-e-margins">
+	<div class="ibox-title">
+		<h5>{{:title}}</h5>
+	</div>
+	<div id="trendIpCompareDiv" class="white-bg" style="text-align: right; padding-right: 20px">
+		<div class="checkbox checkbox-inline">对比：</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" id="check1inlineip" value="check1" checked="checked" onclick="checkIpClick(this);"> <label for="check1inlineip"> 前一日 </label>
+		</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" id="check2inlineip" value="check2" onclick="checkIpClick(this);"> <label for="check2inlineip"> 上周同期 </label>
+		</div>
+	</div>
+	<div id="trendChartsIpDiv" style="height: 400px"></div>
+</div>
+</script>
+<script src="/overview/js/overview_charts_ip.js"></script>

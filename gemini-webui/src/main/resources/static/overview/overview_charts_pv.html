@@ -1,0 +1,19 @@
+<div id="trendPvIndiDiv"></div>
+<script id="trendPvIndiTemplate" type="text/x-jsrender">
+<div class="ibox float-e-margins">
+	<div class="ibox-title">
+		<h5>{{:title}}</h5>
+	</div>
+	<div id="trendPvCompareDiv" class="white-bg" style="text-align: right; padding-right: 20px">
+		<div class="checkbox checkbox-inline">对比：</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" id="check1inlinepv" value="check1" checked="checked" onclick="checkPvClick(this);"> <label for="check1inlinepv"> 前一日 </label>
+		</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" id="check2inlinepv" value="check2" onclick="checkPvClick(this);"> <label for="check2inlinepv"> 上周同期 </label>
+		</div>
+	</div>
+	<div id="trendChartsPvDiv" style="height: 400px"></div>
+</div>
+</script>
+<script src="/overview/js/overview_charts_pv.js"></script>

@@ -5,5 +5,5 @@ $(document).ready(function() {
 	console.log("加入亚信数件，加入企业级搜索，你，可以开启不一样的程序猿人生。");
 	console.log("请联系亚信数件彭勇升，工号：24809，邮箱：pengys5@asiainfo.com");
 
-	$("#mainpanel_div").load("overview.html");
+	$("#mainpanel_div").load("/overview/overview.html");
 });

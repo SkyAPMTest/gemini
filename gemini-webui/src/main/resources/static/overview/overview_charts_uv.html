@@ -1,0 +1,19 @@
+<div id="trendUvIndiDiv"></div>
+<script id="trendUvIndiTemplate" type="text/x-jsrender">
+<div class="ibox float-e-margins">
+	<div class="ibox-title">
+		<h5>{{:title}}</h5>
+	</div>
+	<div id="trendUvCompareDiv" class="white-bg" style="text-align: right; padding-right: 20px">
+		<div class="checkbox checkbox-inline">对比：</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" id="check1inlineuv" value="check1" checked="checked" onclick="checkUvClick(this);"> <label for="check1inlineuv"> 前一日 </label>
+		</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" id="check2inlineuv" value="check2" onclick="checkUvClick(this);"> <label for="check2inlineuv"> 上周同期 </label>
+		</div>
+	</div>
+	<div id="trendChartsUvDiv" style="height: 400px"></div>
+</div>
+</script>
+<script src="/overview/js/overview_charts_uv.js"></script>

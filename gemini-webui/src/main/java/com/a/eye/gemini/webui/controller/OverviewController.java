@@ -17,7 +17,7 @@ import com.a.eye.gemini.webui.model.TrafficVO;
 import com.a.eye.gemini.webui.service.OverviewService;
 import com.a.eye.gemini.webui.web.ControllerBase;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 @Controller
 public class OverviewController extends ControllerBase {
@@ -39,9 +39,16 @@ public class OverviewController extends ControllerBase {
 
 	@RequestMapping(value = "getTrendChart", method = RequestMethod.GET)
 	@ResponseBody
-	public void getTrendChart(@ModelAttribute("host") String host, @ModelAttribute("indicator") String indicator, HttpServletResponse response) throws IOException {
-		JsonObject data = dashboardService.getTrendChart(host, indicator);
-		logger.debug("data: %s", gson.toJson(data));
-		reply(gson.toJson(data), response);
+	public void getTrendChart(@ModelAttribute("host") String host, @ModelAttribute("indicator") String indicator, @ModelAttribute("minusDay") String minusDay, @ModelAttribute("check1") String check1,
+			@ModelAttribute("check2") String check2, HttpServletResponse response) throws IOException {
+		if (Integer.valueOf(minusDay) < 2) {
+			JsonArray data = dashboardService.getTrendChartHour(host, indicator, Integer.valueOf(minusDay), check1, check2);
+			logger.debug("data: %s", gson.toJson(data));
+			reply(gson.toJson(data), response);
+		} else {
+			JsonArray data = dashboardService.getTrendChartDay(host, indicator, Integer.valueOf(minusDay));
+			logger.debug("data: %s", gson.toJson(data));
+			reply(gson.toJson(data), response);
+		}
 	}
 }

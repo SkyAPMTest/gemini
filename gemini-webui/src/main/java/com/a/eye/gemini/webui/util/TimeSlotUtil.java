@@ -44,7 +44,7 @@ public class TimeSlotUtil {
 
 	public static String[][] getHours24(int minusDay) {
 		String[][] hours = new String[24][2];
-		
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(new Date().getTime());
 		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - minusDay);
@@ -65,5 +65,31 @@ public class TimeSlotUtil {
 			hours[i][1] = DateUtil.data2String(DateUtil.hourDf, slotStart) + " - " + DateUtil.data2String(DateUtil.hourDf, slotEnd);
 		}
 		return hours;
+	}
+
+	public static String[][] getSlotDays(int minusDay) {
+		String[][] days = new String[minusDay][2];
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(new Date().getTime());
+		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - minusDay);
+		for (int i = 0; i < minusDay; i++) {
+			calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+
+			long slotStart = calendar.getTimeInMillis();
+
+			calendar.set(Calendar.HOUR_OF_DAY, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			calendar.set(Calendar.SECOND, 59);
+			long slotEnd = calendar.getTimeInMillis();
+
+			days[i][0] = String.valueOf(slotStart) + "-" + String.valueOf(slotEnd);
+			days[i][1] = DateUtil.data2String(DateUtil.dayDf, slotStart);
+		}
+		return days;
 	}
 }

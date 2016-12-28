@@ -1,0 +1,19 @@
+<div id="trendCostIndiDiv"></div>
+<script id="trendCostIndiTemplate" type="text/x-jsrender">
+<div class="ibox float-e-margins">
+	<div class="ibox-title">
+		<h5>{{:title}}</h5>
+	</div>
+	<div id="trendCostCompareDiv" class="white-bg" style="text-align: right; padding-right: 20px">
+		<div class="checkbox checkbox-inline">对比：</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" id="check1inlinecost" value="check1" checked="checked" onclick="checkCostClick(this);"> <label for="check1inlinecost"> 前一日 </label>
+		</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" id="check2inlinecost" value="check2" onclick="checkCostClick(this);"> <label for="check2inlinecost"> 上周同期 </label>
+		</div>
+	</div>
+	<div id="trendChartsCostDiv" style="height: 400px"></div>
+</div>
+</script>
+<script src="/overview/js/overview_charts_cost.js"></script>
