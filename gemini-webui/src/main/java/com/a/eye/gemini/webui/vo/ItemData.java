@@ -8,23 +8,34 @@ public abstract class ItemData {
 	@Id
 	protected String id;
 
-	@Field ("host")
+	@Field("host")
 	private String host;
 
 	private String hostName;
 
-	@Field ("time_slot")
+	@Field("time_slot")
 	private String timeSlot;
 
-	@Field ("analysis_val")
-	private Long analysisVal;
+	@Field("key")
+	private String key;
 
-	public Long getAnalysisVal() {
-		return analysisVal;
+	@Field("value")
+	private Long value;
+
+	public String getKey() {
+		return key;
 	}
 
-	public void setAnalysisVal(Long analysisVal) {
-		this.analysisVal = analysisVal;
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public Long getValue() {
+		return value;
+	}
+
+	public void setValue(Long value) {
+		this.value = value;
 	}
 
 	public String getHostName() {

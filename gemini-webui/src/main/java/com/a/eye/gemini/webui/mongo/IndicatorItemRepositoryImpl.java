@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import com.a.eye.gemini.webui.vo.IndicatorHostItemData;
+
 @Component
 public class IndicatorItemRepositoryImpl implements IndicatorItemRepository {
 
@@ -13,7 +15,7 @@ public class IndicatorItemRepositoryImpl implements IndicatorItemRepository {
 	MongoOperations mongoOperations;
 
 	@Override
-	public <T> T findIndicatorData(Class<T> entityClass, String host, String timeSlot) {
-		return mongoOperations.findOne(Query.query(Criteria.where("host").is(host).and("timeSlot").is(timeSlot)), entityClass);
+	public IndicatorHostItemData findIndicatorData(String indicator, String host, String timeSlot) {
+		return mongoOperations.findOne(Query.query(Criteria.where("host").is(host).and("timeSlot").is(timeSlot)), IndicatorHostItemData.class, indicator);
 	}
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.a.eye.gemini.webui.mongo.IndicatorItemRepository;
+import com.a.eye.gemini.webui.vo.IndicatorHostItemData;
 
 @Service
 public class IndicatorHostService {
@@ -17,9 +18,13 @@ public class IndicatorHostService {
 	@Autowired
 	private DomainInfoService domainInfoService;
 
-	public <T> T getIndicatorData(Class<T> entityClass, String host, String timeSlot) {
-		logger.info("host=%s, timeSlot=%s", host, timeSlot);
-		T entity = repository.findIndicatorData(entityClass, host, timeSlot);
-		return entity;
+	public IndicatorHostItemData findIndicatorData(String indicator, String host, String timeSlot) {
+		logger.info("indicator=%s, host=%s, timeSlot=%s", indicator, host, timeSlot);
+		IndicatorHostItemData itemData = repository.findIndicatorData(indicator, host, timeSlot);
+		if (itemData == null) {
+			itemData = new IndicatorHostItemData();
+			itemData.setValue(0l);
+		}
+		return itemData;
 	}
 }

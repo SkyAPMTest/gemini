@@ -11,6 +11,29 @@
 </head>
 <body>
 	<div id="trafficDiv"></div>
+	<div id="timeSlotDiv" class="col-lg-12 white-bg" style="padding: 0px">
+		<div class="btn-group" role="group">
+			<button type="button" class="btn btn-success active" style="width: 80px">今天</button>
+			<button type="button" class="btn btn-white" style="width: 80px">昨天</button>
+			<button type="button" class="btn btn-white" style="width: 80px">最近7天</button>
+			<button type="button" class="btn btn-white" style="width: 80px">最近30天</button>
+		</div>
+	</div>
+	<div class="col-lg-12" style="margin-top: 25px; padding: 0px">
+		<div class="col-lg-6" style="padding-left: 0px">
+			<div class="ibox float-e-margins">
+				<div id="main" style="height: 400px"></div>
+			</div>
+		</div>
+		<div class="col-lg-6" style="padding-right: 0px">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>趋势图（UV）</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<script id="trafficTemplate" type="text/x-jsrender">
 	<div class="ibox">
 		<div class="ibox-title">
@@ -63,6 +86,24 @@
 	</div>
 	</script>
 
+	<script src="/webjars/echarts/3.3.1/dist/echarts.min.js"></script>
 	<script src="/js/overview.js"></script>
+
+	<div>
+		<div style="background: #f4f4f4;">
+			<div style="display: inline; line-height: 35px; padding: 0 20px 0 20px">{b0}</div>
+			<div style="display: inline; padding: 0 20px 0 20px">浏览量(PV)</div>
+		</div>
+		<div>
+			<div>
+				<div style="display: inline; line-height: 35px; padding-left: 20px">{a0}</div>
+				<div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c0}</div>
+			</div>
+			<div>
+				<div style="display: inline; line-height: 35px; padding-left: 20px">{a1}</div>
+				<div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c1}</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

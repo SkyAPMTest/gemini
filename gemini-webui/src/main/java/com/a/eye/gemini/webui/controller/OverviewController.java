@@ -17,6 +17,7 @@ import com.a.eye.gemini.webui.model.TrafficVO;
 import com.a.eye.gemini.webui.service.OverviewService;
 import com.a.eye.gemini.webui.web.ControllerBase;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @Controller
 public class OverviewController extends ControllerBase {
@@ -33,6 +34,14 @@ public class OverviewController extends ControllerBase {
 	public void getTraffic(@ModelAttribute("host") String host, HttpServletResponse response) throws IOException {
 		logger.debug("host=%s", host);
 		TrafficVO data = dashboardService.getTraffic(host);
+		reply(gson.toJson(data), response);
+	}
+
+	@RequestMapping(value = "getTrendChart", method = RequestMethod.GET)
+	@ResponseBody
+	public void getTrendChart(@ModelAttribute("host") String host, @ModelAttribute("indicator") String indicator, HttpServletResponse response) throws IOException {
+		JsonObject data = dashboardService.getTrendChart(host, indicator);
+		logger.debug("data: %s", gson.toJson(data));
 		reply(gson.toJson(data), response);
 	}
 }

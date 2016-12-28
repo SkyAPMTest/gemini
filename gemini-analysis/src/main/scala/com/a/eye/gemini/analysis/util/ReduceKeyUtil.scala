@@ -2,7 +2,7 @@ package com.a.eye.gemini.analysis.util
 
 object ReduceKeyUtil {
   
-  private val Split_Str = "|"
+  val Split_Str = "|"
 
   def buildIndiReduceKey(timeSlot: String, host: String, indKey: String): String = {
     timeSlot + Split_Str + host + Split_Str + indKey

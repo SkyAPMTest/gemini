@@ -23,7 +23,7 @@ import com.a.eye.gemini.analysis.util.GeminiMongoClient
 import org.apache.logging.log4j.LogManager
 
 abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, keyInDbName: String) extends GeminiAbstractExecuter {
-  
+
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def analysisAtomData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
@@ -68,7 +68,6 @@ abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, k
       indicatorData.resSeq = recevierPairsData.tcpSeq
       indicatorData.host = recevierPairsData.reqData.get("req_Host").get
       indicatorData.indKey = recevierPairsData.reqData.get(indKey).get
-      indicatorData.keyInDbName = keyInDbName
       indicatorData.tcpTime = recevierPairsData.tcpTime
       logger.debug("统计值：%s", indicatorData.indKey)
       (indicatorData)
@@ -83,11 +82,11 @@ abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, k
         "partition" -> partition,
         "seq" -> indicatorData.resSeq,
         "host" -> indicatorData.host,
-        indicatorData.keyInDbName -> indicatorData.indKey,
+        "key" -> indicatorData.indKey,
         "tcp_time" -> indicatorData.tcpTime,
         "create_date" -> periodTime)
 
-      GeminiMongoClient.db("indicator_" + indicatorData.keyInDbName).insert(mongoData)
+      GeminiMongoClient.db("indicator_" + keyInDbName).insert(mongoData)
     })
   }
 
@@ -95,7 +94,7 @@ abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, k
     data.map(indicatorData => {
       val timeSlot = timeSlotUtil.compareSlotTime(indicatorData.tcpTime)
       if (isUseIndValue) {
-        val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, indicatorData.keyInDbName)
+        val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, keyInDbName)
         (indKey, indicatorData.indKey.toLong)
       } else {
         val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, indicatorData.indKey)
@@ -126,8 +125,8 @@ abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, k
         "time_slot" -> indiReduceKey.timeSlot,
         "start_time" -> timeSlotData.startTime,
         "end_time" -> timeSlotData.endTime,
-        keyInDbName -> indiReduceKey.indKey,
-        "analysis_val" -> analysisVal,
+        "key" -> indiReduceKey.indKey,
+        "value" -> analysisVal,
         "create_date" -> periodTime)
 
       val collection = "indicator_" + slotType + "_" + keyInDbName
@@ -142,7 +141,7 @@ abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, k
       val analysisKey = analysisRow._1
       var analysisVal = analysisRow._2
 
-      val hostReduceKey = ReduceKeyUtil.parseHostReduceKey(analysisKey)
+      var hostReduceKey = ReduceKeyUtil.parseHostReduceKey(analysisKey)
 
       if (jedis.exists(analysisKey)) {
         analysisVal = analysisVal + jedis.get(analysisKey).toInt
@@ -152,13 +151,19 @@ abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, k
 
       val timeSlotData = TimeSlotUtil.formatTimeSlot(hostReduceKey.timeSlot)
 
+      var host = hostReduceKey.host
+      if (isUseIndValue) {
+        val firstIdx = host.indexOf(ReduceKeyUtil.Split_Str)
+        host = host.substring(0, firstIdx)
+      }
+
       var mongoData = MongoDBObject("_id" -> analysisKey,
         "partition" -> partition,
-        "host" -> hostReduceKey.host,
+        "host" -> host,
         "time_slot" -> hostReduceKey.timeSlot,
         "start_time" -> timeSlotData.startTime,
         "end_time" -> timeSlotData.endTime,
-        "analysis_val" -> analysisVal,
+        "value" -> analysisVal,
         "create_date" -> periodTime)
 
       val collection = "indicator_host_" + slotType + "_" + keyInDbName

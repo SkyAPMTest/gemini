@@ -2,7 +2,9 @@ package com.a.eye.gemini.webui.mongo;
 
 import org.springframework.stereotype.Repository;
 
+import com.a.eye.gemini.webui.vo.IndicatorHostItemData;
+
 @Repository
 public interface IndicatorItemRepository {
-	<T> T findIndicatorData(Class<T> entityClass, String host, String timeSlot);
+	public IndicatorHostItemData findIndicatorData(String indicator, String host, String timeSlot);
 }
