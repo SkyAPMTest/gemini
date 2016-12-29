@@ -16,16 +16,16 @@ Network sniffer and performance analysis.
 # 安装说明
 ## 第三方工具安装
 ### kafka & zookeeper安装
-windows
+windows  
 linux
 ### mongodb安装
-windows
+windows  
 linux
 ### redis安装
-windows
+windows  
 linux
 ## Gemini安装
-windows
+windows  
 linux
 # Contributors
 * 彭勇升 [@pengys5](https://github.com/pengys5)
