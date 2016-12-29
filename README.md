@@ -5,12 +5,28 @@
 * 无视应用程序繁杂的编程语言
 * 不会对所需监视的应用程序造成任何性能损耗
 
+详情见[Wiki](https://github.com/skywalking-developer/gemini/wiki)
+
 Network sniffer and performance analysis.
 
 * Read data from the network core switch or a hub, which set a mirror network input/output.
 * Base on these data, **Gemini** can analysis system performance, but have no influences to the application.
 * Combine with the [sky-walking](https://github.com/wu-sheng/sky-walking) tracer, reduce the tracer's cost, improve traced application performance.
 
+# 安装说明
+## 第三方工具安装
+### kafka & zookeeper安装
+windows
+linux
+### mongodb安装
+windows
+linux
+### redis安装
+windows
+linux
+## Gemini安装
+windows
+linux
 # Contributors
 * 彭勇升 [@pengys5](https://github.com/pengys5)
 * 吴晟 [@wusheng](https://github.com/wu-sheng)  Assist on Architecture, Design and APM tech.
