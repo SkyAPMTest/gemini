@@ -51,6 +51,7 @@ Console Log
 #### Step 3. Start the sniffer 
 * First, you need a **Kafka** MQ.
 * Then, start up the **gemini**.
+
 windows  
 
     > java -Djava.library.path=./native/windows -jar gemini-sniffer-1.0.0-alpha1.jar -o online  
