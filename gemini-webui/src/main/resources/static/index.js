@@ -1,3 +1,7 @@
+$.ajaxSetup ({ 
+    cache: false //关闭AJAX相应的缓存 
+}); 
+
 $(document).ready(function() {
 	console.log("探寻这里的秘密；");
 	console.log("体验这里的挑战；");
@@ -7,3 +11,7 @@ $(document).ready(function() {
 
 	$("#mainpanel_div").load("/overview/overview.html");
 });
+
+function openMenu(path) {
+	$("#mainpanel_div").load(path);
+}

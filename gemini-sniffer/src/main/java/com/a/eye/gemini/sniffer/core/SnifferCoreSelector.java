@@ -7,17 +7,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.a.eye.gemini.sniffer.setting.GeminiSettings;
+import com.a.eye.gemini.sniffer.cmd.GeminiCmd;
 
 @Component
 public class SnifferCoreSelector {
 
 	private Logger logger = LogManager.getFormatterLogger(this.getClass().getName());
 
-	private static final String On = "on";
-
 	@Autowired
-	private GeminiSettings settings;
+	private SnifferCoreCard coreCard;
 
 	@Autowired
 	private SnifferCoreOnline onlineCore;
@@ -30,17 +28,23 @@ public class SnifferCoreSelector {
 
 	@PostConstruct
 	public void start() {
-		if (On.equals(settings.getOnline().toLowerCase())) {
-			onlineCore.startCapture();
-			logger.info("开启在线处理模式");
-		}
-		if (On.equals(settings.getOfflineWriter().toLowerCase())) {
-			offlineWriterCore.startCapture();
-			logger.info("开启离线写入模式");
-		}
-		if (On.equals(settings.getOfflineReader().toLowerCase())) {
-			offlineReaderCore.startCapture();
-			logger.info("开启离线读取模式");
+		Class<?>[] sniffer = GeminiCmd.sniffer;
+		for (Class<?> clazz : sniffer) {
+			if (clazz != null) {
+				logger.info("启动：%s", clazz);
+				if (coreCard.getClass() == clazz) {
+					coreCard.getDevs();
+				}
+				if (onlineCore.getClass() == clazz) {
+					onlineCore.startCapture();
+				}
+				if (offlineWriterCore.getClass() == clazz) {
+					offlineWriterCore.startCapture();
+				}
+				if (offlineReaderCore.getClass() == clazz) {
+					offlineReaderCore.startCapture();
+				}
+			}
 		}
 	}
 }

@@ -9,8 +9,8 @@ import org.jnetpcap.protocol.JProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.a.eye.gemini.sniffer.cmd.GeminiCmd;
 import com.a.eye.gemini.sniffer.handler.SnifferOnlineHandler;
-import com.a.eye.gemini.sniffer.setting.GeminiSettings;
 
 @Component
 public class SnifferCoreOfflineReader extends SnifferCoreBase {
@@ -18,18 +18,15 @@ public class SnifferCoreOfflineReader extends SnifferCoreBase {
 	private Logger logger = LogManager.getFormatterLogger(this.getClass().getName());
 
 	@Autowired
-	private GeminiSettings settings;
-
-	@Autowired
 	private SnifferOnlineHandler handler;
 
 	@Override
 	public void startCapture() {
 		StringBuilder errbuf = new StringBuilder();
-		File pcapFiles = new File(settings.getFilePath());
+		File pcapFiles = new File("");
 		String[] pcapFilelist = pcapFiles.list();
 		for (String file : pcapFilelist) {
-			String absolutePath = settings.getFilePath() + "/" + file;
+			String absolutePath = GeminiCmd.Cmd_P_Value + "/" + file;
 			logger.info("读取文件：%s", absolutePath);
 			Pcap pcap = Pcap.openOffline(absolutePath, errbuf);
 			this.loop(pcap);

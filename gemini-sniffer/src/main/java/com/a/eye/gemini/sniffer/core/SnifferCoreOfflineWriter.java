@@ -8,16 +8,13 @@ import org.jnetpcap.PcapDumper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.a.eye.gemini.sniffer.cmd.GeminiCmd;
 import com.a.eye.gemini.sniffer.handler.SnifferOfflineWriterHandler;
-import com.a.eye.gemini.sniffer.setting.GeminiSettings;
 
 @Component
 public class SnifferCoreOfflineWriter extends SnifferCoreBase {
 
 	public static final String DATE_FORMAT_NOW = "yyyyMMddHHmmss";
-
-	@Autowired
-	private GeminiSettings settings;
 
 	@Autowired
 	private SnifferOfflineWriterHandler handler;
@@ -26,9 +23,9 @@ public class SnifferCoreOfflineWriter extends SnifferCoreBase {
 	protected void loop(Pcap pcap) {
 		while (true) {
 			// 10 seconds
-			final int CAPTURE_INTERVAL = Integer.parseInt(settings.getIntervalTime()) * 1000;
+			final int CAPTURE_INTERVAL = GeminiCmd.Cmd_I_Value * 1000;
 			final long interval = System.currentTimeMillis() + CAPTURE_INTERVAL;
-			String ofile = settings.getFilePath() + "/" + now().toString() + "_gemini_sniffer.pcap";
+			String ofile = GeminiCmd.Cmd_P_Value + "/" + now().toString() + "_gemini_sniffer.pcap";
 			final PcapDumper dumper = pcap.dumpOpen(ofile);
 			handler.setDumper(dumper);
 			handler.setInterval(interval);

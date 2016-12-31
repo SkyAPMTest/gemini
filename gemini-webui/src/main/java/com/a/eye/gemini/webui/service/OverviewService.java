@@ -126,8 +126,10 @@ public class OverviewService {
 				categories.add(hour[1]);
 			}
 			if (Constants.Indicator_COST.equals(indicator)) {
-				IndicatorHostItemData pvHour = indicatorHostService.findIndicatorData(CollectionNameConstants.INDICATOR_HOST_HOUR_COST, host, hour[0]);
-				data.add(pvHour.getValue());
+				IndicatorHostItemData costHour = indicatorHostService.findIndicatorData(CollectionNameConstants.INDICATOR_HOST_HOUR_COST, host, hour[0]);
+				IndicatorHostItemData pvHour = indicatorHostService.findIndicatorData(CollectionNameConstants.INDICATOR_HOST_HOUR_PV, host, hour[0]);
+				data.add(costHour.getValue() == 0 ? 0 : costHour.getValue() / pvHour.getValue());
+
 				categories.add(hour[1]);
 			}
 		}
@@ -168,8 +170,9 @@ public class OverviewService {
 				categories.add(day[1]);
 			}
 			if (Constants.Indicator_COST.equals(indicator)) {
-				IndicatorHostItemData pvHour = indicatorHostService.findIndicatorData(CollectionNameConstants.INDICATOR_HOST_DAY_COST, host, day[0]);
-				data.add(pvHour.getValue());
+				IndicatorHostItemData costHour = indicatorHostService.findIndicatorData(CollectionNameConstants.INDICATOR_HOST_DAY_COST, host, day[0]);
+				IndicatorHostItemData pvHour = indicatorHostService.findIndicatorData(CollectionNameConstants.INDICATOR_HOST_DAY_PV, host, day[0]);
+				data.add(costHour.getValue() == 0 ? 0 : costHour.getValue() / pvHour.getValue());
 				categories.add(day[1]);
 			}
 		}

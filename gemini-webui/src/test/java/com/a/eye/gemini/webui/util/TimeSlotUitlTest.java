@@ -1,10 +1,7 @@
 package com.a.eye.gemini.webui.util;
 
-import org.junit.Test;
-
 public class TimeSlotUitlTest {
 
-	@Test
 	public void test() {
 		String[][] hours = TimeSlotUtil.getHours24(0);
 		for (String[] hour : hours) {

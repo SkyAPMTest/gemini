@@ -44,36 +44,34 @@
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar white-bg">
 					<li><a href="index.html"><i class="fa fa-heart-o"></i> <span class="nav-label">常用报告</span> </a></li>
-					<li><a href="index.html"><i class="fa fa-file-text"></i> <span class="nav-label">网站概况</span> </a></li>
+					<li><a href="javascript: openMenu('/overview/overview.html');"><i class="fa fa-file-text"></i> <span class="nav-label" style="color: #31b9ff">网站概况</span> </a></li>
 					<li><a href="index.html"><i class="fa fa-bar-chart"></i> <span class="nav-label">流量分析</span> </a>
 						<ul class="nav nav-second-level">
-							<li><a href="index.html">实时访客</a></li>
-							<li><a href="dashboard_2.html">趋势分析 今</a></li>
-							<li><a href="dashboard_3.html">趋势分析 昨</a></li>
+							<li><a href="index.html"><span>实时访客</span></a></li>
+							<li><a href="javascript: openMenu('/trend/trend.html');">趋势分析</a></li>
 						</ul></li>
 					<li><a href="index.html"><i class="fa fa-bar-chart"></i> <span class="nav-label">来源分析</span> </a>
 						<ul class="nav nav-second-level">
 							<li><a href="index.html">全部来源</a></li>
-							<li><a href="dashboard_2.html">内网</a></li>
-							<li><a href="dashboard_3.html">外网</a></li>
+							<li><a href="index.html">内网</a></li>
+							<li><a href="index.html">外网</a></li>
 						</ul></li>
 					<li><a href="index.html"><i class="fa fa-bar-chart"></i> <span class="nav-label">访问分析</span> </a>
 						<ul class="nav nav-second-level">
 							<li><a href="index.html">受访页面</a></li>
-							<li><a href="dashboard_2.html">入口页面</a></li>
-							<li><a href="dashboard_3.html">受访域名</a></li>
+							<li><a href="index.html">入口页面</a></li>
+							<li><a href="index.html">受访域名</a></li>
 						</ul></li>
 					<li><a href="index.html"><i class="fa fa-bar-chart"></i> <span class="nav-label">访客分析</span> </a>
 						<ul class="nav nav-second-level">
 							<li><a href="index.html">系统环境</a></li>
-							<li><a href="dashboard_2.html">新老访客</a></li>
-							<li><a href="dashboard_3.html">访客属性</a></li>
+							<li><a href="index.html">新老访客</a></li>
+							<li><a href="index.html">访客属性</a></li>
 						</ul></li>
 				</ul>
 			</div>
 
-			<div id="mainpanel_div" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-			</div>
+			<div id="mainpanel_div" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
 		</div>
 	</div>
 
@@ -95,7 +93,7 @@
 	<!-- Select2 -->
 	<script src="/webjars/select2/4.0.3/dist/js/select2.full.min.js"></script>
 	<script src="/webjars/jquery-ui/1.12.0/jquery-ui.min.js"></script>
-	
+
 	<script src="/index.js"></script>
 </body>
 </html>

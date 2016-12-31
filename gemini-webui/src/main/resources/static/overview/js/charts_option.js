@@ -21,7 +21,7 @@ optionOne = {
 			fontSize : 12,
 			fontFamily : 'Microsoft Yahei, Helvetica, Arial, sans-serif'
 		},
-		formatter : '<div><div style="background: #f4f4f4;"><div style="display: inline; line-height: 35px; padding: 0 20px 0 20px">{b0}</div><div style="display: inline; padding: 0 20px 0 20px">浏览量(PV)</div></div><div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a0}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c0}</div></div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a1}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c1}</div></div></div></div>'
+		formatter : '<div><div style="background: #f4f4f4;"><div style="display: inline; line-height: 35px; padding: 0 20px 0 20px">{b0}</div><div style="display: inline; padding: 0 20px 0 20px">数值</div></div><div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a0}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c0}</div></div></div></div>'
 	},
 	legend : {
 		data : [],
@@ -72,7 +72,7 @@ optionTwo = {
 			fontSize : 12,
 			fontFamily : 'Microsoft Yahei, Helvetica, Arial, sans-serif'
 		},
-		formatter : '<div><div style="background: #f4f4f4;"><div style="display: inline; line-height: 35px; padding: 0 20px 0 20px">{b0}</div><div style="display: inline; padding: 0 20px 0 20px">浏览量(PV)</div></div><div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a0}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c0}</div></div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a1}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c1}</div></div></div></div>'
+		formatter : '<div><div style="background: #f4f4f4;"><div style="display: inline; line-height: 35px; padding: 0 20px 0 20px">{b0}</div><div style="display: inline; padding: 0 20px 0 20px">数值</div></div><div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a0}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c0}</div></div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a1}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c1}</div></div></div></div>'
 	},
 	legend : {
 		data : [],
@@ -135,7 +135,7 @@ optionThree = {
 			fontSize : 12,
 			fontFamily : 'Microsoft Yahei, Helvetica, Arial, sans-serif'
 		},
-		formatter : '<div><div style="background: #f4f4f4;"><div style="display: inline; line-height: 35px; padding: 0 20px 0 20px">{b0}</div><div style="display: inline; padding: 0 20px 0 20px">浏览量(PV)</div></div><div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a0}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c0}</div></div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a1}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c1}</div></div></div></div>'
+		formatter : '<div><div style="background: #f4f4f4;"><div style="display: inline; line-height: 35px; padding: 0 20px 0 20px">{b0}</div><div style="display: inline; padding: 0 20px 0 20px">数值</div></div><div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a0}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c0}</div></div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a1}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c1}</div></div><div><div style="display: inline; line-height: 35px; padding-left: 20px">{a2}</div><div style="display: inline; line-height: 35px; float: right; padding-right: 20px">{c2}</div></div></div></div>'
 	},
 	legend : {
 		data : [],

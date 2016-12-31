@@ -123,7 +123,7 @@ h3, h4, h5 {
 	{
 	color: #fff;
 	text-decoration: none;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	outline: 0;
 }
 
@@ -326,7 +326,7 @@ body.mini-navbar .navbar-default .nav>li>.nav-second-level li a {
 }
 
 .navbar-default .special_link a {
-	background: #1ab394;
+	background: #4da7fd;
 	color: white;
 }
 
@@ -337,7 +337,7 @@ body.mini-navbar .navbar-default .nav>li>.nav-second-level li a {
 
 .navbar-default .special_link a span.label {
 	background: #fff;
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .navbar-default .landing_link a {
@@ -346,7 +346,7 @@ body.mini-navbar .navbar-default .nav>li>.nav-second-level li a {
 }
 
 .navbar-default .landing_link a:hover {
-	background: #1ab394 !important;
+	background: #4da7fd !important;
 	color: white;
 }
 
@@ -483,7 +483,7 @@ body.canvas-menu .logo-element {
 
 body.mini-navbar .nav-header {
 	padding: 0;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 }
 
 body.canvas-menu .nav-header {
@@ -608,7 +608,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 
 .top-navigation .navbar-nav .dropdown-menu>.active>a {
 	background: white;
-	color: #1ab394;
+	color: #4da7fd;
 	font-weight: bold;
 }
 
@@ -627,7 +627,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 
 .top-navigation .nav>li a:hover, .top-navigation .nav>li a:focus {
 	background: #fff;
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .top-navigation .nav>li.active {
@@ -636,7 +636,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 
 .top-navigation .nav>li.active>a {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .top-navigation .navbar-right {
@@ -658,7 +658,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 
 .top-navigation .navbar-brand {
-	background: #1ab394;
+	background: #4da7fd;
 	color: #fff;
 	padding: 15px 25px;
 }
@@ -691,7 +691,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 
 .navbar-toggle {
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	color: #fff;
 	padding: 6px 12px;
 	font-size: 14px;
@@ -747,7 +747,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 
 .btn-primary.btn-outline {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .btn-success.btn-outline {
@@ -773,23 +773,25 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 
 .btn-primary {
-	background-color: #1ab394;
-	border-color: #1ab394;
-	color: #FFFFFF;
+	background-color: #FFFFFF;
+	border: 1px solid #d2d2d2;
+	color: #262626;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active,
 	.btn-primary.active, .open .dropdown-toggle.btn-primary, .btn-primary:active:focus,
 	.btn-primary:active:hover, .btn-primary.active:hover, .btn-primary.active:focus
 	{
-	background-color: #18a689;
-	border-color: #18a689;
+	background-color: #4da7fd;
+	border-color: #4da7fd;
 	color: #FFFFFF;
 }
 
 .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary
 	{
-	background-image: none;
+	background-color: #4da7fd;
+	border-color: #4da7fd;
+	color: #FFFFFF;
 }
 
 .btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus,
@@ -958,7 +960,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 
 .btn-link:hover, .btn-link:focus, .btn-link:active, .btn-link.active,
 	.open .dropdown-toggle.btn-link {
-	color: #1ab394;
+	color: #4da7fd;
 	text-decoration: none;
 }
 
@@ -1136,7 +1138,7 @@ button.dim:active:before {
 }
 
 .label-primary, .badge-primary {
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	color: #FFFFFF;
 }
 
@@ -1196,7 +1198,7 @@ button.dim:active:before {
 	display: block;
 	overflow: hidden;
 	cursor: pointer;
-	border: 2px solid #1ab394;
+	border: 2px solid #4da7fd;
 	border-radius: 2px;
 }
 
@@ -1227,7 +1229,7 @@ button.dim:active:before {
 .onoffswitch-inner:before {
 	content: "ON";
 	padding-left: 10px;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	color: #FFFFFF;
 }
 
@@ -1243,7 +1245,7 @@ button.dim:active:before {
 	width: 20px;
 	margin: 0;
 	background: #FFFFFF;
-	border: 2px solid #1ab394;
+	border: 2px solid #4da7fd;
 	border-radius: 2px;
 	position: absolute;
 	top: 0;
@@ -1409,8 +1411,8 @@ button.dim:active:before {
 }
 
 .fc-state-active {
-	background-color: #1ab394;
-	border-color: #1ab394;
+	background-color: #4da7fd;
+	border-color: #4da7fd;
 	color: #ffffff;
 }
 
@@ -1447,9 +1449,9 @@ button.dim:active:before {
 
 .fc-event, .fc-agenda .fc-event-time, .fc-event a {
 	padding: 4px 6px;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	/* background color */
-	border-color: #1ab394;
+	border-color: #4da7fd;
 	/* border color */
 }
 
@@ -1562,8 +1564,8 @@ button.dim:active:before {
 /* LIST GROUP */
 a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.active:focus
 	{
-	background-color: #1ab394;
-	border-color: #1ab394;
+	background-color: #4da7fd;
+	border-color: #4da7fd;
 	color: #FFFFFF;
 	z-index: 2;
 }
@@ -1900,7 +1902,7 @@ div.dt-button-info {
 }
 
 .pace .pace-progress {
-	background: #1ab394;
+	background: #4da7fd;
 	position: fixed;
 	z-index: 2040;
 	top: 0;
@@ -2056,11 +2058,11 @@ div.dt-button-info {
 }
 
 .form-control:focus, .single-line:focus {
-	border-color: #1ab394 !important;
+	border-color: #4da7fd !important;
 }
 
 .has-success .form-control {
-	border-color: #1ab394;
+	border-color: #4da7fd;
 }
 
 .has-warning .form-control {
@@ -2072,7 +2074,7 @@ div.dt-button-info {
 }
 
 .has-success .control-label {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .has-warning .control-label {
@@ -2104,7 +2106,7 @@ div.dt-button-info {
 }
 
 .noUi-connect {
-	background: none repeat scroll 0 0 #1ab394;
+	background: none repeat scroll 0 0 #4da7fd;
 	box-shadow: none;
 }
 
@@ -2143,7 +2145,7 @@ div.dt-button-info {
 	display: block;
 	overflow: hidden;
 	cursor: pointer;
-	border: 2px solid #1AB394;
+	border: 2px solid #4da7fd;
 	border-radius: 3px;
 }
 
@@ -2176,7 +2178,7 @@ div.dt-button-info {
 .onoffswitch-inner:before {
 	content: "ON";
 	padding-left: 7px;
-	background-color: #1AB394;
+	background-color: #4da7fd;
 	color: #FFFFFF;
 }
 
@@ -2193,7 +2195,7 @@ div.dt-button-info {
 	width: 18px;
 	margin: 0;
 	background: #FFFFFF;
-	border: 2px solid #1AB394;
+	border: 2px solid #4da7fd;
 	border-radius: 3px;
 	position: absolute;
 	top: 0;
@@ -2741,11 +2743,11 @@ label.error {
 }
 
 .toast {
-	background-color: #1ab394;
+	background-color: #4da7fd;
 }
 
 .toast-success {
-	background-color: #1ab394;
+	background-color: #4da7fd;
 }
 
 .toast-error {
@@ -2794,7 +2796,7 @@ label.error {
 }
 
 .inspinia-notify.alert-info {
-	border-left: 6px solid #1ab394;
+	border-left: 6px solid #4da7fd;
 }
 /* Image cropper style */
 .img-container, .img-preview {
@@ -2930,11 +2932,11 @@ a.forum-item-title:hover {
 }
 
 .forum-item.active .fa {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .forum-item.active a.forum-item-title {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 @media ( max-width : 992px) {
@@ -3126,7 +3128,7 @@ a.forum-item-title:hover {
 }
 
 .vertical-date small {
-	color: #1ab394;
+	color: #4da7fd;
 	font-weight: 400;
 }
 
@@ -3385,7 +3387,7 @@ a.forum-item-title:hover {
 	position: absolute;
 	left: 10px;
 	border-radius: 3px;
-	background: #1ab394;
+	background: #4da7fd;
 	padding: 3px;
 	color: white;
 	cursor: pointer;
@@ -3495,7 +3497,7 @@ a.forum-item-title:hover {
 }
 /*Slick Carousel */
 .slick-prev:before, .slick-next:before {
-	color: #1ab394 !important;
+	color: #4da7fd !important;
 }
 /* Payments */
 .payment-card {
@@ -3586,7 +3588,7 @@ body.tour-open .animated {
 /* Dropzone */
 .dropzone {
 	min-height: 140px;
-	border: 1px dashed #1ab394;
+	border: 1px dashed #4da7fd;
 	background: white;
 	padding: 20px 20px;
 }
@@ -4201,7 +4203,7 @@ img.circle-border {
 	font-weight: 600;
 	padding: 17px 20px;
 	text-align: center;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 }
 
 .login-panel {
@@ -4409,7 +4411,7 @@ table.table-mail tr td {
 }
 
 .navy-bg, .bg-success {
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	color: #ffffff;
 }
 
@@ -4438,12 +4440,12 @@ table.table-mail tr td {
 }
 
 .panel-primary {
-	border-color: #1ab394;
+	border-color: #4da7fd;
 }
 
 .panel-primary>.panel-heading {
-	background-color: #1ab394;
-	border-color: #1ab394;
+	background-color: #4da7fd;
+	border-color: #4da7fd;
 }
 
 .panel-success {
@@ -4487,7 +4489,7 @@ table.table-mail tr td {
 }
 
 .progress-bar {
-	background-color: #1ab394;
+	background-color: #4da7fd;
 }
 
 .progress-small, .progress-small .progress-bar {
@@ -4537,7 +4539,7 @@ table.table-mail tr td {
 }
 /* COLORS */
 .text-navy {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .text-primary {
@@ -5492,7 +5494,7 @@ ul.notes li div {
 }
 
 .category-list li a .text-navy {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .category-list li a .text-primary {
@@ -5690,7 +5692,7 @@ a.compose-mail {
 }
 
 .file-list li a:hover {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .user-friends img {
@@ -5816,7 +5818,7 @@ dd.project-people {
 .faq-question {
 	font-size: 18px;
 	font-weight: 600;
-	color: #1ab394;
+	color: #4da7fd;
 	display: block;
 }
 
@@ -6058,7 +6060,7 @@ dd.project-people {
 }
 /* ISSUE TRACKER */
 .issue-tracker .btn-link {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 table.issue-tracker tbody tr td {
@@ -6124,7 +6126,7 @@ table.issue-tracker tbody tr td {
 }
 
 .agile-list li.success-element {
-	border-left: 3px solid #1ab394;
+	border-left: 3px solid #4da7fd;
 }
 
 .agile-detail {
@@ -6221,14 +6223,14 @@ table.shoping-cart-table tr td:last-child {
 }
 
 .product-name:hover, .product-name:focus {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .product-price {
 	font-size: 14px;
 	font-weight: 600;
 	color: #ffffff;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	padding: 6px 12px;
 	position: absolute;
 	top: -32px;
@@ -6371,7 +6373,7 @@ table.shoping-cart-table tr td:last-child {
 }
 
 .vote-actions a {
-	color: #1ab394;
+	color: #4da7fd;
 	font-weight: 600;
 }
 
@@ -6406,7 +6408,7 @@ table.shoping-cart-table tr td:last-child {
 }
 
 .vote-info a:hover {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .vote-icon {
@@ -6417,7 +6419,7 @@ table.shoping-cart-table tr td:last-child {
 }
 
 .vote-icon.active {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 body.body-small .vote-icon {
@@ -6449,7 +6451,7 @@ body.body-small .vote-icon {
 	height: 38px;
 	width: 38px;
 	display: block;
-	background: #1ab394;
+	background: #4da7fd;
 	padding: 9px 8px;
 	text-align: center;
 	color: #fff;
@@ -6458,7 +6460,7 @@ body.body-small .vote-icon {
 
 .open-small-chat:hover {
 	color: white;
-	background: #1ab394;
+	background: #4da7fd;
 }
 
 .small-chat-box {
@@ -6524,7 +6526,7 @@ body.body-small .vote-icon {
 }
 
 .small-chat-box .content .chat-message.active {
-	background: #1ab394;
+	background: #4da7fd;
 	color: #fff;
 }
 
@@ -6648,7 +6650,7 @@ body.body-small .vote-icon {
 .sk-spinner-rotating-plane.sk-spinner {
 	width: 30px;
 	height: 30px;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	margin: 0 auto;
 	-webkit-animation: sk-rotatePlane 1.2s infinite ease-in-out;
 	animation: sk-rotatePlane 1.2s infinite ease-in-out;
@@ -6669,7 +6671,22 @@ body.body-small .vote-icon {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -6677,7 +6694,22 @@ body.body-small .vote-icon {
 
 
 
+
+
+
+
+
 perspective
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6690,8 +6722,28 @@ px
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateX
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6706,6 +6758,16 @@ rotateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateY
 
@@ -6714,8 +6776,28 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6728,7 +6810,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -6736,7 +6833,22 @@ transform
 
 
 
+
+
+
+
+
 perspective
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6749,8 +6861,28 @@ px
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateX
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6765,6 +6897,16 @@ rotateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateY
 
@@ -6773,8 +6915,28 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6790,7 +6952,22 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -6798,7 +6975,22 @@ deg
 
 
 
+
+
+
+
+
 perspective
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6811,8 +7003,28 @@ px
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateX
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6825,6 +7037,16 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateY
 
@@ -6833,8 +7055,28 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-179
 .9deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6849,7 +7091,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -6857,7 +7114,22 @@ transform
 
 
 
+
+
+
+
+
 perspective
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6870,8 +7142,28 @@ px
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateX
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6884,6 +7176,16 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateY
 
@@ -6892,8 +7194,28 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-179
 .9deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6918,7 +7240,22 @@ keyframes sk-rotatePlane { 0% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -6926,7 +7263,22 @@ keyframes sk-rotatePlane { 0% {
 
 
 
+
+
+
+
+
 perspective
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6939,8 +7291,28 @@ px
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateX
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6955,6 +7327,16 @@ rotateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateY
 
@@ -6963,8 +7345,28 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6977,7 +7379,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -6985,7 +7402,22 @@ transform
 
 
 
+
+
+
+
+
 perspective
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6998,8 +7430,28 @@ px
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateX
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7014,6 +7466,16 @@ rotateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateY
 
@@ -7022,8 +7484,28 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7039,7 +7521,22 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7047,7 +7544,22 @@ deg
 
 
 
+
+
+
+
+
 perspective
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7060,8 +7572,28 @@ px
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateX
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7074,6 +7606,16 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateY
 
@@ -7082,8 +7624,28 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-179
 .9deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7098,7 +7660,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7106,7 +7683,22 @@ transform
 
 
 
+
+
+
+
+
 perspective
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7119,8 +7711,28 @@ px
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateX
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7133,6 +7745,16 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 rotateY
 
@@ -7141,8 +7763,28 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-179
 .9deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7173,7 +7815,7 @@ rotateY
 	width: 100%;
 	height: 100%;
 	border-radius: 50%;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	opacity: 0.6;
 	position: absolute;
 	top: 0;
@@ -7202,7 +7844,22 @@ rotateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7210,7 +7867,22 @@ rotateY
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7225,7 +7897,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7233,7 +7920,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7258,7 +7960,22 @@ keyframes sk-doubleBounce { 0%, 100% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7266,7 +7983,22 @@ keyframes sk-doubleBounce { 0%, 100% {
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7281,7 +8013,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7289,7 +8036,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7320,7 +8082,7 @@ scale
 }
 
 .sk-spinner-wave div {
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	height: 100%;
 	width: 6px;
 	display: inline-block;
@@ -7363,7 +8125,22 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7371,7 +8148,22 @@ scale
 
 
 
+
+
+
+
+
 scaleY
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7386,7 +8178,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7394,7 +8201,22 @@ transform
 
 
 
+
+
+
+
+
 scaleY
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7419,7 +8241,22 @@ keyframes sk-waveStretchDelay { 0%, 40%, 100% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7427,7 +8264,22 @@ keyframes sk-waveStretchDelay { 0%, 40%, 100% {
 
 
 
+
+
+
+
+
 scaleY
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7442,7 +8294,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -7450,7 +8317,22 @@ transform
 
 
 
+
+
+
+
+
 scaleY
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7478,7 +8360,7 @@ scaleY
 
 .sk-spinner-wandering-cubes .sk-cube1, .sk-spinner-wandering-cubes .sk-cube2
 	{
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	width: 10px;
 	height: 10px;
 	position: absolute;
@@ -7509,11 +8391,31 @@ scaleY
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -7524,8 +8426,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7538,8 +8460,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7552,8 +8494,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-179
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7566,11 +8528,31 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -7581,8 +8563,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7595,8 +8597,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7609,8 +8631,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-179
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7621,7 +8663,17 @@ deg
 .1
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 %
@@ -7631,10 +8683,30 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 translateX
@@ -7642,8 +8714,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 )
@@ -7652,8 +8744,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 )
@@ -7662,8 +8774,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-180
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 );
@@ -7672,10 +8804,30 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 translateX
@@ -7683,8 +8835,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 )
@@ -7693,8 +8865,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 )
@@ -7703,8 +8895,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-180
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 );
@@ -7718,11 +8930,31 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -7733,8 +8965,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7747,8 +8999,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7761,8 +9033,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-270
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7775,8 +9067,28 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 .5
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7791,11 +9103,31 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -7806,8 +9138,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7820,8 +9172,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7834,8 +9206,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-270
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7848,8 +9240,28 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 .5
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7867,11 +9279,31 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -7882,8 +9314,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-360
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7896,11 +9348,31 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -7911,8 +9383,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-360
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7936,11 +9428,31 @@ keyframes sk-wanderingCubeMove { 25% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -7951,8 +9463,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7965,8 +9497,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7979,8 +9531,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-179
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7993,11 +9565,31 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -8008,8 +9600,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8022,8 +9634,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8036,8 +9668,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-179
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8048,7 +9700,17 @@ deg
 .1
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 %
@@ -8058,10 +9720,30 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 translateX
@@ -8069,8 +9751,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 )
@@ -8079,8 +9781,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 )
@@ -8089,8 +9811,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-180
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 );
@@ -8099,10 +9841,30 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 translateX
@@ -8110,8 +9872,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 )
@@ -8120,8 +9902,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 )
@@ -8130,8 +9932,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-180
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 );
@@ -8145,11 +9967,31 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -8160,8 +10002,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8174,8 +10036,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8188,8 +10070,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-270
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8202,8 +10104,28 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 .5
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8218,11 +10140,31 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -8233,8 +10175,28 @@ translateX
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8247,8 +10209,28 @@ translateY
 
 
 
+
+
+
+
+
+
+
+
+
+
 (42
 px
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8261,8 +10243,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-270
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8275,8 +10277,28 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 (0
 .5
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8294,11 +10316,31 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -8309,8 +10351,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-360
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8323,11 +10385,31 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -8338,8 +10420,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (-360
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8357,7 +10459,7 @@ deg
 	width: 40px;
 	height: 40px;
 	margin: 0 auto;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	border-radius: 100%;
 	-webkit-animation: sk-pulseScaleOut 1s infinite ease-in-out;
 	animation: sk-pulseScaleOut 1s infinite ease-in-out;
@@ -8378,7 +10480,22 @@ deg
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8386,7 +10503,22 @@ deg
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8401,7 +10533,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8409,7 +10556,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8424,11 +10586,31 @@ opacity
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -8450,7 +10632,22 @@ keyframes sk-pulseScaleOut { 0% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8458,7 +10655,22 @@ keyframes sk-pulseScaleOut { 0% {
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8473,7 +10685,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8481,7 +10708,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8496,11 +10738,31 @@ opacity
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -8532,7 +10794,7 @@ opacity
 	display: inline-block;
 	position: absolute;
 	top: 0;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	border-radius: 100%;
 	-webkit-animation: sk-chasingDotsBounce 2s infinite ease-in-out;
 	animation: sk-chasingDotsBounce 2s infinite ease-in-out;
@@ -8574,7 +10836,22 @@ keyframes sk-chasingDotsRotate { 100% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8582,7 +10859,22 @@ keyframes sk-chasingDotsRotate { 100% {
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8597,7 +10889,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8605,7 +10912,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8630,7 +10952,22 @@ keyframes sk-chasingDotsBounce { 0%, 100% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8638,7 +10975,22 @@ keyframes sk-chasingDotsBounce { 0%, 100% {
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8653,7 +11005,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8661,7 +11028,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8690,7 +11072,7 @@ scale
 .sk-spinner-three-bounce div {
 	width: 18px;
 	height: 18px;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	border-radius: 100%;
 	display: inline-block;
 	-webkit-animation: sk-threeBounceDelay 1.4s infinite ease-in-out;
@@ -8725,7 +11107,22 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8733,7 +11130,22 @@ scale
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8748,7 +11160,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8756,7 +11183,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8781,7 +11223,22 @@ keyframes sk-threeBounceDelay { 0%, 80%, 100% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8789,7 +11246,22 @@ keyframes sk-threeBounceDelay { 0%, 80%, 100% {
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8804,7 +11276,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -8812,7 +11299,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8862,7 +11364,7 @@ scale
 	margin: 0 auto;
 	width: 20%;
 	height: 20%;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	border-radius: 100%;
 	-webkit-animation: sk-circleBounceDelay 1.2s infinite ease-in-out;
 	animation: sk-circleBounceDelay 1.2s infinite ease-in-out;
@@ -9007,7 +11509,22 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -9015,7 +11532,22 @@ scale
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9030,7 +11562,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -9038,7 +11585,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9063,7 +11625,22 @@ keyframes sk-circleBounceDelay { 0%, 80%, 100% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -9071,7 +11648,22 @@ keyframes sk-circleBounceDelay { 0%, 80%, 100% {
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9086,7 +11678,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -9094,7 +11701,22 @@ transform
 
 
 
+
+
+
+
+
 scale
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9139,7 +11761,7 @@ scale
 .sk-spinner-cube-grid .sk-cube {
 	width: 33%;
 	height: 33%;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	float: left;
 	-webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
 	animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
@@ -9205,7 +11827,22 @@ scale
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -9213,7 +11850,22 @@ scale
 
 
 
+
+
+
+
+
 scale3D
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9231,7 +11883,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -9239,7 +11906,22 @@ transform
 
 
 
+
+
+
+
+
 scale3D
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9267,7 +11949,22 @@ keyframes sk-cubeGridScaleDelay { 0%, 70%, 100% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -9275,7 +11972,22 @@ keyframes sk-cubeGridScaleDelay { 0%, 70%, 100% {
 
 
 
+
+
+
+
+
 scale3D
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9293,7 +12005,22 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
+
+
+
+
+
 
 
 
@@ -9301,7 +12028,22 @@ transform
 
 
 
+
+
+
+
+
 scale3D
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9323,7 +12065,7 @@ scale3D
  *
  */
 .sk-spinner-wordpress.sk-spinner {
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	width: 30px;
 	height: 30px;
 	border-radius: 30px;
@@ -9359,11 +12101,31 @@ scale3D
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -9374,8 +12136,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (360
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9388,11 +12170,31 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -9403,8 +12205,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (360
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9427,11 +12249,31 @@ keyframes sk-innerCircle { 0% {
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -9442,8 +12284,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (360
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9456,11 +12318,31 @@ transform
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -9471,8 +12353,28 @@ rotate
 
 
 
+
+
+
+
+
+
+
+
+
+
 (360
 deg
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -9520,7 +12422,7 @@ deg
 	margin: 0 auto;
 	width: 18%;
 	height: 18%;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	border-radius: 100%;
 	-webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out;
 	animation: sk-circleFadeDelay 1.2s infinite ease-in-out;
@@ -9664,11 +12566,31 @@ opacity
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -9689,11 +12611,31 @@ opacity
 
 
 
+
+
+
+
+
+
+
+
+
+
 :
 
 
 
+
+
+
+
+
  
+
+
+
+
+
 
 
 
@@ -9754,7 +12696,7 @@ body.landing-page {
 }
 
 .landing-page span.navy {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .landing-page p.text-color {
@@ -9762,7 +12704,7 @@ body.landing-page {
 }
 
 .landing-page a.navy-link {
-	color: #1ab394;
+	color: #4da7fd;
 	text-decoration: none;
 }
 
@@ -9789,7 +12731,7 @@ body.landing-page {
 	width: 60px;
 	height: 1px;
 	margin: 60px auto 0;
-	border-bottom: 2px solid #1ab394;
+	border-bottom: 2px solid #4da7fd;
 }
 
 .landing-page .navbar-wrapper {
@@ -9840,12 +12782,12 @@ body.landing-page {
 	{
 	background: transparent;
 	color: #fff;
-	border-top: 6px solid #1ab394;
+	border-top: 6px solid #4da7fd;
 }
 
 .landing-page .navbar-default .navbar-nav>li>a:hover, .landing-page .navbar-default .navbar-nav>li>a:focus
 	{
-	color: #1ab394;
+	color: #4da7fd;
 	background: inherit;
 }
 
@@ -9876,7 +12818,7 @@ body.landing-page {
 	height: auto;
 	display: block;
 	font-size: 14px;
-	background: #1ab394;
+	background: #4da7fd;
 	padding: 15px 20px 15px 20px;
 	border-radius: 0 0 5px 5px;
 	font-weight: 700;
@@ -9888,7 +12830,7 @@ body.landing-page {
 }
 
 .landing-page .navbar-scroll.navbar-default .nav li a:hover {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .landing-page .navbar-wrapper .navbar.navbar-scroll {
@@ -9913,7 +12855,7 @@ body.landing-page {
 
 .landing-page .navbar-default .navbar-nav>.active>a, .landing-page .navbar-default .navbar-nav>.active>a:hover
 	{
-	border-top: 6px solid #1ab394;
+	border-top: 6px solid #4da7fd;
 }
 
 .landing-page .navbar-fixed-top {
@@ -10087,7 +13029,7 @@ body.landing-page {
 }
 
 .landing-page .features small {
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .landing-page .features h2 {
@@ -10104,13 +13046,13 @@ body.landing-page {
 }
 
 .landing-page .features-icon {
-	color: #1ab394;
+	color: #4da7fd;
 	font-size: 40px;
 }
 
 .landing-page .navy-section {
 	margin-top: 60px;
-	background: #1ab394;
+	background: #4da7fd;
 	color: #fff;
 	padding: 20px 0;
 }
@@ -10129,7 +13071,7 @@ body.landing-page {
 }
 
 .landing-page .social-icon a {
-	background: #1ab394;
+	background: #4da7fd;
 	color: #fff;
 	padding: 4px 8px;
 	height: 28px;
@@ -10166,7 +13108,7 @@ body.landing-page {
 
 .landing-page .pricing-plan .pricing-price span {
 	font-weight: 700;
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .landing-page li.pricing-desc {
@@ -10176,7 +13118,7 @@ body.landing-page {
 }
 
 .landing-page li.pricing-title {
-	background: #1ab394;
+	background: #4da7fd;
 	color: #fff;
 	padding: 10px;
 	border-radius: 4px 4px 0 0;
@@ -10187,7 +13129,7 @@ body.landing-page {
 .landing-page .testimonials {
 	padding-top: 80px;
 	padding-bottom: 90px;
-	background-color: #1ab394;
+	background-color: #4da7fd;
 	background-image: url('../img/landing/avatar_all.png');
 }
 
@@ -10196,7 +13138,7 @@ body.landing-page {
 }
 
 .landing-page .features .big-icon {
-	color: #1ab394 !important;
+	color: #4da7fd !important;
 }
 
 .landing-page .contact {
@@ -10264,8 +13206,8 @@ body.landing-page {
 }
 
 .landing-page .btn-primary {
-	background-color: #1ab394;
-	border-color: #1ab394;
+	background-color: #4da7fd;
+	border-color: #4da7fd;
 	color: #FFFFFF;
 	font-size: 14px;
 	padding: 10px 20px;
@@ -10358,7 +13300,7 @@ body.landing-page {
 		color: #676a6c;
 	}
 	.landing-page .navbar-default .nav li a:hover {
-		color: #1ab394;
+		color: #4da7fd;
 	}
 	.landing-page .navbar-wrapper .navbar {
 		padding-top: 0;
@@ -10709,7 +13651,7 @@ body.rtls .top-navigation .footer.fixed, body.rtls.top-navigation .footer.fixed
 }
 
 .spin-icon {
-	background: #1ab394;
+	background: #4da7fd;
 	position: absolute;
 	padding: 7px 10px 7px 13px;
 	border-radius: 20px 0 0 20px;
@@ -11369,7 +14311,7 @@ body.md-skin {
 
 .md-skin .nav .open>a, .md-skin .nav .open>a:hover, .md-skin .nav .open>a:focus
 	{
-	background: #1ab394;
+	background: #4da7fd;
 }
 
 .md-skin .navbar-top-links li {
@@ -11452,7 +14394,7 @@ body.md-skin {
 }
 
 .md-skin .navbar-fixed-top, .md-skin .navbar-static-top {
-	background-color: #1ab394 !important;
+	background-color: #4da7fd !important;
 	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px
 		rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
@@ -11568,7 +14510,7 @@ body.md-skin {
 .md-skin.landing-page .navbar-default .navbar-nav>li>a:hover, .md-skin.landing-page .navbar-default .navbar-nav>li>a:focus
 	{
 	background: inherit;
-	color: #1ab394;
+	color: #4da7fd;
 }
 
 .md-skin.landing-page.body-small .nav.navbar-right>li>a {
@@ -11605,12 +14547,12 @@ body.md-skin {
 .md-skin.top-navigation .nav>li a:hover, .md-skin .top-navigation .nav>li a:focus,
 	.md-skin.top-navigation .nav .open>a, .md-skin.top-navigation .nav .open>a:hover,
 	.md-skin.top-navigation .nav .open>a:focus {
-	color: #1ab394;
+	color: #4da7fd;
 	background: #ffffff;
 }
 
 .md-skin.top-navigation .nav>li.active a {
-	color: #1ab394;
+	color: #4da7fd;
 	background: #ffffff;
 }
 
@@ -11721,17 +14663,47 @@ body.md-skin {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	:not
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	(
 	.mini-navbar
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	)
@@ -11741,26 +14713,76 @@ body.md-skin {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	:
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	background-color
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	500
 	ms
 	
 	
+	
+	
+	
+	
+	
 	 
 	
 	
+	
+	
+	
+	
+	
 	linear
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -11771,26 +14793,76 @@ body.md-skin {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	:
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	background-color
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	500
 	ms
 	
 	
+	
+	
+	
+	
+	
 	 
 	
 	
+	
+	
+	
+	
+	
 	linear
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -11801,26 +14873,76 @@ body.md-skin {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	:
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	background-color
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	500
 	ms
 	
 	
+	
+	
+	
+	
+	
 	 
 	
 	
+	
+	
+	
+	
+	
 	linear
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -11831,26 +14953,76 @@ body.md-skin {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	:
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	background-color
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	500
 	ms
 	
 	
+	
+	
+	
+	
+	
 	 
 	
 	
+	
+	
+	
+	
+	
 	linear
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -11861,26 +15033,76 @@ body.md-skin {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	:
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	background-color
 	
 	
+	
+	
+	
+	
+	
 	 
+	
+	
+	
+	
+	
 	
 	
 	500
 	ms
 	
 	
+	
+	
+	
+	
+	
 	 
 	
 	
+	
+	
+	
+	
+	
 	linear
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -11891,13 +15113,43 @@ body.md-skin {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	:
+	
+	
+	
+	
+	
 	
 	
 	 
 	
 	
+	
+	
+	
+	
+	
 	#f3f3f4
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
