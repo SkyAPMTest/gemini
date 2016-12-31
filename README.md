@@ -14,8 +14,8 @@ Network sniffer and performance analysis.
 * Combine with the [sky-walking](https://github.com/wu-sheng/sky-walking) tracer, reduce the tracer's cost, improve traced application performance.
 
 ### Quickstart
-#### Step 1. Download the code
-[Download](https://github.com/) the 1.0.0-alpha1 release and un-tar it.   
+#### Step 1. Download the lastest release
+[Download](https://github.com/skywalking-developer/gemini/releases) the lastest released version, and untar.
 
     > tar -xzf gemini-1.0.0-alpha1.tgz  
     
@@ -48,8 +48,9 @@ Console Log
     > #2: \Device\NPF_{18D24468-9011-4691-89BF-E7FA75B20934} [Intel(R) 82579LM Gigabit Network Connection]
     > #3: \Device\NPF_{4B226C94-45B4-4E1B-B32C-22689E4777BD} [VMware Virtual Ethernet Adapter]
 
-#### Step 3. Start the sniffer  
-Gemini uses **Kafka** so you need to first start a Kafka server if you don't already have one.   
+#### Step 3. Start the sniffer 
+* First, you need a **Kafka** MQ.
+* Then, start up the **gemini**.
 windows  
 
     > java -Djava.library.path=./native/windows -jar gemini-sniffer-1.0.0-alpha1.jar -o online  
