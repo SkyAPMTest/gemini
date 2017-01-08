@@ -14,10 +14,10 @@ Network sniffer and performance analysis.
 * Combine with the [sky-walking](https://github.com/wu-sheng/sky-walking) tracer, reduce the tracer's cost, improve traced application performance.
 
 ### Quickstart
-#### Step 1. Download the code
-[Download](https://github.com/skywalking-developer/gemini/archive/gemini-1.0.0-alpha1.tar.gz) the 1.0.0-alpha1 release and un-tar it.   
+#### Step 1. Download the lastest release
+[Download](https://github.com/skywalking-developer/gemini/releases) the lastest released version, and untar.
 
-    > tar -xzf gemini-1.0.0-alpha1.tar.gz  
+    > tar -xzf gemini-1.0.0-alpha1.tgz  
     
 #### Step 2. Get the network card number  
 
@@ -41,33 +41,26 @@ linux
 
     > java -Djava.library.path=./native/linux -jar gemini-sniffer-1.0.0-alpha1.jar -o card
     
-Console Log
+* After run the command, you may see some outputs like these:
+```shell
+     #0: \Device\NPF_{D0548256-0B61-4535-9651-DC1B91E124DD} [Microsoft]
+     #1: \Device\NPF_{38D46CC0-57E8-4BEC-AA69-A902D879F06C} [VMware Virtual Ethernet Adapter]
+     #2: \Device\NPF_{18D24468-9011-4691-89BF-E7FA75B20934} [Intel(R) 82579LM Gigabit Network Connection]
+     #3: \Device\NPF_{4B226C94-45B4-4E1B-B32C-22689E4777BD} [VMware Virtual Ethernet Adapter]
+ ```
+ * Then you should choose ...
 
-    > #0: \Device\NPF_{D0548256-0B61-4535-9651-DC1B91E124DD} [Microsoft]
-    > #1: \Device\NPF_{38D46CC0-57E8-4BEC-AA69-A902D879F06C} [VMware Virtual Ethernet Adapter]
-    > #2: \Device\NPF_{18D24468-9011-4691-89BF-E7FA75B20934} [Intel(R) 82579LM Gigabit Network Connection]
-    > #3: \Device\NPF_{4B226C94-45B4-4E1B-B32C-22689E4777BD} [VMware Virtual Ethernet Adapter]
+#### Step 3. Start the sniffer 
+* First, you need a **Kafka** MQ.
+* Then, start up the **gemini**.
 
-#### Step 3. Start the sniffer  
-Gemini sniffer uses **Kafka** so you need to first start a Kafka server if you don't already have one.   
 windows  
 
-    > java -Djava.library.path=./native/windows -jar gemini-sniffer-1.0.0-alpha1.jar -o online -c 2
+    > java -Djava.library.path=./native/windows -jar gemini-sniffer-1.0.0-alpha1.jar -o online  
     
 linux  
 
-    > java -Djava.library.path=./native/linux -jar gemini-sniffer-1.0.0-alpha1.jar -o online -c 2
-
-#### Step 4. Start the analysis  
-Gemini analysis uses **Spark, Kafka, Zookeeper, Mongodb, Redis** so you need to first start Spark, Kafka, Zookeeper, Mongodb, Redis server if you don't already have.  
-
-    > cd gemini-analysis
-    > java -jar gemini-analysis-1.0.0-alpha1.jar
-
-#### Step 5. Start the webui  
-
-    > cd gemini-webui
-    > java -jar gemini-webui-1.0.0-alpha1.jar
+    > java -Djava.library.path=./native/linux -jar gemini-sniffer-1.0.0-alpha1.jar -o online
 
 # Contributors
 * 彭勇升 [@pengys5](https://github.com/pengys5)
