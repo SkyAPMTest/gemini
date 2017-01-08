@@ -9,9 +9,11 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>gemini-simulator</module>
 		<module>gemini-sniffer</module>
 		<module>gemini-analysis</module>
 		<module>gemini-webui</module>
+		<module>gemini-common</module>
 	</modules>
 
 	<properties>
@@ -110,4 +112,14 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>bintray</id>
+			<name>bintray</name>
+			<url>https://jcenter.bintray.com</url>
+		</repository>
+	</repositories>
 </project>

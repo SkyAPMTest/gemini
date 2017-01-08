@@ -7,6 +7,8 @@ import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.stereotype.Component;
 
+import com.a.eye.gemini.sniffer.cmd.GeminiCmd;
+
 @Component
 public class GeminiProducer {
 
@@ -18,6 +20,7 @@ public class GeminiProducer {
 		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(kafkaproperty);
 		try {
 			properties.load(inputStream);
+			properties.setProperty("bootstrap.servers", GeminiCmd.Cmd_K_Value);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

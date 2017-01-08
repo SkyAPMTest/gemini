@@ -21,7 +21,7 @@ public abstract class SnifferCoreBase {
 			String description = (device.getDescription() != null) ? device.getDescription() : "No description available";
 			logger.info("#%d: %s [%s]", i++, device.getName(), description);
 		}
-		if (result == Pcap.NOT_OK || devs.isEmpty()) {
+		if (result != Pcap.OK || devs.isEmpty()) {
 			logger.error("错误 %s \n", errsb.toString());
 			return null;
 		} else {

@@ -28,4 +28,8 @@ public class GeminiOptions {
 	public static final String Cmd_P = "p";
 	public static final String Cmd_Pcap_File_Path = "file-path";
 	public static final String Cmd_P_Arg_Name = "path";
+
+	public static final String Cmd_K = "k";
+	public static final String Cmd_Kafka_Server = "kafka-server";
+	public static final String Cmd_K_Arg_Name = "kafka-server";
 }

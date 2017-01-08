@@ -15,13 +15,13 @@ Network sniffer and performance analysis.
 
 ### Quickstart
 #### Step 1. Download the code
-[Download](https://github.com/) the 1.0.0-alpha1 release and un-tar it.   
+[Download](https://github.com/skywalking-developer/gemini/archive/gemini-1.0.0-alpha1.tar.gz) the 1.0.0-alpha1 release and un-tar it.   
 
-    > tar -xzf gemini-1.0.0-alpha1.tgz  
+    > tar -xzf gemini-1.0.0-alpha1.tar.gz  
     
 #### Step 2. Get the network card number  
 
-    > cd gemini-sniffer-1.0.0-alpha1
+    > cd gemini-sniffer
     > java -jar gemini-sniffer-1.0.0-alpha1.jar
     > 2016-12-31 13:05:27,630 [main] ERROR c.a.e.g.s.c.GeminiCmd - 未指定需要执行的操作
     > -c,--card-id <card id>               指定扫描的网卡编号
@@ -49,14 +49,25 @@ Console Log
     > #3: \Device\NPF_{4B226C94-45B4-4E1B-B32C-22689E4777BD} [VMware Virtual Ethernet Adapter]
 
 #### Step 3. Start the sniffer  
-Gemini uses **Kafka** so you need to first start a Kafka server if you don't already have one.   
+Gemini sniffer uses **Kafka** so you need to first start a Kafka server if you don't already have one.   
 windows  
 
-    > java -Djava.library.path=./native/windows -jar gemini-sniffer-1.0.0-alpha1.jar -o online  
+    > java -Djava.library.path=./native/windows -jar gemini-sniffer-1.0.0-alpha1.jar -o online -c 2
     
 linux  
 
-    > java -Djava.library.path=./native/linux -jar gemini-sniffer-1.0.0-alpha1.jar -o online
+    > java -Djava.library.path=./native/linux -jar gemini-sniffer-1.0.0-alpha1.jar -o online -c 2
+
+#### Step 4. Start the analysis  
+Gemini analysis uses **Spark, Kafka, Zookeeper, Mongodb, Redis** so you need to first start Spark, Kafka, Zookeeper, Mongodb, Redis server if you don't already have.  
+
+    > cd gemini-analysis
+    > java -jar gemini-analysis-1.0.0-alpha1.jar
+
+#### Step 5. Start the webui  
+
+    > cd gemini-webui
+    > java -jar gemini-webui-1.0.0-alpha1.jar
 
 # Contributors
 * 彭勇升 [@pengys5](https://github.com/pengys5)

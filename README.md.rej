@@ -1,0 +1,14 @@
+diff a/README.md b/README.md	(rejected hunks)
+@@ -41,12 +41,6 @@
+ 
+     > java -Djava.library.path=./native/linux -jar gemini-sniffer-1.0.0-alpha1.jar -o card
+     
+-Console Log
+-
+-    > #0: \Device\NPF_{D0548256-0B61-4535-9651-DC1B91E124DD} [Microsoft]
+-    > #1: \Device\NPF_{38D46CC0-57E8-4BEC-AA69-A902D879F06C} [VMware Virtual Ethernet Adapter]
+-    > #2: \Device\NPF_{18D24468-9011-4691-89BF-E7FA75B20934} [Intel(R) 82579LM Gigabit Network Connection]
+-    > #3: \Device\NPF_{4B226C94-45B4-4E1B-B32C-22689E4777BD} [VMware Virtual Ethernet Adapter]
+ * After run the command, you may see some outputs like these:
+ ```shell
+      #0: \Device\NPF_{D0548256-0B61-4535-9651-DC1B91E124DD} [Microsoft]
