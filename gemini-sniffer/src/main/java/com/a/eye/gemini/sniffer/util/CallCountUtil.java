@@ -7,7 +7,6 @@ public class CallCountUtil {
 	private static AtomicInteger atomicInteger = new AtomicInteger(0);
 
 	public static void increment() {
-		int count = atomicInteger.getAndIncrement();
-		System.out.println(count);
+		atomicInteger.getAndIncrement();
 	}
 }

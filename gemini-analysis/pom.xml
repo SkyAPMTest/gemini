@@ -13,37 +13,37 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<scala.version>2.10.6</scala.version>
-		<scala.version.tools>2.10</scala.version.tools>
+		<scala.version>2.11.8</scala.version>
+		<scala.version.tools>2.11</scala.version.tools>
 		<spark.version>2.0.2</spark.version>
 	</properties>
 
 	<dependencies>
-		 <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-compiler</artifactId>
-            <version>${scala.version}</version>
-            <scope>compile</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>${scala.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-compiler</artifactId>
+			<version>${scala.version}</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-core_2.10</artifactId>
+			<artifactId>spark-core_2.11</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-mllib_2.10</artifactId>
+			<artifactId>spark-mllib_2.11</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-streaming-kafka-0-10_2.10</artifactId>
+			<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
@@ -53,7 +53,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb</groupId>
-			<artifactId>casbah-core_2.10</artifactId>
+			<artifactId>casbah-core_2.11</artifactId>
 			<version>3.1.1</version>
 		</dependency>
 		<dependency>

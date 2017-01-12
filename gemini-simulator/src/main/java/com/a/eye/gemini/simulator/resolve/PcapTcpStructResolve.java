@@ -1,11 +1,14 @@
 package com.a.eye.gemini.simulator.resolve;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.a.eye.gemini.common.util.StringUtils;
 import com.a.eye.gemini.simulator.resolve.Attribute.DataType;
-import com.a.eye.gemini.simulator.resolve.PcapTcpStructResolve.TcpStruct;
 
-public class PcapTcpStructResolve extends GeminiResolveLowBase<TcpStruct> {
+public class PcapTcpStructResolve extends GeminiResolveLowBase {
 
 	public static final String Name = "Tcp";
 
@@ -14,65 +17,97 @@ public class PcapTcpStructResolve extends GeminiResolveLowBase<TcpStruct> {
 
 	public static PcapTcpStructResolve inst = new PcapTcpStructResolve();
 
-	public enum TcpStruct {
-			destination,
-			source,
-			sequence,
-			ack_sequence,
-			data_offset,
-			reserved,
-			ns,
-			cwr,
-			ecr,
-			urg,
-			ack,
-			psh,
-			rst,
-			syn,
-			fin,
-			window_size,
-			checksum,
-			urgent_pointer,
-			option_kind,
-			option_length,
-			mss,
-			data,
-			test
-	}
+	public static final String destination = "destination";
+	public static final String source = "source";
+	public static final String sequence = "sequence";
+	public static final String ack_sequence = "ack_sequence";
+	public static final String data_offset = "data_offset";
+	public static final String reserved = "reserved";
+	public static final String ns = "ns";
+	public static final String cwr = "cwr";
+	public static final String ecr = "ecr";
+	public static final String urg = "urg";
+	public static final String ack = "ack";
+	public static final String psh = "psh";
+	public static final String rst = "rst";
+	public static final String syn = "syn";
+	public static final String fin = "fin";
+	public static final String window_size = "window_size";
+	public static final String checksum = "checksum";
+	public static final String urgent_pointer = "urgent_pointer";
+	public static final String option_kind = "option_kind";
+	public static final String option_length = "option_length";
+	public static final String mss = "mss";
+	public static final String data = "data";
 
 	static {
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.source, 2 * BYTE, DataType.Integer, 1));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.destination, 2 * BYTE, DataType.Integer, 2));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.sequence, 4 * BYTE, DataType.Long, 3));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.ack_sequence, 4 * BYTE, DataType.Long, 4));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.data_offset, 4, DataType.Integer, 5));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.reserved, 3, DataType.String, 6));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.ns, 1 * BIT, DataType.Integer, 7));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.cwr, 1 * BIT, DataType.Integer, 8));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.ecr, 1 * BIT, DataType.Integer, 9));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.urg, 1 * BIT, DataType.Integer, 10));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.ack, 1 * BIT, DataType.Integer, 11));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.psh, 1 * BIT, DataType.Integer, 12));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.rst, 1 * BIT, DataType.Integer, 13));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.syn, 1 * BIT, DataType.Integer, 14));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.fin, 1 * BIT, DataType.Integer, 15));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.window_size, 2 * BYTE, DataType.Long, 16));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.checksum, 2 * BYTE, DataType.Long, 17));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.urgent_pointer, 2 * BYTE, DataType.Long, 18));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.option_kind, 1 * BYTE, DataType.Long, 19));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.option_length, 1 * BYTE, DataType.Integer, 20));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.mss, 2 * BYTE, DataType.Integer, 21));
-		inst.addAttr(new Attribute<TcpStruct>(TcpStruct.test, 8 * BYTE, DataType.String, 22));
-		// inst.addAttr(new Attribute<TcpStruct>(TcpStruct.data, 0,
-		// DataType.Data, 22));
+		Map<String, Attribute> tcpAttrs = new HashMap<String, Attribute>();
+		tcpAttrs.put(source, new Attribute(source, 2 * BYTE, DataType.Integer, Attribute.First));
+		tcpAttrs.put(destination, new Attribute(destination, 2 * BYTE, DataType.Integer, source));
+		tcpAttrs.put(sequence, new Attribute(sequence, 4 * BYTE, DataType.Long, destination));
+		tcpAttrs.put(ack_sequence, new Attribute(ack_sequence, 4 * BYTE, DataType.Long, sequence));
+		tcpAttrs.put(data_offset, new Attribute(data_offset, 4, DataType.Integer, ack_sequence));
+		tcpAttrs.put(reserved, new Attribute(reserved, 3, DataType.Hex, data_offset));
+		tcpAttrs.put(ns, new Attribute(ns, 1 * BIT, DataType.Integer, reserved));
+		tcpAttrs.put(cwr, new Attribute(cwr, 1 * BIT, DataType.Integer, ns));
+		tcpAttrs.put(ecr, new Attribute(ecr, 1 * BIT, DataType.Integer, cwr));
+		tcpAttrs.put(urg, new Attribute(urg, 1 * BIT, DataType.Integer, ecr));
+		tcpAttrs.put(ack, new Attribute(ack, 1 * BIT, DataType.Integer, urg));
+		tcpAttrs.put(psh, new Attribute(psh, 1 * BIT, DataType.Integer, ack));
+		tcpAttrs.put(rst, new Attribute(rst, 1 * BIT, DataType.Integer, psh));
+		tcpAttrs.put(syn, new Attribute(syn, 1 * BIT, DataType.Integer, rst));
+		tcpAttrs.put(fin, new Attribute(fin, 1 * BIT, DataType.Integer, syn));
+		tcpAttrs.put(window_size, new Attribute(window_size, 2 * BYTE, DataType.Long, fin));
+		tcpAttrs.put(checksum, new Attribute(checksum, 2 * BYTE, DataType.Long, window_size));
+		tcpAttrs.put(urgent_pointer, new Attribute(urgent_pointer, 2 * BYTE, DataType.Long, checksum));
+		tcpAttrs.put(data, new Attribute(data, 0, DataType.Data, urgent_pointer));
+		createAttrs(Name, tcpAttrs);
 	}
 
 	@Override
-	public String getDataResolve() {
-		return null;
+	public void dataResolve(String name, InputStream in, long frameId) throws IOException {
+//		Integer ipTotalLength = getAsInteger(PcapIPv4StructResolve.total_length);
+//		Integer ipHeadLength = 20;
+//		Integer tcpHeadLength = 20;
+//		Integer dataLength = ipTotalLength - ipHeadLength - tcpHeadLength;
+//		if (dataLength > 0) {
+//			bitInputStream.readBit(in, dataLength * 8);
+//		}
+//
+//		Integer frameLen = getAsInteger(PcapFrameStructResolve.len);
+//		Integer ethernetHeadLength = 14;
+//		Integer aa = frameLen - ipTotalLength - ethernetHeadLength;
+//		if (aa > 0) {
+//			bitInputStream.readBit(in, aa * 8);
+//		}
 	}
 
 	@Override
-	public void custom(TcpStruct name, InputStream in) {
+	public void custom(Attribute attr, Long frameId, InputStream in) throws IOException {
+		Integer tcpIpTotalLength = getAsInteger(PcapIPv4StructResolve.total_length);
+		Integer ipHeadLength = 20;
+		Integer tcpHeadLength = 20;
+		if (tcpIpTotalLength - ipHeadLength - tcpHeadLength > 0) {
+			if (option_kind.equals(attr.getName())) {
+				byte[] byteread = bitInputStream.readBit(in, attr.getLength());
+				String strread = binaryToHexString(byteread);
+				setValue(option_kind, Integer.parseInt(strread, 16));
+			}
+			if (option_length.equals(attr.getName())) {
+				byte[] byteread = bitInputStream.readBit(in, attr.getLength());
+				String strread = binaryToHexString(byteread);
+				setValue(option_length, Integer.parseInt(strread, 16));
+			}
+			if (mss.equals(attr.getName())) {
+				byte[] byteread = bitInputStream.readBit(in, attr.getLength());
+				String strread = binaryToHexString(byteread);
+				setValue(mss, Integer.parseInt(strread, 16));
+			}
+			if (data.equals(attr.getName())) {
+				Integer optionLengthValue = getAsInteger(option_length);
+				byte[] dataValue = bitInputStream.readBit(in, optionLengthValue * 8 * 2);
+				System.out.printf("%s %s >> %s, %s, %sbit \n", frameId, Name, data, StringUtils.BinaryToHexString(dataValue), optionLengthValue * 8 * 2);
+			}
+		}
 	}
 }

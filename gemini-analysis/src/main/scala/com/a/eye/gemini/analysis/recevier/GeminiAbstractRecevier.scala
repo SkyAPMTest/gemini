@@ -54,8 +54,8 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
     SparkContextSingleton.sparkContext = streamingContext.sparkContext
 
     val fromOffsets = OffsetsManager.selectOffsets(topicName, partition).map { resultSet =>
-      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
-      //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 3070l
+      //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
+      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 2703235l
     }.toMap
 
     (KafkaUtils.createDirectStream[Long, String](

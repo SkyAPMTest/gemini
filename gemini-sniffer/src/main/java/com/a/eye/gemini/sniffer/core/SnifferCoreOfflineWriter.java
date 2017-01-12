@@ -2,6 +2,7 @@ package com.a.eye.gemini.sniffer.core;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapDumper;
@@ -35,7 +36,7 @@ public class SnifferCoreOfflineWriter extends SnifferCoreBase {
 	}
 
 	private static String now() {
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance(Locale.CHINA);
 		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT_NOW);
 		return df.format(cal.getTime());
 	}

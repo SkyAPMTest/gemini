@@ -1,33 +1,37 @@
 package com.a.eye.gemini.simulator.resolve;
 
-public class Attribute<T> implements Comparable<Attribute<T>> {
+public class Attribute {
 
-	private T name;
+	public static final String First = "first_node";
+
+	private String name;
 
 	private Integer length = 0;
 
-	private Integer order = 0;
+	private String parent;
+
+	private String next;
 
 	private Enum<DataType> dataType;
 
 	private boolean skipAfterFirstTime = false;
 
-	public Attribute(T name, Integer length, Enum<DataType> dataType, Integer order) {
+	public Attribute(String name, Integer length, Enum<DataType> dataType, String parent) {
 		this.name = name;
+		this.parent = parent;
 		this.length = length;
 		this.dataType = dataType;
-		this.order = order;
 	}
 
-	public Attribute(T name, Integer length, Enum<DataType> dataType, Integer order, boolean skipAfterFirstTime) {
+	public Attribute(String name, Integer length, Enum<DataType> dataType, String parent, boolean skipAfterFirstTime) {
 		this.name = name;
+		this.parent = parent;
 		this.length = length;
 		this.dataType = dataType;
-		this.order = order;
 		this.skipAfterFirstTime = skipAfterFirstTime;
 	}
 
-	public T getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -35,8 +39,8 @@ public class Attribute<T> implements Comparable<Attribute<T>> {
 		return length;
 	}
 
-	public Integer getOrder() {
-		return order;
+	public String getParent() {
+		return parent;
 	}
 
 	public Enum<DataType> getDataType() {
@@ -47,12 +51,15 @@ public class Attribute<T> implements Comparable<Attribute<T>> {
 		return skipAfterFirstTime;
 	}
 
-	public enum DataType {
-		Frame, String, Integer, Hex, Long, Mac, IP, Custom, Data
+	public String getNext() {
+		return next;
 	}
 
-	@Override
-	public int compareTo(Attribute<T> attr) {
-		return this.order.compareTo(attr.getOrder());
+	public void setNext(String next) {
+		this.next = next;
+	}
+
+	public enum DataType {
+		Frame, String, Integer, Hex, Long, Mac, IP, Custom, Data
 	}
 }

@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 
+import com.a.eye.gemini.sniffer.cmd.GeminiCmd;
+
 public abstract class SnifferCoreBase {
 
 	private Logger logger = LogManager.getFormatterLogger(this.getClass().getName());
@@ -30,7 +32,8 @@ public abstract class SnifferCoreBase {
 	}
 
 	public void startCapture() {// 选择一个网卡开启抓包
-		PcapIf device = this.getDevs().get(2);
+		PcapIf device = this.getDevs().get(GeminiCmd.Cmd_C_Value);
+		logger.info("指定的网卡编号：%s", GeminiCmd.Cmd_C_Value);
 		StringBuilder errsb = new StringBuilder();
 		int snaplen = Pcap.DEFAULT_SNAPLEN;// 长度65536
 		int flags = Pcap.MODE_PROMISCUOUS;// 混杂模式

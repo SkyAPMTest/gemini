@@ -5,11 +5,23 @@ import java.io.InputStream;
 
 public class BitInputStream {
 
+	private static int length_sum = -(40 * 8);
+
 	private byte stream = 0;
 
 	private int offset = 0;
 
+	public static void resetLengthSum() {
+		length_sum = 0;
+	}
+
+	public int getLengthSum() {
+		return length_sum;
+	}
+
 	public byte[] readBit(InputStream in, int len) throws IOException {
+		length_sum = length_sum + len;
+
 		int arrayLen = 0;
 		if (8 - offset >= len) {
 			arrayLen = 1;
@@ -45,7 +57,7 @@ public class BitInputStream {
 			stream = byteread[0];
 			offset = 0;
 		}
-//		System.out.println("offset: " + offset + ", len: " + len);
+		// System.out.println("offset: " + offset + ", len: " + len);
 
 		switch (len) {
 		case 1:

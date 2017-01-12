@@ -24,9 +24,27 @@ import com.google.gson.JsonObject;
 @Component
 public class PacketMatch {
 
+	private long timezone = 8 * 60 * 60 * 1000;
+
+	private long sum = 0;
+
 	private Logger logger = LogManager.getFormatterLogger(this.getClass().getName());
 
+	private ProducerRecord<Long, String> record;
+
 	private static final IdWorker worker = new IdWorker(1, 1);
+
+	private Ethernet eth = new Ethernet();
+
+	private Tcp tcp = new Tcp();
+
+	private Ip4 ip = new Ip4();
+
+	private Http http = new Http();
+
+	private JsonObject onceJson;
+
+	private long lastTime = 0;
 
 	@Autowired
 	private GeminiProducer producer;
@@ -38,9 +56,8 @@ public class PacketMatch {
 	}
 
 	public void handleHttp(PcapPacket packet) {
-		JsonObject onceJson = new JsonObject();
+		onceJson = new JsonObject();
 
-		Ethernet eth = new Ethernet();
 		packet.getHeader(eth);
 
 		onceJson.addProperty("eth_frame_number", packet.getFrameNumber());
@@ -48,18 +65,16 @@ public class PacketMatch {
 		onceJson.addProperty("eth_destination", FormatUtils.mac(eth.destination()));
 		logger.debug("#%d Ethernet Json=%s", packet.getFrameNumber(), onceJson.toString());
 
-		Tcp tcp = new Tcp();
 		packet.getHeader(tcp);
 
 		onceJson.addProperty("tcp_source", tcp.source());
 		onceJson.addProperty("tcp_destination", tcp.destination());
 		onceJson.addProperty("tcp_seq", tcp.seq());
 		onceJson.addProperty("tcp_ack", tcp.ack());
-		onceJson.addProperty("tcp_time", packet.getCaptureHeader().timestampInMillis());
+		onceJson.addProperty("tcp_time", packet.getCaptureHeader().timestampInMillis() - timezone);
 		logger.debug("#%d Tcp Json=%s", packet.getFrameNumber(), onceJson.toString());
-		logger.info("#%d, seq=%s, ack=%s", packet.getFrameNumber(), tcp.seq(), tcp.ack());
+		logger.debug("#%d, seq=%s, ack=%s", packet.getFrameNumber(), tcp.seq(), tcp.ack());
 
-		Ip4 ip = new Ip4();
 		packet.getHeader(ip);
 
 		onceJson.addProperty("ip_source", FormatUtils.ip(ip.source()));
@@ -67,15 +82,28 @@ public class PacketMatch {
 
 		logger.debug("#%d Ip4 Json=%s", packet.getFrameNumber(), onceJson.toString());
 
-		if (tcp.destination() == 17909 && (FormatUtils.ip(ip.destination()).equals("10.19.7.66") || FormatUtils.ip(ip.destination()).equals("10.19.7.67"))) {
-			logger.info("地址被过滤：%s", FormatUtils.ip(ip.destination()));
-			return;
-		} else {
-			logger.info("地址未过滤：%s, 端口：%s", FormatUtils.ip(ip.destination()), tcp.destination());
-		}
+		// if (tcp.destination() == 17909 &&
+		// (FormatUtils.ip(ip.destination()).equals("10.19.7.66") ||
+		// FormatUtils.ip(ip.destination()).equals("10.19.7.67"))) {
+		// logger.debug("地址被过滤：%s", FormatUtils.ip(ip.destination()));
+		// return;
+		// } else {
+		// logger.debug("地址未过滤：%s, 端口：%s", FormatUtils.ip(ip.destination()),
+		// tcp.destination());
+		// }
 
 		if (tcp.destination() != 443) {
-			Http http = new Http();
+			sum++;
+			if (sum % 1000 == 0) {
+				long currentTime = System.currentTimeMillis() - timezone;
+				if (lastTime != 0) {
+					logger.info("sniffer interval = %s second, count = %s", (currentTime - lastTime) / 1000, sum);
+				} else {
+					logger.info("sniffer time = %s, count = %s", currentTime, sum);
+				}
+				lastTime = currentTime;
+			}
+
 			packet.getHeader(http);
 
 			logger.debug("#%d isResponse=%s", packet.getFrameNumber(), http.isResponse());
@@ -107,13 +135,16 @@ public class PacketMatch {
 			CallCountUtil.increment();
 
 			logger.debug(onceJson.toString());
-			ProducerRecord<Long, String> record = new ProducerRecord<Long, String>("gemini-sniffer-topic", worker.nextId(), onceJson.toString());
+			record = new ProducerRecord<Long, String>("gemini-sniffer-topic", worker.nextId(), onceJson.toString());
 			producer.getProducer().send(record, new Callback() {
 				public void onCompletion(RecordMetadata metadata, Exception e) {
+					record = null;
 					if (e != null)
 						e.printStackTrace();
 				}
 			});
+
+			onceJson = null;
 		}
 		// }
 		logger.debug("");

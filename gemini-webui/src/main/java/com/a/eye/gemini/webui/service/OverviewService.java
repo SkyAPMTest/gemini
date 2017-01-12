@@ -2,6 +2,7 @@ package com.a.eye.gemini.webui.service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,7 +101,7 @@ public class OverviewService {
 		JsonArray data = new JsonArray();
 		JsonArray legend = new JsonArray();
 
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(Locale.CHINA);
 		calendar.setTimeInMillis(new Date().getTime());
 		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - minusDay);
 
@@ -147,7 +148,7 @@ public class OverviewService {
 		JsonArray data = new JsonArray();
 		JsonArray legend = new JsonArray();
 
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(Locale.CHINA);
 		calendar.setTimeInMillis(new Date().getTime());
 		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - minusDay);
 

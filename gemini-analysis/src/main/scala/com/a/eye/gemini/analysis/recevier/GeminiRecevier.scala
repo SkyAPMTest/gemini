@@ -28,8 +28,8 @@ class GeminiRecevier extends GeminiAbstractRecevier("gemini-sniffer-app", "gemin
 
   override def buildData(streamingContext: StreamingContext, rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): Array[(RecevierPairsData)] = {
     val reqData = rdd.filter(record => validateReq(record)).map(record => { buildReqData(record, partition) }).collect()
-    val resData = rdd.filter(record => validateRes(record)).map(record => { buildResData(record, partition) })
     logger.info("请求数据条数：%d", reqData.length)
+    val resData = rdd.filter(record => validateRes(record)).map(record => { buildResData(record, partition) })
     logger.info("响应数据条数：%d", resData.count())
 
     val req_res_pairs = resData.map(resRow => {

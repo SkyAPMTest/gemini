@@ -11,18 +11,18 @@ import com.a.eye.gemini.analysis.executer.model.RecevierData
 import com.google.gson.JsonObject
 
 abstract class GeminiAbstractExecuter extends Serializable {
-  
+
   def validateReq(reqJson: JsonObject): Boolean
-  
+
   def validateRes(resJson: JsonObject): Boolean
-  
+
   def buildIndicatorData(data: Array[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)]
 
   def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
 
   def buildAnalysisHostSlotData(data: RDD[(String, Long)], slotType: String): RDD[(String, Long)]
 
-  def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Long)]
+  def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil, keyInDbName: String, slotType: String): RDD[(String, Long)]
 
   def saveAnalysisIndiData(data: RDD[(String, Long)], partition: Int, slotType: String, periodTime: String)
 

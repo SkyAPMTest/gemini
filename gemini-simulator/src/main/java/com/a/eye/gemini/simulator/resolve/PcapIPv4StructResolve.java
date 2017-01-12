@@ -1,12 +1,14 @@
 package com.a.eye.gemini.simulator.resolve;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.a.eye.gemini.simulator.Mapping;
 import com.a.eye.gemini.simulator.resolve.Attribute.DataType;
-import com.a.eye.gemini.simulator.resolve.PcapIPv4StructResolve.IPv4Struct;
 
-public class PcapIPv4StructResolve extends GeminiResolveLowBase<IPv4Struct> {
+public class PcapIPv4StructResolve extends GeminiResolveLowBase {
 
 	public static final String Name = "IPv4";
 
@@ -15,48 +17,66 @@ public class PcapIPv4StructResolve extends GeminiResolveLowBase<IPv4Struct> {
 
 	public static PcapIPv4StructResolve inst = new PcapIPv4StructResolve();
 
-	public enum IPv4Struct {
-		version, ihl, dscp, ecn, total_length, identification, reserved, df, mf, fragment_offset, time_to_live, protocol, header_checksum, destination, source, data
-	}
+	public static final String version = "version";
+	public static final String ihl = "ihl";
+	public static final String dscp = "dscp";
+	public static final String ecn = "ecn";
+	public static final String total_length = "total_length";
+	public static final String identification = "identification";
+	public static final String reserved = "reserved";
+	public static final String df = "df";
+	public static final String mf = "mf";
+	public static final String fragment_offset = "fragment_offset";
+	public static final String time_to_live = "time_to_live";
+	public static final String protocol = "protocol";
+	public static final String header_checksum = "header_checksum";
+	public static final String destination = "destination";
+	public static final String source = "source";
+	public static final String data = "data";
 
 	static {
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.version, 4 * BIT, DataType.Integer, 1));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.ihl, 4 * BIT, DataType.Integer, 2));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.dscp, 6 * BIT, DataType.Integer, 3));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.ecn, 2 * BIT, DataType.Integer, 4));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.total_length, 2 * BYTE, DataType.Integer, 5));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.identification, 2 * BYTE, DataType.Integer, 6));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.reserved, 1 * BIT, DataType.Integer, 7));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.df, 1 * BIT, DataType.Integer, 8));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.mf, 1 * BIT, DataType.Integer, 9));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.fragment_offset, 13 * BIT, DataType.Integer, 10));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.time_to_live, 1 * BYTE, DataType.Integer, 11));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.protocol, 1 * BYTE, DataType.Integer, 12));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.header_checksum, 2 * BYTE, DataType.Integer, 13));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.source, 4 * BYTE, DataType.IP, 14));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.destination, 4 * BYTE, DataType.IP, 15));
-		inst.addAttr(new Attribute<IPv4Struct>(IPv4Struct.data, 0, DataType.Data, 16));
+		Map<String, Attribute> ipv4Attrs = new HashMap<String, Attribute>();
+		ipv4Attrs.put(version, new Attribute(version, 4 * BIT, DataType.Integer, Attribute.First));
+		ipv4Attrs.put(ihl, new Attribute(ihl, 4 * BIT, DataType.Integer, version));
+		ipv4Attrs.put(dscp, new Attribute(dscp, 6 * BIT, DataType.Integer, ihl));
+		ipv4Attrs.put(ecn, new Attribute(ecn, 2 * BIT, DataType.Integer, dscp));
+		ipv4Attrs.put(total_length, new Attribute(total_length, 2 * BYTE, DataType.Integer, ecn));
+		ipv4Attrs.put(identification, new Attribute(identification, 2 * BYTE, DataType.Integer, total_length));
+		ipv4Attrs.put(reserved, new Attribute(reserved, 1 * BIT, DataType.Integer, identification));
+		ipv4Attrs.put(df, new Attribute(df, 1 * BIT, DataType.Integer, reserved));
+		ipv4Attrs.put(mf, new Attribute(mf, 1 * BIT, DataType.Integer, df));
+		ipv4Attrs.put(fragment_offset, new Attribute(fragment_offset, 13 * BIT, DataType.Integer, mf));
+		ipv4Attrs.put(time_to_live, new Attribute(time_to_live, 1 * BYTE, DataType.Integer, fragment_offset));
+		ipv4Attrs.put(protocol, new Attribute(protocol, 1 * BYTE, DataType.Integer, time_to_live));
+		ipv4Attrs.put(header_checksum, new Attribute(header_checksum, 2 * BYTE, DataType.Integer, protocol));
+		ipv4Attrs.put(source, new Attribute(source, 4 * BYTE, DataType.IP, header_checksum));
+		ipv4Attrs.put(destination, new Attribute(destination, 4 * BYTE, DataType.IP, source));
+		ipv4Attrs.put(data, new Attribute(data, 0, DataType.Data, destination));
+		createAttrs(Name, ipv4Attrs);
 	}
 
 	@Override
-	public String getDataResolve() {
-		Integer protocol = getAsInteger(IPv4Struct.protocol);
-		if (Protocol.TCP.value == protocol) {
-			return Protocol.TCP.resolve;
+	public void dataResolve(String name, InputStream in, long frameId) throws IOException {
+		Integer protocolValue = getAsInteger(protocol);
+		if (Protocol.TCP.value == protocolValue) {
+			ResolverRegister.getResolve(Protocol.TCP.resolve).resolve(Protocol.TCP.resolve, in, frameId);
+		} else if (Protocol.UDP.value == protocolValue) {
+			ResolverRegister.getResolve(Protocol.UDP.resolve).resolve(Protocol.UDP.resolve, in, frameId);
+		} else {
+			Integer totalLengthValue = getAsInteger(total_length);
+			if (totalLengthValue - 20 > 0) {
+				bitInputStream.readBit(in, (totalLengthValue - 20) * 8);
+			}
 		}
-		if (Protocol.UDP.value == protocol) {
-			return Protocol.UDP.resolve;
-		}
-		return null;
 	}
-	
+
 	@Override
-	public void custom(IPv4Struct name, InputStream in) {
+	public void custom(Attribute attr, Long frameId, InputStream in) {
 	}
 
 	public enum Protocol implements Mapping {
-		ICMP(1, (byte) 0x01, null, ""), IGMP(2, (byte) 0x02, null, ""), TCP(6, (byte) 0x06, PcapTcpStructResolve.Name, ""), UDP(17, (byte) 0x11, PcapUDPStructResolve.Name, ""), ENCAP(41, (byte) 0x29,
-			null, ""), OSPF(89, (byte) 0x59, null, ""), SCTP(132, (byte) 0x84, null, "");
+		ICMP(1, (byte) 0x01, null, ""), TCP(6, (byte) 0x06, PcapTcpStructResolve.Name, ""), UDP(17, (byte) 0x11, PcapUDPStructResolve.Name, ""), ENCAP(41, (byte) 0x29, null, ""), OSPF(89,
+			(byte) 0x59, null, ""), SCTP(132, (byte) 0x84, null, "");
 
 		private int value;
 		private byte hexValue;

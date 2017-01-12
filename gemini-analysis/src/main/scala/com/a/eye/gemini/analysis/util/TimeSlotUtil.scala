@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager
 
 import com.a.eye.gemini.analysis.config.GeminiConfig
 import scala.runtime.RichInt
+import java.util.Locale
 
 abstract class TimeSlotUtil extends Serializable {
   def compareSlotTime(tcpTime: Long): String
@@ -53,7 +54,7 @@ class AtomTimeSlotUtil extends TimeSlotUtil {
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def compareSlotTime(tcpTime: Long): String = {
-    val calendar = Calendar.getInstance();
+    val calendar = Calendar.getInstance(Locale.CHINA);
     calendar.setTimeInMillis(tcpTime)
     val second = calendar.get(Calendar.SECOND)
     logger.debug("秒：%s", second)
@@ -74,7 +75,7 @@ class HourTimeSlotUtil extends TimeSlotUtil {
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def compareSlotTime(tcpTime: Long): String = {
-    val calendar = Calendar.getInstance();
+    val calendar = Calendar.getInstance(Locale.CHINA);
     calendar.setTimeInMillis(tcpTime)
     calendar.set(Calendar.MINUTE, 0)
     calendar.set(Calendar.SECOND, 0)
@@ -94,7 +95,7 @@ class DayTimeSlotUtil extends TimeSlotUtil {
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def compareSlotTime(tcpTime: Long): String = {
-    val calendar = Calendar.getInstance();
+    val calendar = Calendar.getInstance(Locale.CHINA);
     calendar.setTimeInMillis(tcpTime)
     calendar.set(Calendar.HOUR_OF_DAY, 0)
     calendar.set(Calendar.MINUTE, 0)
@@ -116,7 +117,7 @@ class WeekTimeSlotUtil extends TimeSlotUtil {
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def compareSlotTime(tcpTime: Long): String = {
-    val calendar = Calendar.getInstance();
+    val calendar = Calendar.getInstance(Locale.CHINA);
     calendar.setTimeInMillis(tcpTime)
     calendar.setFirstDayOfWeek(Calendar.MONDAY)
     calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
@@ -141,7 +142,7 @@ class MonthTimeSlotUtil extends TimeSlotUtil {
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def compareSlotTime(tcpTime: Long): String = {
-    val calendar = Calendar.getInstance();
+    val calendar = Calendar.getInstance(Locale.CHINA);
     calendar.setTimeInMillis(tcpTime)
     calendar.set(Calendar.DAY_OF_MONTH, 1)
     calendar.set(Calendar.HOUR_OF_DAY, 0)

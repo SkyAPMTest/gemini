@@ -1,12 +1,8 @@
 package com.a.eye.gemini.analysis.util
 
 import org.apache.logging.log4j.LogManager
-
-import com.typesafe.config.ConfigFactory
-import org.apache.zookeeper.ZooDefs.Ids
 import org.apache.zookeeper.CreateMode
-import breeze.util.partition
-import java.util.concurrent.CountDownLatch
+import org.apache.zookeeper.ZooDefs.Ids
 
 object OffsetsManager {
 

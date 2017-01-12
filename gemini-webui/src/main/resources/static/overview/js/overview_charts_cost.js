@@ -52,7 +52,7 @@ function openCostTrendCharts() {
 		text : "图表数据正在努力加载..."
 	});
 
-	$.getJSON('getTrendChart?host=blog.csdn.net&indicator=cost&minusDay=' + minusDay + "&check1=" + check1 + "&check2=" + check2).done(function(data) {
+	$.getJSON('getTrendChart?host=work.asiainfo.com&indicator=cost&minusDay=' + minusDay + "&check1=" + check1 + "&check2=" + check2).done(function(data) {
 		trendCostChart.hideLoading();
 		trendCostChart.setOption({
 			legend : {

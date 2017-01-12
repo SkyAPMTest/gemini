@@ -2,11 +2,12 @@ package com.a.eye.gemini.webui.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class TimeSlotUtil {
 
 	public static String getTodaySlot() {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(Locale.CHINA);
 		calendar.setTimeInMillis(new Date().getTime());
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
@@ -24,7 +25,7 @@ public class TimeSlotUtil {
 	}
 
 	public static String getYesterdaySlot() {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(Locale.CHINA);
 		calendar.setTimeInMillis(new Date().getTime());
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
@@ -45,7 +46,7 @@ public class TimeSlotUtil {
 	public static String[][] getHours24(int minusDay) {
 		String[][] hours = new String[24][2];
 
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(Locale.CHINA);
 		calendar.setTimeInMillis(new Date().getTime());
 		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - minusDay);
 		for (int i = 0; i < 24; i++) {
@@ -70,7 +71,7 @@ public class TimeSlotUtil {
 	public static String[][] getSlotDays(int minusDay) {
 		String[][] days = new String[minusDay][2];
 
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(Locale.CHINA);
 		calendar.setTimeInMillis(new Date().getTime());
 		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - minusDay);
 		for (int i = 0; i < minusDay; i++) {

@@ -8,7 +8,7 @@ var minusDayMap = {
 };
 
 $(document).ready(function() {
-	$.getJSON('getTraffic?host=blog.csdn.net', function(data) {
+	$.getJSON('getTraffic?host=work.asiainfo.com', function(data) {
 		var trafficTemplate = $.templates("#trafficTemplate");
 		trafficTemplate.link("#trafficDiv", data);
 	});

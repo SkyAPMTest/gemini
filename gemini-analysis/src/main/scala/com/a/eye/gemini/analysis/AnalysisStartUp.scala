@@ -1,4 +1,4 @@
-package com.a.eye.search.data.receive
+package com.a.eye.gemini.analysis
 
 import com.a.eye.gemini.analysis.executer.GeminiRegistry
 import com.a.eye.gemini.analysis.executer.indicator.PvIndicatorExecuter

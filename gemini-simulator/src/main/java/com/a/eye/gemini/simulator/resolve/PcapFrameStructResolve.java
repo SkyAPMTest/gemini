@@ -1,51 +1,61 @@
 package com.a.eye.gemini.simulator.resolve;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.a.eye.gemini.simulator.Mapping;
 import com.a.eye.gemini.simulator.resolve.Attribute.DataType;
-import com.a.eye.gemini.simulator.resolve.PcapFrameStructResolve.PcapFileStruct;
 
-public class PcapFrameStructResolve extends GeminiResolveHighBase<PcapFileStruct> {
+public class PcapFrameStructResolve extends GeminiResolveHighBase {
 
 	public static final String Name = "Frame";
 
-	private PcapFrameStructResolve() {
-	}
-
 	public static PcapFrameStructResolve inst = new PcapFrameStructResolve();
 
-	public enum PcapFileStruct {
-		frame, magic, version_major, version_minor, thiszone, sigfigs, snaplen, linktype, ts_seconds, ts_microseconds, caplen, len, data
-	}
+	public static final String frame_id = "frame_id";
+	public static final String magic = "magic";
+	public static final String version_major = "version_major";
+	public static final String version_minor = "version_minor";
+	public static final String thiszone = "thiszone";
+	public static final String sigfigs = "sigfigs";
+	public static final String snaplen = "snaplen";
+	public static final String linktype = "linktype";
+	public static final String ts_seconds = "ts_seconds";
+	public static final String ts_microseconds = "ts_microseconds";
+	public static final String caplen = "caplen";
+	public static final String len = "len";
+	public static final String data = "data";
 
 	static {
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.frame, 0, DataType.Frame, 1, true));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.magic, 4 * BYTE, DataType.String, 2, true));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.version_major, 2 * BYTE, DataType.Integer, 3, true));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.version_minor, 2 * BYTE, DataType.Integer, 4, true));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.thiszone, 4 * BYTE, DataType.Integer, 5, true));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.sigfigs, 4 * BYTE, DataType.Integer, 6, true));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.snaplen, 4 * BYTE, DataType.Integer, 7, true));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.linktype, 4 * BYTE, DataType.Integer, 8, true));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.ts_seconds, 4 * BYTE, DataType.Integer, 9));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.ts_microseconds, 4 * BYTE, DataType.Integer, 10));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.caplen, 4 * BYTE, DataType.Integer, 11));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.len, 4 * BYTE, DataType.Integer, 12));
-		inst.addAttr(new Attribute<PcapFileStruct>(PcapFileStruct.data, 0, DataType.Data, 13));
+		Map<String, Attribute> frameAttrs = new HashMap<String, Attribute>();
+		frameAttrs.put(frame_id, new Attribute(frame_id, 0, DataType.Frame, Attribute.First, true));
+		frameAttrs.put(magic, new Attribute(magic, 4 * BYTE, DataType.Hex, frame_id, true));
+		frameAttrs.put(version_major, new Attribute(version_major, 2 * BYTE, DataType.Integer, magic, true));
+		frameAttrs.put(version_minor, new Attribute(version_minor, 2 * BYTE, DataType.Integer, version_major, true));
+		frameAttrs.put(thiszone, new Attribute(thiszone, 4 * BYTE, DataType.Integer, version_minor, true));
+		frameAttrs.put(sigfigs, new Attribute(sigfigs, 4 * BYTE, DataType.Integer, thiszone, true));
+		frameAttrs.put(snaplen, new Attribute(snaplen, 4 * BYTE, DataType.Integer, sigfigs, true));
+		frameAttrs.put(linktype, new Attribute(linktype, 4 * BYTE, DataType.Integer, snaplen, true));
+		frameAttrs.put(ts_seconds, new Attribute(ts_seconds, 4 * BYTE, DataType.Integer, linktype));
+		frameAttrs.put(ts_microseconds, new Attribute(ts_microseconds, 4 * BYTE, DataType.Integer, ts_seconds));
+		frameAttrs.put(caplen, new Attribute(caplen, 4 * BYTE, DataType.Integer, ts_microseconds));
+		frameAttrs.put(len, new Attribute(len, 4 * BYTE, DataType.Integer, caplen));
+		frameAttrs.put(data, new Attribute(data, 0, DataType.Data, len));
+		createAttrs(Name, frameAttrs);
 	}
 
 	@Override
-	public String getDataResolve() {
-		Integer linktype = getAsInteger(PcapFileStruct.linktype);
-		if (Linktype.Ethernet.value == linktype) {
-			return Linktype.Ethernet.resolve;
+	public void dataResolve(String name, InputStream in, long frameId) throws IOException {
+		Integer linkType = getAsInteger(linktype);
+		if (Linktype.Ethernet.value == linkType) {
+			ResolverRegister.getResolve(Linktype.Ethernet.resolve).resolve(Linktype.Ethernet.resolve, in, frameId);
 		}
-		return null;
 	}
-	
+
 	@Override
-	public void custom(PcapFileStruct name, InputStream in) {
+	public void custom(Attribute attr, Long frameId, InputStream in) {
 	}
 
 	public enum Linktype implements Mapping {

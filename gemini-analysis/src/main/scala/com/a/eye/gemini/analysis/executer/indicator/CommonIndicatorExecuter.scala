@@ -27,35 +27,35 @@ abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, k
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
   override def analysisAtomData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
-    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new AtomTimeSlotUtil())
+    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new AtomTimeSlotUtil(), keyInDbName, TimeSlotUtil.Atom)
     this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Atom, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Atom)
     this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Atom, periodTime)
   }
 
   override def analysisHourData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
-    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new HourTimeSlotUtil())
+    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new HourTimeSlotUtil(), keyInDbName, TimeSlotUtil.Hour)
     this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Hour, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Hour)
     this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Hour, periodTime)
   }
 
   override def analysisDayData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
-    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new DayTimeSlotUtil())
+    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new DayTimeSlotUtil(), keyInDbName, TimeSlotUtil.Day)
     this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Day, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Day)
     this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Day, periodTime)
   }
 
   override def analysisWeekData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
-    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new WeekTimeSlotUtil())
+    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new WeekTimeSlotUtil(), keyInDbName, TimeSlotUtil.Week)
     this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Week, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Week)
     this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Week, periodTime)
   }
 
   override def analysisMonthData(data: RDD[(IndicatorData)], partition: Int, periodTime: String) {
-    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new MonthTimeSlotUtil())
+    val indiSlotData = this.buildAnalysisIndiSlotData(data, partition, new MonthTimeSlotUtil(), keyInDbName, TimeSlotUtil.Month)
     this.saveAnalysisIndiData(indiSlotData, partition, TimeSlotUtil.Month, periodTime)
     val hostSlotData = this.buildAnalysisHostSlotData(indiSlotData, TimeSlotUtil.Month)
     this.saveAnalysisHostData(hostSlotData, partition, TimeSlotUtil.Month, periodTime)
@@ -88,19 +88,6 @@ abstract class CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, k
 
       GeminiMongoClient.db("indicator_" + keyInDbName).insert(mongoData)
     })
-  }
-
-  override def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil): RDD[(String, Long)] = {
-    data.map(indicatorData => {
-      val timeSlot = timeSlotUtil.compareSlotTime(indicatorData.tcpTime)
-      if (isUseIndValue) {
-        val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, keyInDbName)
-        (indKey, indicatorData.indKey.toLong)
-      } else {
-        val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, indicatorData.indKey)
-        (indKey, 1l)
-      }
-    }).reduceByKey(_ + _)
   }
 
   override def saveAnalysisIndiData(data: RDD[(String, Long)], partition: Int, slotType: String, periodTime: String) {
