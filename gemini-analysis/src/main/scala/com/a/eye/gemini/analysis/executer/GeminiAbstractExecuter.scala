@@ -12,29 +12,27 @@ import com.google.gson.JsonObject
 
 abstract class GeminiAbstractExecuter extends Serializable {
 
-  def validateReq(reqJson: JsonObject): Boolean
+  def filterIndicatorData(data: RDD[Map[String, String]], partition: Int): RDD[Map[String, String]]
 
-  def validateRes(resJson: JsonObject): Boolean
-
-  def buildIndicatorData(data: Array[(RecevierPairsData)], partition: Int): RDD[(IndicatorData)]
+  def buildIndicatorData(data: RDD[Map[String, String]], partition: Int): RDD[(IndicatorData)]
 
   def saveIndicatorData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
 
-  def buildAnalysisHostSlotData(data: RDD[(String, Long)], slotType: String): RDD[(String, Long)]
+  def buildAnalysisHostSlotData(data: RDD[(Long, Map[String, String])], timeSlotUtil: TimeSlotUtil, slotType: String): RDD[(String, Long)]
 
-  def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil, keyInDbName: String, slotType: String): RDD[(String, Long)]
+  def buildAnalysisIndiSlotData(data: RDD[(Long, Map[String, String])], timeSlotUtil: TimeSlotUtil, keyInDbName: String, slotType: String): RDD[(String, Long)]
 
   def saveAnalysisIndiData(data: RDD[(String, Long)], partition: Int, slotType: String, periodTime: String)
 
-  def saveAnalysisHostData(data: RDD[(String, Long)], partition: Int, slotType: String, periodTime: String)
+  def saveAnalysisHostData(data: RDD[(String, Long)], slotType: String, periodTime: String)
 
-  def analysisAtomData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
+  //  def analysisAtomData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
 
-  def analysisHourData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
+  //  def analysisHourData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
 
-  def analysisDayData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
+  def analysisDayData(data: RDD[(Long, Map[String, String])], periodTime: String)
 
-  def analysisWeekData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
+  //  def analysisWeekData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
 
-  def analysisMonthData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
+  //  def analysisMonthData(data: RDD[(IndicatorData)], partition: Int, periodTime: String)
 }

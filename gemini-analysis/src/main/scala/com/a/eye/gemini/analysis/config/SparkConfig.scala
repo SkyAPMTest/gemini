@@ -9,6 +9,8 @@ object SparkConfig {
   private val conf = ConfigFactory.load()
 
   val sparkConf = new SparkConf();
+  sparkConf.set("spark.master", conf.getString("spark.master"))
+
   sparkConf.set("spark.mongodb.output.uri", "mongodb://master:27017/")
   sparkConf.set("spark.mongodb.output.database", "gemini")
   sparkConf.set("spark.mongodb.output.collection", "gemini")

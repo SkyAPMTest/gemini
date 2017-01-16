@@ -11,33 +11,41 @@ import com.a.eye.gemini.analysis.util.RedisClient
 import com.a.eye.gemini.analysis.util.ReduceKeyUtil
 import com.a.eye.gemini.analysis.util.WeekTimeSlotUtil
 import com.a.eye.gemini.analysis.util.TimeSlotUtil
+import org.apache.logging.log4j.LogManager
+import org.apache.spark.HashPartitioner
 
 abstract class CumulativeIndicatorExecuter(indKey: String, isUseIndValue: Boolean, indKeyName: String) extends CommonIndicatorExecuter(indKey: String, isUseIndValue: Boolean, indKeyName: String) {
 
-  override def buildAnalysisIndiSlotData(data: RDD[(IndicatorData)], partition: Int, timeSlotUtil: TimeSlotUtil, keyInDbName: String, slotType: String): RDD[(String, Long)] = {
-    data.map(indicatorData => {
-      val timeSlot = timeSlotUtil.compareSlotTime(indicatorData.tcpTime)
-      if (isUseIndValue) {
-        val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, keyInDbName)
-        (indKey, indicatorData.indKey.toLong)
-      } else {
-        val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData.host, indicatorData.indKey)
-        (indKey, 1l)
-      }
+  override def buildAnalysisIndiSlotData(data: RDD[(Long, Map[String, String])], timeSlotUtil: TimeSlotUtil, keyInDbName: String, slotType: String): RDD[(String, Long)] = {
+    data.mapPartitions(partition => {
+      partition.map(indicatorData => {
+        val timeSlot = timeSlotUtil.compareSlotTime(indicatorData._2.get("req_tcp_time").get.toLong)
+        if (isUseIndValue) {
+          val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData._2.get("req_host").get, keyInDbName)
+          (indKey, 1l)
+          //        (indKey, indicatorData.indKey.toLong)
+        } else {
+          val indKey = ReduceKeyUtil.buildIndiReduceKey(timeSlot, indicatorData._2.get("req_host").get, keyInDbName)
+          (indKey, 1l)
+        }
+      })
     }).reduceByKey(_ + _)
   }
 
-  override def buildAnalysisHostSlotData(data: RDD[(String, Long)], slotType: String): RDD[(String, Long)] = {
-    data.map(analysisIndiSlotData => {
-      val analysisKey = analysisIndiSlotData._1
-      val analysisVal = analysisIndiSlotData._2
+  override def buildAnalysisHostSlotData(data: RDD[(Long, Map[String, String])], timeSlotUtil: TimeSlotUtil, slotType: String): RDD[(String, Long)] = {
+    data.mapPartitions(partition => {
+      partition.map(analysisIndiSlotData => {
+        val timeSlot = timeSlotUtil.compareSlotTime(analysisIndiSlotData._2.get("req_tcp_time").get.toLong)
+        val analysisKey = timeSlot + ReduceKeyUtil.Split_Str + analysisIndiSlotData._2.get("req_host").get
+        val analysisVal = 1l
 
-      var hostKey = analysisKey
-      if (!isUseIndValue) {
-        hostKey = ReduceKeyUtil.parseIndiKeyToHostKey(analysisKey)
-      }
+        var hostKey = analysisKey
+        if (!isUseIndValue) {
+          //        hostKey = ReduceKeyUtil.parseIndiKeyToHostKey(analysisKey)
+        }
 
-      (hostKey, analysisVal)
+        (hostKey, analysisVal)
+      })
     }).reduceByKey(_ + _)
   }
 }

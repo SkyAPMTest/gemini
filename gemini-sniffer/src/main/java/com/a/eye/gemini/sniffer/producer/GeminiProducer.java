@@ -15,7 +15,7 @@ public class GeminiProducer {
 
 	private static String kafkaproperty = "properties/kafka.properties";
 	private static Properties properties = new Properties();
-	private static KafkaProducer<Long, String> producer;
+	private static KafkaProducer<Long, byte[]> producer;
 
 	static {
 		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(kafkaproperty);
@@ -27,10 +27,10 @@ public class GeminiProducer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		producer = new KafkaProducer<Long, String>(properties);
+		producer = new KafkaProducer<Long, byte[]>(properties);
 	}
 
-	public KafkaProducer<Long, String> getProducer() {
+	public KafkaProducer<Long, byte[]> getProducer() {
 		return producer;
 	}
 }

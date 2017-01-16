@@ -1,5 +1,7 @@
 package com.a.eye.gemini.sniffer.matcher;
 
+import java.util.Map;
+
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
 import com.a.eye.gemini.sniffer.producer.GeminiProducer;
 import com.a.eye.gemini.sniffer.util.CallCountUtil;
 import com.a.eye.gemini.sniffer.util.IdWorker;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 @Component
@@ -29,6 +32,9 @@ public class PacketMatch {
 	private long sum = 0;
 
 	private Logger logger = LogManager.getFormatterLogger(this.getClass().getName());
+
+	@Autowired
+	private PacketReqCache cache;
 
 	private ProducerRecord<Long, String> record;
 
@@ -46,6 +52,8 @@ public class PacketMatch {
 
 	private long lastTime = 0;
 
+	private String reqOrRes = "";
+
 	@Autowired
 	private GeminiProducer producer;
 
@@ -57,96 +65,95 @@ public class PacketMatch {
 
 	public void handleHttp(PcapPacket packet) {
 		onceJson = new JsonObject();
+		packet.getHeader(http);
+
+		logger.debug("#%d isResponse=%s", packet.getFrameNumber(), http.isResponse());
+		if (http.isResponse()) {
+			reqOrRes = "res_";
+
+			logger.debug("#" + packet.getFrameNumber() + " Res  ");
+			for (Response res : Response.values()) {
+				if (http.hasField(res)) {
+					logger.debug(res.toString() + ":" + http.fieldValue(res) + "  ");
+					onceJson.addProperty(reqOrRes + res.toString().toLowerCase(), http.fieldValue(res));
+				}
+			}
+		} else {
+			reqOrRes = "req_";
+
+			logger.debug("#" + packet.getFrameNumber() + " Req  ");
+			for (Request req : Request.values()) {
+				if (http.hasField(req)) {
+					logger.debug(req.toString() + ":" + http.fieldValue(req) + "  ");
+					onceJson.addProperty(reqOrRes + req.toString().toLowerCase(), http.fieldValue(req));
+				}
+			}
+		}
 
 		packet.getHeader(eth);
 
-		onceJson.addProperty("eth_frame_number", packet.getFrameNumber());
-		onceJson.addProperty("eth_source", FormatUtils.mac(eth.source()));
-		onceJson.addProperty("eth_destination", FormatUtils.mac(eth.destination()));
+		onceJson.addProperty(reqOrRes + "eth_frame_number", packet.getFrameNumber());
+		onceJson.addProperty(reqOrRes + "eth_source", FormatUtils.mac(eth.source()));
+		onceJson.addProperty(reqOrRes + "eth_destination", FormatUtils.mac(eth.destination()));
 		logger.debug("#%d Ethernet Json=%s", packet.getFrameNumber(), onceJson.toString());
 
 		packet.getHeader(tcp);
 
-		onceJson.addProperty("tcp_source", tcp.source());
-		onceJson.addProperty("tcp_destination", tcp.destination());
-		onceJson.addProperty("tcp_seq", tcp.seq());
-		onceJson.addProperty("tcp_ack", tcp.ack());
-		onceJson.addProperty("tcp_time", packet.getCaptureHeader().timestampInMillis() - timezone);
+		onceJson.addProperty(reqOrRes + "tcp_source", tcp.source());
+		onceJson.addProperty(reqOrRes + "tcp_destination", tcp.destination());
+		long seq = tcp.seq();
+		long ack = tcp.ack();
+		onceJson.addProperty(reqOrRes + "tcp_seq", tcp.seq());
+		onceJson.addProperty(reqOrRes + "tcp_ack", tcp.ack());
+		onceJson.addProperty(reqOrRes + "tcp_time", packet.getCaptureHeader().timestampInMillis() - timezone);
 		logger.debug("#%d Tcp Json=%s", packet.getFrameNumber(), onceJson.toString());
 		logger.debug("#%d, seq=%s, ack=%s", packet.getFrameNumber(), tcp.seq(), tcp.ack());
 
 		packet.getHeader(ip);
 
-		onceJson.addProperty("ip_source", FormatUtils.ip(ip.source()));
-		onceJson.addProperty("ip_destination", FormatUtils.ip(ip.destination()));
+		onceJson.addProperty(reqOrRes + "ip_source", FormatUtils.ip(ip.source()));
+		onceJson.addProperty(reqOrRes + "ip_destination", FormatUtils.ip(ip.destination()));
 
 		logger.debug("#%d Ip4 Json=%s", packet.getFrameNumber(), onceJson.toString());
 
-		// if (tcp.destination() == 17909 &&
-		// (FormatUtils.ip(ip.destination()).equals("10.19.7.66") ||
-		// FormatUtils.ip(ip.destination()).equals("10.19.7.67"))) {
-		// logger.debug("地址被过滤：%s", FormatUtils.ip(ip.destination()));
-		// return;
-		// } else {
-		// logger.debug("地址未过滤：%s, 端口：%s", FormatUtils.ip(ip.destination()),
-		// tcp.destination());
-		// }
+		logger.debug(packet.getCaptureHeader().timestampInMillis());
 
-		if (tcp.destination() != 443) {
-			sum++;
-			if (sum % 1000 == 0) {
-				long currentTime = System.currentTimeMillis() - timezone;
-				if (lastTime != 0) {
-					logger.info("sniffer interval = %s second, count = %s", (currentTime - lastTime) / 1000, sum);
-				} else {
-					logger.info("sniffer time = %s, count = %s", currentTime, sum);
+		CallCountUtil.increment();
+
+		if (!http.isResponse()) {
+			cache.cacheData(ack, onceJson);
+		} else {
+			JsonObject reqJson = cache.findPair(seq);
+			if (reqJson != null) {
+				logger.debug(onceJson.toString());
+				for (Map.Entry<String, JsonElement> entry : reqJson.entrySet()) {
+					onceJson.addProperty(entry.getKey(), entry.getValue().getAsString());
 				}
-				lastTime = currentTime;
+				logger.debug(onceJson.toString());
+
+				long workId = worker.nextId();
+				record = new ProducerRecord<Long, String>("gemini-sniffer-topic", workId, onceJson.toString());
+//				producer.getProducer().send(record, new Callback() {
+//					public void onCompletion(RecordMetadata metadata, Exception e) {
+//						record = null;
+//						if (e != null)
+//							e.printStackTrace();
+//					}
+//				});
 			}
-
-			packet.getHeader(http);
-
-			logger.debug("#%d isResponse=%s", packet.getFrameNumber(), http.isResponse());
-			// if (ContentType.HTML.equals(http.contentTypeEnum()) ||
-			// (http.hasField(Request.Accept) &&
-			// http.fieldValue(Request.Accept).contains("text/html"))) {
-			if (http.isResponse()) {
-				logger.debug("#" + packet.getFrameNumber() + " Res  ");
-				onceJson.addProperty("is_res", true);
-				for (Response res : Response.values()) {
-					if (http.hasField(res)) {
-						logger.debug(res.toString() + ":" + http.fieldValue(res) + "  ");
-						onceJson.addProperty("res_" + res.toString(), http.fieldValue(res));
-					}
-				}
-			} else {
-				logger.debug("#" + packet.getFrameNumber() + " Req  ");
-				onceJson.addProperty("is_res", false);
-				for (Request req : Request.values()) {
-					if (http.hasField(req)) {
-						logger.debug(req.toString() + ":" + http.fieldValue(req) + "  ");
-						onceJson.addProperty("req_" + req.toString(), http.fieldValue(req));
-					}
-				}
-			}
-
-			logger.debug(packet.getCaptureHeader().timestampInMillis());
-
-			CallCountUtil.increment();
-
-			logger.debug(onceJson.toString());
-			record = new ProducerRecord<Long, String>("gemini-sniffer-topic", worker.nextId(), onceJson.toString());
-			producer.getProducer().send(record, new Callback() {
-				public void onCompletion(RecordMetadata metadata, Exception e) {
-					record = null;
-					if (e != null)
-						e.printStackTrace();
-				}
-			});
-
-			onceJson = null;
+			reqJson = null;
 		}
-		// }
-		logger.debug("");
+		onceJson = null;
+
+		sum++;
+		if (sum % 1000 == 0) {
+			long currentTime = System.currentTimeMillis() - timezone;
+			if (lastTime != 0) {
+				logger.info("sniffer interval = %s second, count = %s", (currentTime - lastTime) / 1000, sum);
+			} else {
+				logger.info("sniffer time = %s, count = %s", currentTime, sum);
+			}
+			lastTime = currentTime;
+		}
 	}
 }

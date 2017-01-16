@@ -41,27 +41,26 @@ import org.apache.spark.SparkContext
 import com.a.eye.gemini.analysis.util.SparkContextSingleton
 import com.a.eye.gemini.analysis.executer.model.RecevierData
 
-abstract class GeminiAbstractRecevier(appName: String, topicName: String, partition: Int, groupId: String, esIdx: String, edType: String) extends Serializable {
+abstract class GeminiAbstractRecevier(appName: String, topicName: String, partitions: Int, groupId: String) extends Serializable {
 
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
-  private def initialize[K, V](): (InputDStream[ConsumerRecord[Long, String]], StreamingContext) = {
-    val sparkConf = SparkConfig.sparkConf.setAppName(appName).setMaster("local[4]")
+  private def initialize[K, V](): (InputDStream[ConsumerRecord[Long, Array[Byte]]], StreamingContext) = {
+    val sparkConf = SparkConfig.sparkConf.setAppName(appName)
     val streamingContext = new StreamingContext(sparkConf, Seconds(GeminiConfig.intervalTime))
     val kafkaParams = KafkaConfig.kafkaParams + ("group.id" -> groupId)
     val topics = Array(topicName)
 
     SparkContextSingleton.sparkContext = streamingContext.sparkContext
 
-    val fromOffsets = OffsetsManager.selectOffsets(topicName, partition).map { resultSet =>
-      //      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
-      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> 2703235l
+    val fromOffsets = OffsetsManager.selectOffsets(topicName, partitions).map { resultSet =>
+      new TopicPartition(resultSet("topic"), resultSet("partition").toInt) -> resultSet("offset").toLong
     }.toMap
 
-    (KafkaUtils.createDirectStream[Long, String](
+    (KafkaUtils.createDirectStream[Long, Array[Byte]](
       streamingContext,
       PreferConsistent,
-      Assign[Long, String](fromOffsets.keys.toList, kafkaParams, fromOffsets)), streamingContext)
+      Assign[Long, Array[Byte]](fromOffsets.keys.toList, kafkaParams, fromOffsets)), streamingContext)
   }
 
   def startRecevie() {
@@ -75,41 +74,13 @@ abstract class GeminiAbstractRecevier(appName: String, topicName: String, partit
       val periodTime = DateUtil.date2String(new Date().getTime)
       logger.info("本次处理的消息条数： " + rdd.count())
       offsets.foreach { x => logger.info("本次消息的偏移量：从" + x.fromOffset + " 到 " + x.untilOffset) }
-
-      val pairsData = buildData(streamingContext, rdd, partition, periodTime)
-      if (pairsData.length > 0) {
-        GeminiAnalysis.startAnalysis(pairsData, partition, periodTime)
-      }
-      offsets.foreach { x => OffsetsManager.persistentOffsets(topicName, partition, x.untilOffset) }
+      val recordMapData = buildData(streamingContext, rdd, periodTime)
+      GeminiAnalysis.startAnalysis(recordMapData, periodTime)
+      offsets.foreach { x => OffsetsManager.persistentOffsets(x.topic, x.partition, x.untilOffset) }
     })
     streamingContext.start()
     streamingContext.awaitTermination()
   }
 
-  def buildData(streamingContext: StreamingContext, rdd: RDD[ConsumerRecord[Long, String]], partition: Int, periodTime: String): Array[(RecevierPairsData)]
-
-  def validateReq(record: ConsumerRecord[Long, String]): Boolean = {
-    val gson = new Gson()
-    val reqJson = gson.fromJson(record.value(), classOf[JsonObject])
-    val isRes = reqJson.get("is_res").getAsBoolean
-    val noHost = !reqJson.has("req_Host")
-
-    if (isRes || noHost) {
-      false
-    } else {
-      GeminiAnalysis.validateReq(reqJson)
-    }
-  }
-
-  def validateRes(record: ConsumerRecord[Long, String]): Boolean = {
-    val gson = new Gson()
-    val resJson = gson.fromJson(record.value(), classOf[JsonObject])
-    val isRes = resJson.get("is_res").getAsBoolean
-
-    if (isRes) {
-      GeminiAnalysis.validateReq(resJson)
-    } else {
-      false
-    }
-  }
+  def buildData(streamingContext: StreamingContext, rdd: RDD[ConsumerRecord[Long, Array[Byte]]], periodTime: String): RDD[(Long, Map[String, String])]
 }

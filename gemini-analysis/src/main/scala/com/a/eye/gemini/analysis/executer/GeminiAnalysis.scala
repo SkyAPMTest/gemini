@@ -14,43 +14,27 @@ object GeminiAnalysis {
 
   private val executers = GeminiRegistry.executers
 
-  def initializeData(streamingContext: StreamingContext) {
-    //    executers.foreach { executer => executer.detail() }
-  }
-
-  def startAnalysis(data: Array[(RecevierPairsData)], partition: Int, periodTime: String) {
+  def startAnalysis(data: RDD[(Long, Map[String, String])], periodTime: String) {
     executers.foreach { executer =>
+      logger.info("过滤指标所需数据 -- 开始")
+      //      val filterData = executer.filterIndicatorData(data, partition)
+      logger.info("过滤指标所需数据  -- 完毕")
+
       logger.info("构建并保存明细数据 -- 开始")
-      val indicatorData = executer.buildIndicatorData(data, partition)
-      executer.saveIndicatorData(indicatorData, partition, periodTime)
+      //      val indicatorData = executer.buildIndicatorData(data, partition)
+      //      executer.saveIndicatorData(indicatorData, partition, periodTime)
       logger.info("构建并保存明细数据 -- 完毕")
 
-      executer.analysisAtomData(indicatorData, partition, periodTime)
-      logger.info("构建并保存一个周期数据（原子）, 指标：%s -- 完毕", executer.getClass.getSimpleName)
-      executer.analysisHourData(indicatorData, partition, periodTime)
-      logger.info("构建并保存一个周期数据（小时）, 指标：%s  -- 完毕", executer.getClass.getSimpleName)
-      executer.analysisDayData(indicatorData, partition, periodTime)
+      //      executer.analysisAtomData(indicatorData, partition, periodTime)
+      //      logger.info("构建并保存一个周期数据（原子）, 指标：%s -- 完毕", executer.getClass.getSimpleName)
+      //      executer.analysisHourData(indicatorData, partition, periodTime)
+      //      logger.info("构建并保存一个周期数据（小时）, 指标：%s  -- 完毕", executer.getClass.getSimpleName)
+      executer.analysisDayData(data, periodTime)
       logger.info("构建并保存一个周期数据（天）指标：%s -- 完毕", executer.getClass.getSimpleName)
-      executer.analysisWeekData(indicatorData, partition, periodTime)
-      logger.info("构建并保存一个周期数据（周）指标：%s -- 完毕", executer.getClass.getSimpleName)
-      executer.analysisMonthData(indicatorData, partition, periodTime)
-      logger.info("构建并保存一个周期数据（月）指标：%s -- 完毕", executer.getClass.getSimpleName)
+      //      executer.analysisWeekData(indicatorData, partition, periodTime)
+      //      logger.info("构建并保存一个周期数据（周）指标：%s -- 完毕", executer.getClass.getSimpleName)
+      //      executer.analysisMonthData(indicatorData, partition, periodTime)
+      //      logger.info("构建并保存一个周期数据（月）指标：%s -- 完毕", executer.getClass.getSimpleName)
     }
-  }
-
-  def validateReq(reqJson: JsonObject): Boolean = {
-    var pass = true
-    executers.foreach { executer =>
-      pass = pass && executer.validateReq(reqJson)
-    }
-    pass
-  }
-
-  def validateRes(resJson: JsonObject): Boolean = {
-    var pass = true
-    executers.foreach { executer =>
-      pass = pass && executer.validateRes(resJson)
-    }
-    pass
   }
 }

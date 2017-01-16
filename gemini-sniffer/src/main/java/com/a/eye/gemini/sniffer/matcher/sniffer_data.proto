@@ -1,0 +1,12 @@
+package gemini;
+
+option java_package = "com.a.eye.gemini.sniffer.matcher";
+option java_outer_classname = "SnifferDataProtos";
+option optimize_for = LITE_RUNTIME;
+
+message SnifferData{
+	required string req_host = 1;
+	required string req_requesturl = 2;
+	required string req_tcp_seq = 3;
+	required string req_tcp_time = 4;
+}

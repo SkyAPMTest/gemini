@@ -8,16 +8,19 @@ object OffsetsManager {
 
   private val logger = LogManager.getFormatterLogger(this.getClass.getName)
 
-  def selectOffsets(topicName: String, partition: Int): Array[Map[String, String]] = {
-    val path = getPath(topicName, partition).toString()
-    logger.info("起始的offsets在zk中的path为：%s", path)
-    initializeOffsets(path)
+  def selectOffsets(topicName: String, partitions: Int): Array[Map[String, String]] = {
+    var offsets: Array[Map[String, String]] = new Array[Map[String, String]](partitions)
 
-    val offsets = new String(GeminiZkClient.get(path))
+    for (partition <- 0 to partitions - 1) {
+      val path = getPath(topicName, partition)
+      logger.info("partition：%d 的起始offsets在zk中的path为：%s", partition, path)
+      initializeOffsets(path)
+      val offset = new String(GeminiZkClient.get(path))
+      logger.info("partition：%d 的起始offsets位置为：%s", partition, offset)
+      offsets(partition) = Map("topic" -> topicName, "partition" -> partition.toString(), "offset" -> offset)
+    }
 
-    logger.info("起始的offsets位置为：%s", offsets)
-
-    Array(Map("topic" -> topicName, "partition" -> partition.toString(), "offset" -> offsets))
+    offsets
   }
 
   def persistentOffsets(topicName: String, partition: Int, offsets: Long) {
